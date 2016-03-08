@@ -1,0 +1,12 @@
+#ifndef SYSTEMINFO_GLOBAL_H
+#define SYSTEMINFO_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(SYSTEMINFO_LIBRARY)
+#  define SYSTEMINFOSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define SYSTEMINFOSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // SYSTEMINFO_GLOBAL_H

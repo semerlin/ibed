@@ -1,0 +1,12 @@
+#ifndef BEDCONTROL_GLOBAL_H
+#define BEDCONTROL_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(BEDCONTROL_LIBRARY)
+#  define BEDCONTROLSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define BEDCONTROLSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // BEDCONTROL_GLOBAL_H
