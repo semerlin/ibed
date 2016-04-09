@@ -1,20 +1,20 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-04-09T15:31:06
+# Project created by QtCreator 2016-04-09T15:10:11
 #
 #-------------------------------------------------
 
 QT       -= gui
 
-TARGET = hardware
+TARGET = basecontrols
 TEMPLATE = lib
 
-DEFINES += HARDWARE_LIBRARY
+DEFINES += BASECONTROLS_LIBRARY
 
-SOURCES += hardware.cpp
+SOURCES += basecontrols.cpp
 
-HEADERS += hardware.h\
-        hardware_global.h
+HEADERS += basecontrols.h\
+        basecontrols_global.h
 
 unix {
     target.path = /usr/lib

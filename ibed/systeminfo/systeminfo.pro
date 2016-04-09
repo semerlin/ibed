@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-03-08T14:04:49
+# Project created by QtCreator 2016-04-09T15:30:43
 #
 #-------------------------------------------------
 
@@ -11,16 +11,10 @@ TEMPLATE = lib
 
 DEFINES += SYSTEMINFO_LIBRARY
 
-SOURCES += systeminfo.cpp \
-    memory.cpp \
-    cpu.cpp \
-    time.cpp
+SOURCES += systeminfo.cpp
 
 HEADERS += systeminfo.h\
-        systeminfo_global.h \
-    memory.h \
-    cpu.h \
-    time.h
+        systeminfo_global.h
 
 unix {
     target.path = /usr/lib

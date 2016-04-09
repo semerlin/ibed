@@ -1,20 +1,20 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-04-09T15:31:06
+# Project created by QtCreator 2016-04-09T15:29:23
 #
 #-------------------------------------------------
 
 QT       -= gui
 
-TARGET = hardware
+TARGET = utility
 TEMPLATE = lib
 
-DEFINES += HARDWARE_LIBRARY
+DEFINES += UTILITY_LIBRARY
 
-SOURCES += hardware.cpp
+SOURCES += utility.cpp
 
-HEADERS += hardware.h\
-        hardware_global.h
+HEADERS += utility.h\
+        utility_global.h
 
 unix {
     target.path = /usr/lib

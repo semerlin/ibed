@@ -1,17 +1,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    main \
-    peripheral \
-    voip \
-    log4qt \
-    netprotocol \
+    excutable \
+    corelib \
+    mainmodule \
+    utility \
     systeminfo \
-    licensetool \
-    autotest \
-    sensor \
-    basecontrols \
     hardware \
-    bedcontrol \
-    patient \
-    commonunit
+    3rdpart
