@@ -12,9 +12,28 @@ TARGET = excutable
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        widget.cpp
+SOURCES += main.cpp \
+    mainwidget.cpp \
+    applancher.cpp
 
-HEADERS  += widget.h
+HEADERS  += \
+    mainwidget.h \
+    applancher.h
 
-FORMS    += widget.ui
+FORMS    += \
+    mainwidget.ui
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
+
+INCLUDEPATH += $$PWD/../corelib/hardware
+DEPENDPATH += $$PWD/../corelib/hardware
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
+
+INCLUDEPATH += $$PWD/../corelib/hardware
+DEPENDPATH += $$PWD/../corelib/hardware
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
+
+INCLUDEPATH += $$PWD/../corelib/utility
+DEPENDPATH += $$PWD/../corelib/utility

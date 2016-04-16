@@ -12,11 +12,13 @@ TEMPLATE = lib
 DEFINES += UTILITY_LIBRARY
 
 SOURCES += utility.cpp \
-    qssloader.cpp
+    qssloader.cpp \
+    systemcall.cpp
 
 HEADERS += utility.h\
         utility_global.h \
-    qssloader.h
+    qssloader.h \
+    systemcall.h
 
 unix {
     target.path = /usr/lib

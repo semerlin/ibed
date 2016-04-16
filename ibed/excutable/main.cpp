@@ -1,20 +1,17 @@
-#include "widget.h"
-#include <QApplication>
-#include <QSplashScreen>
-#include <QImageReader>
+#include "applancher.h"
+
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    return AppLancher::instance().run(argc, argv);
+//    QApplication app(argc, argv);
 
-    //启动界面
-    QPixmap pixmap("res/a.bmp");
-    QSplashScreen splash(pixmap);
-    splash.show();
-    app.processEvents();
-
-    Widget w;
-    w.show();
-
-    return app.exec();
+     //main window
+//    MainWidget w;
+//    w.show();
+//#ifndef TARGET_X86
+//    for(int i = 0; i < 100; i += 5)
+//        Backlight::instance().setValue(i);
+//#endif
+//    return app.exec();
 }

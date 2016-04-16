@@ -1,20 +1,20 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-04-09T15:31:06
+# Project created by QtCreator 2016-04-11T20:52:27
 #
 #-------------------------------------------------
 
 QT       -= gui
 
-TARGET = hardware
+TARGET = sensor
 TEMPLATE = lib
 
-DEFINES += HARDWARE_LIBRARY
+DEFINES += SENSOR_LIBRARY
 
-SOURCES += hardware.cpp
+SOURCES += sensor.cpp
 
-HEADERS += hardware.h\
-        hardware_global.h
+HEADERS += sensor.h\
+        sensor_global.h
 
 unix {
     target.path = /usr/lib
