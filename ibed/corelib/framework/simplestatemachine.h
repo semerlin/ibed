@@ -143,21 +143,6 @@ public:
 
 private:
     /**
-     * @brief statemachine transition description
-     */
-    struct TransitionDescription
-    {
-        QString source;  //source state
-        QString event;  //event to trigger state transtions
-        QString condition;  //transition condition
-        QString target;  //target state
-        QString action;  //callback function before enter target state
-        QString leaveCallback;  //callback function after leave source state
-    };
-    TransitionDescription parseOneLine(const QString &oneLine);
-
-private:
-    /**
      * @brief set initial state
      * @param initState: initial state
      */
