@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::MainWidget *ui;
+
+    // QWidget interface
+protected:
+    void mousePressEvent(QMouseEvent *);
 };
 
 #endif // WIDGET_H

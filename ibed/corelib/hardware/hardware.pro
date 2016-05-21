@@ -26,8 +26,8 @@ HEADERS += hardware.h\
     serialportctrl.h \
     win_serialport.h \
     powermange.h \
-    ipowermangedevice.h \
-    powerdef.h
+    powerdef.h \
+    idevice.h
 
 unix {
     target.path = /usr/lib

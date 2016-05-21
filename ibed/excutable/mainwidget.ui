@@ -49,7 +49,26 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="DefaultWidget" native="true"/>
+    <widget class="QWidget" name="DefaultWidget" native="true">
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>70</y>
+        <width>391</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>56</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </widget>
    </item>
    <item>
     <widget class="QWidget" name="ControlWidget" native="true">

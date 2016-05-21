@@ -6,4 +6,5 @@ SUBDIRS += \
     mainmodule \
     systeminfo \
     3rdpart \
-    sensor
+    sensor \
+    controls

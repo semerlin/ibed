@@ -3,4 +3,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
     basecontrols \
     utility \
-    hardware
+    hardware \
+    framework
+

@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
+#include "powermange.h"
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -11,4 +12,10 @@ MainWidget::MainWidget(QWidget *parent) :
 MainWidget::~MainWidget()
 {
     delete ui;
+}
+
+void MainWidget::mousePressEvent(QMouseEvent *)
+{
+    PowerMange::instance().enterState(POWER_ON);
+//    Backlight::instance().setValue(100);
 }
