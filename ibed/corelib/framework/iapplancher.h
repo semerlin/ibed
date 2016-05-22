@@ -10,16 +10,22 @@
 class FRAMEWORKSHARED_EXPORT IAppLancher
 {
 public:
-    typedef bool (*Func)(QVariant param);
     IAppLancher();
 
 public:
+    /**
+     * @brief run application
+     * @param argc
+     * @param argv
+     * @return
+     */
     virtual int run(int argc, char **argv) = 0;
-    virtual QString &error(void) const;
 
-public:
-    virtual void addStep(Func func);
-    virtual void setStep(QList<Func> funcs) = 0;
+    /**
+     * @brief restart application
+     * @return
+     */
+    virtual int restart(void) = 0;
 };
 
 #endif // IAPPLANCHER_H

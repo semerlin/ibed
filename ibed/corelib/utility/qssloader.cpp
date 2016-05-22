@@ -5,7 +5,7 @@
  * Description:     // 模块描述
  * Version:         // 版本信息
  * History:
- * 	HuangYang    2016/4/9     1.0     build this moudle
+ *     HuangYang    2016/4/9     1.0     build this moudle
 ***********************************************************/
 #include "qssloader.h"
 #include <QStringList>
