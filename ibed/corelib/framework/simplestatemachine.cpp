@@ -214,7 +214,10 @@ class EventFinder
 {
 public:
     EventFinder(const QString &str = DUMMY_EVENT) :
-        toFind(str){}
+        toFind(str)
+    {
+
+    }
 
 public:
     bool operator()(const SimpleStateMachine::Transition& transition)
@@ -245,134 +248,134 @@ bool SimpleStateMachine::postEvent(const QString &event)
 
         bool result = executeTransition(*transitionPos);
 
+        //may condition false
         if(result)
         {
             return true;
         }
 
-        //condition = false
 
         findBegin = transitionPos;
         ++findBegin;
-        continue;
     }
 
-    Q_ASSERT(false);
     return false;
 }
 
-bool SimpleStateMachine::executeTransition
-(const SimpleStateMachine::Transition &transition){
+bool SimpleStateMachine::executeTransition(const SimpleStateMachine::Transition &transition)
+{
+    log()->debug("executeTransition: %1+%2=%3",
+                 m_currentState, transition.event, transition.target);
 
+    bool conditionValue = false;
 
-        log()->debug("executeTransition: %1+%2=%3",
-                m_currentState,transition.event,transition.target);
-
-    bool conditionValue=false;
-
-    if (transition.condition) {
-
-        transition.condition->invoke
-            (m_callee, Qt::DirectConnection, Q_RETURN_ARG(bool,conditionValue));
+    //condition test
+    if(transition.condition)
+    {
+        transition.condition->invoke(m_callee, Qt::DirectConnection,
+                                     Q_RETURN_ARG(bool, conditionValue));
 
         log()->debug("test condition: %1 = %2",
-                transition.condition->signature(),conditionValue);
+                     transition.condition->signature(), conditionValue);
 
-        if (!conditionValue) {
+        if(!conditionValue)
+        {
             return false;
         } 
     }
 
-    if (transition.leaveCallback) {
+    //call leave callback function
+    if(transition.leaveCallback)
+    {
+        log()->debug("leaveCallback: %1 ", transition.leaveCallback->signature());
 
-        log()->debug("leaveCallback: %1 ",
-                transition.leaveCallback->signature());
-
-        transition.leaveCallback->invoke(m_callee, 
-                Qt::DirectConnection);
+        transition.leaveCallback->invoke(m_callee, Qt::DirectConnection);
     }
 
-    if (transition.action) {
-        transition.action->invoke(m_callee, 
-                Qt::DirectConnection, 
-                Q_ARG(QString,m_currentState),
-                Q_ARG(QString,transition.target));
+    //call enter new state function
+    if(transition.action)
+    {
+        transition.action->invoke(m_callee, Qt::DirectConnection,
+                                  Q_ARG(QString,m_currentState),
+                                  Q_ARG(QString,transition.target));
 
-        log()->debug("action: %1",transition.action->signature());
+        log()->debug("action: %1", transition.action->signature());
 
     }
 
-    m_prevState=m_currentState;
-    m_currentState=transition.target;
+    m_prevState = m_currentState;
+    m_currentState = transition.target;
 
     return true;
 }
 
-void SimpleStateMachine::enterStateMachine(){
-    m_currentState=m_initState;
-    m_prevState=m_initState;
+void SimpleStateMachine::enterStateMachine()
+{
+    m_currentState = m_initState;
+    m_prevState = m_initState;
     Q_ASSERT(checkReachability());
     postEvent(DUMMY_EVENT);
 }
 
-void SimpleStateMachine::reset(){
-    m_currentState=m_initState;
-    m_prevState=m_initState;
+void SimpleStateMachine::reset()
+{
+    m_currentState = m_initState;
+    m_prevState = m_initState;
 }
 
 
-static void recursiveReach(const QString& state,
-        const SimpleStateMachine::TransitionTableType& table,
-        QSet<QString>& canReach){
+static void recursiveReach(const QString &state,
+                           const SimpleStateMachine::TransitionTableType &table,
+                           QSet<QString> &canReach){
 
-    if (canReach.find(state)!=canReach.end()) {
+    if (canReach.find(state) != canReach.end())
+    {
         //already reached
         return;
     }
 
     canReach.insert(state);
 
-    foreach(const SimpleStateMachine::Transition& trans,table.value(state)){
-        recursiveReach(trans.target,table,canReach);
+    foreach(const SimpleStateMachine::Transition &trans, table.value(state))
+    {
+        recursiveReach(trans.target, table, canReach);
     }
-
 }
 
-static QString setToString(const QSet<QString>& toConvert){
+static QString setToString(const QSet<QString> &toConvert)
+{
+    QString ret = "QSet(";
 
-    QString ret="QSet(";
-
-    foreach(const QString& str,toConvert){
-        ret+=str;
+    foreach(const QString &str, toConvert)
+    {
+        ret += str;
         ret.append(',');
     }
 
-    ret.resize(ret.size()-1);
+    ret.resize(ret.size() - 1);
 
-    ret+=")";
+    ret += ")";
 
     return ret;
 }
 
-bool SimpleStateMachine::checkReachability(){
-
+bool SimpleStateMachine::checkReachability()
+{
     QSet<QString> canReach;
 
-    recursiveReach(m_initState,m_transitionTable,canReach);
+    recursiveReach(m_initState, m_transitionTable, canReach);
 
-    QSet<QString> uniqueKeys=QSet<QString>::fromList(
-            m_transitionTable.uniqueKeys());
+    QSet<QString> uniqueKeys = QSet<QString>::fromList(m_transitionTable.uniqueKeys());
 
     uniqueKeys.subtract(canReach);
 
-    if (!uniqueKeys.isEmpty()) {
-    
-
+    if(!uniqueKeys.isEmpty())
+    {
         log()->error("these state can not be reached: %1",
-                setToString(uniqueKeys));
+                     setToString(uniqueKeys));
     
-        Q_ASSERT_X(false,
-            "SimpleStateMachine::checkReachability","not all state can be reached,");
+        Q_ASSERT_X(false, "SimpleStateMachine::checkReachability",
+                   "not all state can be reached,");
     }
 
     return true;
