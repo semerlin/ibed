@@ -20,5 +20,5 @@ void LanchWidget::increaseStep()
 
 void LanchWidget::printMsg(const QString &msg)
 {
-
+    ui->label_message->setText(msg);
 }

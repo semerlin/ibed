@@ -1,7 +1,6 @@
-#include <QApplication>
-#include "baseapplancher.h"
+#include "ibedlancher.h"
 
 int main(int argc, char *argv[])
 {
-//    BaseAppLancher
+    return IBedLancher::instance().run(argc, argv);
 }

@@ -13,10 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    lanchwidget.cpp
+    lanchwidget.cpp \
+    ibedlancher.cpp
 
 HEADERS  += \
-    lanchwidget.h
+    lanchwidget.h \
+    ibedlancher.h
 
 FORMS    += \
     lanchwidget.ui
@@ -43,3 +45,14 @@ DEPENDPATH += $$PWD/../corelib/framework
 
 RESOURCES += \
     resource.qrc
+
+unix:!macx: LIBS += -L$$OUT_PWD/../modules/ -lmodules
+
+INCLUDEPATH += $$PWD/../modules
+DEPENDPATH += $$PWD/../modules
+
+unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
+
+INCLUDEPATH += $$PWD/../3rdpart/log4qt
+DEPENDPATH += $$PWD/../3rdpart/log4qt
+

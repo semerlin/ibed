@@ -17,7 +17,7 @@ public:
 
 
 private:
-    HardwareModule();
+    HardwareModule(const QString &name);
 };
 
 #endif // HARDWAREMODULE_H
