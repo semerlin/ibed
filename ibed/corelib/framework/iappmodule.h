@@ -8,7 +8,7 @@ class FRAMEWORKSHARED_EXPORT IAppModule : public QObject
 {
     Q_OBJECT
 public:
-    IAppModule();
+    IAppModule() {}
 
 public:
     /**
@@ -36,6 +36,11 @@ public:
      */
     virtual void reload(void) = 0;
 
+    /**
+     * @brief set module name
+     * @param name: module name
+     */
+    virtual void setName(const QString &name) = 0;
     /**
      * @brief module name
      * @return module name

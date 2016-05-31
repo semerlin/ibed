@@ -6,6 +6,7 @@
 
 class FRAMEWORKSHARED_EXPORT IAppLancherWidget : public QWidget
 {
+    Q_OBJECT
 public:
     explicit IAppLancherWidget(QWidget *parent = NULL) :
         QWidget(parent)

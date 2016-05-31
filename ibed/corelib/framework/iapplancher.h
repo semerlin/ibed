@@ -2,7 +2,6 @@
 #define IAPPLANCHER_H
 
 #include "framework_global.h"
-#include <QVariant>
 
 /**
  * @brief application lanch framework
@@ -10,7 +9,7 @@
 class FRAMEWORKSHARED_EXPORT IAppLancher
 {
 public:
-    IAppLancher();
+    IAppLancher() {}
 
 public:
     /**

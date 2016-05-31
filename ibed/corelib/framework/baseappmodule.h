@@ -7,7 +7,7 @@
 class FRAMEWORKSHARED_EXPORT BaseAppModule : public IAppModule
 {
 public:
-    BaseAppModule();
+    explicit BaseAppModule(const QString &name = "NullModule");
     virtual ~BaseAppModule();
 
 public:
@@ -15,6 +15,7 @@ public:
     virtual bool isLoaded() const;
     virtual void unload();
     virtual void reload();
+    void setName(const QString &name);
     QString name() const;
     QString error() const;
 

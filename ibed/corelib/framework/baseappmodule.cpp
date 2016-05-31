@@ -2,13 +2,14 @@
 
 
 
-BaseAppModule::BaseAppModule() :
-    m_name("Empty module"),
+BaseAppModule::BaseAppModule(const QString &name) :
+    m_name("name"),
     m_error("No error"),
     m_isLoaded(false),
     m_val(QVariant(QVariant::Invalid))
 {
 }
+
 
 BaseAppModule::~BaseAppModule()
 {
@@ -47,6 +48,11 @@ void BaseAppModule::reload()
     }
 
     load(m_val);
+}
+
+void BaseAppModule::setName(const QString &name)
+{
+    m_name = name;
 }
 
 QString BaseAppModule::name() const

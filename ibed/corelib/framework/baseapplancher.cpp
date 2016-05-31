@@ -3,17 +3,23 @@
 #include "log4qt/logger.h"
 #include "boost/foreach.hpp"
 #include <QStringList>
+#include <QThread>
 
 LOG4QT_DECLARE_STATIC_LOGGER(log,SimpleStateMachine)
 
 
 BaseAppLancher::BaseAppLancher(IAppLancherWidget *widget, ModuleManger *manger) :
     m_widget(widget),
-    m_moduleManger(manger)
+    m_moduleManger(manger),
+    m_thread(new QThread)
 {
     Q_ASSERT(m_moduleManger != NULL);
 
+
+    //load module may cost a lot of time, so move it to thread
     m_moduleManger->moveToThread(m_thread);
+    m_thread->start();
+
 
     connect(this, SIGNAL(startLanch(const QVariant&)),
             m_moduleManger, SLOT(onLoadModules(const QVariant&)));
@@ -38,12 +44,13 @@ BaseAppLancher::~BaseAppLancher()
         delete m_moduleManger;
         m_moduleManger = NULL;
     }
+
+    if(m_thread->isRunning())
+        m_thread->quit();
 }
 
 int BaseAppLancher::run(int argc, char **argv)
 {
-    QApplication app(argc, argv);
-
     m_widget->show();
 
     QStringList val;
@@ -55,9 +62,13 @@ int BaseAppLancher::run(int argc, char **argv)
     QVariant moduleVal = QVariant(val);
 
     emit startLanch(moduleVal);
-//    m_moduleManger->loadModules(moduleVal);
 
-    return app.exec();
+    return 0;
+}
+
+int BaseAppLancher::restart()
+{
+    return 0;
 }
 
 void BaseAppLancher::onModuleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status)
