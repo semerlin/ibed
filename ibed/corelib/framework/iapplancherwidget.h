@@ -7,20 +7,23 @@
 class FRAMEWORKSHARED_EXPORT IAppLancherWidget : public QWidget
 {
 public:
-    IAppLancherWidget();
+    explicit IAppLancherWidget(QWidget *parent = NULL) :
+        QWidget(parent)
+    {
+    }
 
 public slots:
     /**
      * @brief increase one step
      */
-    virtual void increaseStep(void) = 0;
+    virtual void increaseStep(void) {}
 
     /**
      * @brief print some lanch messages
      * @param msg
      */
-    virtual void printMsg(const QString &msg) = 0;
+    virtual void printMsg(const QString &msg) {}
 };
 
-#endif // IAPPLANCHERWIDGET
+#endif // IAPPLANCHERWIDGET_H
 

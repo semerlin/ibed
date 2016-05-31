@@ -4,7 +4,7 @@
 #include "framework_global.h"
 #include "iappmodule.h"
 
-class FRAMEWORKSHARED_EXPORT BaseAppModule : IAppModule
+class FRAMEWORKSHARED_EXPORT BaseAppModule : public IAppModule
 {
 public:
     BaseAppModule();
@@ -15,8 +15,8 @@ public:
     virtual bool isLoaded() const;
     virtual void unload();
     virtual void reload();
-    virtual QString name() const;
-    virtual QString error() const;
+    QString name() const;
+    QString error() const;
 
 private:
     QString m_name;

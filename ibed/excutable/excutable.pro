@@ -13,15 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    mainwidget.cpp \
-    applancher.cpp
+    lanchwidget.cpp
 
 HEADERS  += \
-    mainwidget.h \
-    applancher.h
+    lanchwidget.h
 
 FORMS    += \
-    mainwidget.ui
+    lanchwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
 
@@ -37,3 +35,11 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
 
 INCLUDEPATH += $$PWD/../corelib/utility
 DEPENDPATH += $$PWD/../corelib/utility
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/framework/ -lframework
+
+INCLUDEPATH += $$PWD/../corelib/framework
+DEPENDPATH += $$PWD/../corelib/framework
+
+RESOURCES += \
+    resource.qrc

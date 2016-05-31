@@ -8,7 +8,6 @@ BaseAppModule::BaseAppModule() :
     m_isLoaded(false),
     m_val(QVariant(QVariant::Invalid))
 {
-
 }
 
 BaseAppModule::~BaseAppModule()
