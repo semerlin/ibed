@@ -16,10 +16,16 @@ public:
     {
         MODULE_ADD,
         MODULE_REMOVE,
-        MODULE_LOAD,
+        MODULE_LOADING,
+        MODULE_LOADED,
         MODULE_LOAD_FAILED,
+        MODULE_UNLOADING,
+        MODULE_UNLOADED,
+        MODULE_UNLOAD_FAILED,
         MODULE_UNLOAD,
-        MODULE_RELOAD,
+        MODULE_RELOADING,
+        MODULE_RELOADED,
+        MODULE_RELOAD_FAILED,
     }MODULE_STATUS;
 
 public:

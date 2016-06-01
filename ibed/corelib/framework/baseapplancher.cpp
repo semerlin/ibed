@@ -73,14 +73,20 @@ int BaseAppLancher::restart()
 
 void BaseAppLancher::onModuleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status)
 {
-    if(status == ModuleManger::MODULE_LOAD)
+    if(status == ModuleManger::MODULE_LOADING)
     {
         m_widget->increaseStep();
-        m_widget->printMsg(tr("load module %1 ...").arg(module->name()));
+        QString name = module->name();
+        m_widget->printMsg(tr("loading module '%1' ").arg(module->name()));
+    }
+    else if(status == ModuleManger::MODULE_LOADED)
+    {
+        m_widget->increaseStep();
+        m_widget->printMsg(tr("load module '%1' success").arg(module->name()));
     }
     else if(status == ModuleManger::MODULE_LOAD_FAILED)
     {
-        m_widget->printMsg(tr("load module %1 failed!").arg(module->name()));
+        m_widget->printMsg(tr("load module '%1 failed!").arg(module->name()));
         m_widget->printMsg(tr("error message = %1.").arg(module->error()));
     }
 }

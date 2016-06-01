@@ -7,7 +7,7 @@ LOG4QT_DECLARE_STATIC_LOGGER(log,SimpleStateMachine)
 ModuleManger::ModuleManger() :
     m_error("No error")
 {
-
+    qRegisterMetaType<ModuleManger::MODULE_STATUS>("ModuleManger::MODULE_STATUS");
 }
 
 ModuleManger::~ModuleManger()
@@ -157,6 +157,7 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
     {
         if(!m_moduleWithNames[name]->isLoaded())
         {
+            emit moduleChanged(m_moduleWithNames[name], MODULE_LOADING);
             ret = m_moduleWithNames[name]->load(val);
             if(!ret)
             {
@@ -164,7 +165,7 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD_FAILED);
             }
             else
-                emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD);
+                emit moduleChanged(m_moduleWithNames[name], MODULE_LOADED);
         }
     }
 
@@ -179,6 +180,7 @@ bool ModuleManger::loadModules(const QVariant &val)
     {
         if(!module->isLoaded())
         {
+            emit moduleChanged(module, MODULE_LOADING);
             ret = module->load(val);
             if(!ret)
             {
@@ -187,7 +189,7 @@ bool ModuleManger::loadModules(const QVariant &val)
                 break;
             }
             else
-                emit moduleChanged(module, MODULE_LOAD);
+                emit moduleChanged(module, MODULE_LOADED);
         }
     }
 
@@ -204,6 +206,7 @@ bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
         if(m_moduleWithNames[name]->isLoaded())
             m_moduleWithNames[name]->unload();
 
+        emit moduleChanged(m_moduleWithNames[name], MODULE_RELOADING);
         ret = m_moduleWithNames[name]->load(val);
         if(!ret)
         {
@@ -211,7 +214,7 @@ bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
             emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD_FAILED);
         }
         else
-            emit moduleChanged(m_moduleWithNames[name], MODULE_RELOAD);
+            emit moduleChanged(m_moduleWithNames[name], MODULE_RELOADED);
     }
 
     return ret;
@@ -226,6 +229,7 @@ bool ModuleManger::reloadModules(const QVariant &val)
         if(module->isLoaded())
             module->unload();
 
+        emit moduleChanged(module, MODULE_RELOADING);
         ret = module->load(val);
         if(!ret)
         {
@@ -234,7 +238,7 @@ bool ModuleManger::reloadModules(const QVariant &val)
             break;
         }
         else
-            emit moduleChanged(module, MODULE_RELOAD);
+            emit moduleChanged(module, MODULE_RELOADED);
     }
 
     return ret;
@@ -277,6 +281,7 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
     {
         if(!m_moduleWithNames[name]->isLoaded())
         {
+            emit moduleChanged(m_moduleWithNames[name], MODULE_LOADING);
             ret = m_moduleWithNames[name]->load(val);
             if(!ret)
             {
@@ -284,7 +289,7 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD_FAILED);
             }
             else
-                emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD);
+                emit moduleChanged(m_moduleWithNames[name], MODULE_LOADED);
         }
     }
 }
@@ -297,6 +302,7 @@ void ModuleManger::onLoadModules(const QVariant &val)
     {
         if(!module->isLoaded())
         {
+            emit moduleChanged(module, MODULE_LOADING);
             ret = module->load(val);
             if(!ret)
             {
@@ -305,7 +311,7 @@ void ModuleManger::onLoadModules(const QVariant &val)
                 break;
             }
             else
-                emit moduleChanged(module, MODULE_LOAD);
+                emit moduleChanged(module, MODULE_LOADED);
         }
     }
 }
