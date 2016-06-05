@@ -11,13 +11,9 @@ int main(int argc, char *argv[])
 
     LanchWidget widget;
     ModuleManger manger;
-    HardwareModule *module = new HardwareModule("Hardware");
-    manger.addModule(module);
-    delete module;
-    manger.unloadModules();
-//    manger.addModule(&HardwareModule::instance());
-//    BaseAppLancher lancher(&widget, &manger);
-//    lancher.run(argc, argv);
+    manger.addModule(&HardwareModule::instance());
+    BaseAppLancher lancher(&widget, &manger);
+    lancher.run(argc, argv);
 
     return app.exec();
 }

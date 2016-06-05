@@ -6,6 +6,7 @@ LanchWidget::LanchWidget(QWidget *parent) :
     ui(new Ui::LanchWidget)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 }
 
 LanchWidget::~LanchWidget()

@@ -57,7 +57,6 @@ public:
 signals:
     void message(const QString &msg);
 
-    //TODO use shared_ptr instead of deleted signal
     /**
      * @brief when a dynamic malloced module deleted,
      *        module should send this single in destructor,
