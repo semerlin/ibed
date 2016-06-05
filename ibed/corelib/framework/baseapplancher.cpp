@@ -14,6 +14,7 @@ BaseAppLancher::BaseAppLancher(IAppLancherWidget *widget, ModuleManger *manger) 
     m_thread(new QThread)
 {
     Q_ASSERT(m_moduleManger != NULL);
+    Q_ASSERT(m_widget != NULL);
 
 
     //load module may cost a lot of time, so move it to thread
@@ -36,13 +37,10 @@ BaseAppLancher::BaseAppLancher(IAppLancherWidget *widget, ModuleManger *manger) 
 
 BaseAppLancher::~BaseAppLancher()
 {
-    disconnect(m_moduleManger, SIGNAL(moduleChanged(IAppModule*,ModuleManger::MODULE_STATUS)),
-               this, SLOT(onModuleChanged(IAppModule*,ModuleManger::MODULE_STATUS)));
-
     if(m_moduleManger)
     {
-        delete m_moduleManger;
-        m_moduleManger = NULL;
+        disconnect(m_moduleManger, SIGNAL(moduleChanged(IAppModule*,ModuleManger::MODULE_STATUS)),
+                   this, SLOT(onModuleChanged(IAppModule*,ModuleManger::MODULE_STATUS)));
     }
 
     if(m_thread->isRunning())

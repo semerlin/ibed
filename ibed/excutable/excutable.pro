@@ -13,12 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    lanchwidget.cpp \
-    ibedlancher.cpp
+    lanchwidget.cpp
 
 HEADERS  += \
-    lanchwidget.h \
-    ibedlancher.h
+    lanchwidget.h
 
 FORMS    += \
     lanchwidget.ui

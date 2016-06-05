@@ -17,6 +17,8 @@ BaseAppModule::~BaseAppModule()
     {
         unload();
     }
+
+//    emit deleted();
 }
 
 bool BaseAppModule::load(const QVariant &val)

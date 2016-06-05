@@ -153,6 +153,7 @@ signals:
 private slots:
     void onLoadModule(const QString &name, const QVariant &val);
     void onLoadModules(const QVariant &val);
+    void onModuleDestroyed(void);
 
 private:
     QSet<IAppModule *> m_modules;

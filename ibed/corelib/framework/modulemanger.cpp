@@ -13,7 +13,6 @@ ModuleManger::ModuleManger() :
 ModuleManger::~ModuleManger()
 {
     unloadedModules();
-    m_error = "No error";
 }
 
 void ModuleManger::addModule(IAppModule *module)
@@ -24,6 +23,7 @@ void ModuleManger::addModule(IAppModule *module)
     m_modules.insert(module);
     m_moduleWithNames[module->name()] = module;
 
+    connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
     emit moduleChanged(module, MODULE_ADD);
 }
 
@@ -34,6 +34,7 @@ void ModuleManger::addModules(const QSet<IAppModule *> &modules)
         m_modules.insert(module);
         m_moduleWithNames[module->name()] = module;
 
+        connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
         emit moduleChanged(module, MODULE_ADD);
     }
 }
@@ -53,6 +54,7 @@ void ModuleManger::setModules(const QSet<IAppModule *> &modules)
     {
         m_moduleWithNames[module->name()] = module;
 
+        connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
         emit moduleChanged(module, MODULE_ADD);
     }
 }
@@ -62,6 +64,7 @@ void ModuleManger::removeModule(IAppModule *module)
     m_modules.remove(module);
     m_moduleWithNames.remove(module->name());
 
+    disconnect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
     emit moduleChanged(module, MODULE_REMOVE);
 }
 
@@ -73,6 +76,7 @@ void ModuleManger::removeModule(const QString &name)
         m_modules.remove(module);
         m_moduleWithNames.remove(name);
 
+        disconnect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
         emit moduleChanged(module, MODULE_REMOVE);
     }
 }
@@ -127,8 +131,11 @@ QSet<IAppModule *> ModuleManger::unloadedModules() const
 
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
-        if(!module->isLoaded())
-            ret.insert(module);
+        if(module)
+        {
+            if(!module->isLoaded())
+                ret.insert(module);
+        }
     }
 
     return ret;
@@ -141,8 +148,11 @@ QStringList ModuleManger::unloadedModuleNames() const
 
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
-        if(!module->isLoaded())
-            ret << module->name();
+        if(module)
+        {
+            if(!module->isLoaded())
+                ret << module->name();
+        }
     }
 
     return ret;
@@ -314,6 +324,13 @@ void ModuleManger::onLoadModules(const QVariant &val)
                 emit moduleChanged(module, MODULE_LOADED);
         }
     }
+}
+
+void ModuleManger::onModuleDestroyed(void)
+{
+    IAppModule *module = qobject_cast<IAppModule *>(sender());
+    if(module)
+        m_modules.remove(module);
 }
 
 
