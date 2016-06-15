@@ -39,7 +39,7 @@ bool BaseAppModule::isLoaded() const
 
 void BaseAppModule::unload()
 {
-
+    m_isLoaded = false;
 }
 
 void BaseAppModule::reload()

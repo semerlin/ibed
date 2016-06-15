@@ -19,10 +19,12 @@ public:
     QString name() const;
     QString error() const;
 
+protected:
+    bool m_isLoaded;
+    QString m_error;
+
 private:
     QString m_name;
-    QString m_error;
-    bool m_isLoaded;
     QVariant m_val;
 };
 
