@@ -41,7 +41,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/framework/ -lframework
 INCLUDEPATH += $$PWD/../corelib/framework
 DEPENDPATH += $$PWD/../corelib/framework
 
-RESOURCES +=
+RESOURCES += \
+    ../resource/res.qrc
 
 unix:!macx: LIBS += -L$$OUT_PWD/../modules/ -lmodules
 
@@ -52,9 +53,3 @@ unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
 
 INCLUDEPATH += $$PWD/../3rdpart/log4qt
 DEPENDPATH += $$PWD/../3rdpart/log4qt
-
-
-unix:!macx: LIBS += -L$$OUT_PWD/../resource/ -lresource
-
-INCLUDEPATH += $$PWD/../resource
-DEPENDPATH += $$PWD/../resource

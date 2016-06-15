@@ -8,4 +8,5 @@ SUBDIRS += \
     sensor \
     controls \
     modules \
-    commonunit
+    commonunit \
+    resource
