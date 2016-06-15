@@ -54,7 +54,7 @@ bool QssLoader::loadQss(const QString &name)
     file.readAll();
 
     qApp->setStyleSheet(name);
-
+    m_curQss = name;
     emit qssChanged(name);
 
     return true;
