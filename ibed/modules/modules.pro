@@ -12,11 +12,13 @@ TEMPLATE = lib
 DEFINES += MODULES_LIBRARY
 
 SOURCES += modules.cpp \
-    hardwaremodule.cpp
+    hardwaremodule.cpp \
+    qssmodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
-    hardwaremodule.h
+    hardwaremodule.h \
+    qssmodule.h
 
 unix {
     target.path = /usr/lib
@@ -35,3 +37,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
 
 INCLUDEPATH += $$PWD/../corelib/hardware
 DEPENDPATH += $$PWD/../corelib/hardware
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
+
+INCLUDEPATH += $$PWD/../corelib/utility
+DEPENDPATH += $$PWD/../corelib/utility
