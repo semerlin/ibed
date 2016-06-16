@@ -18,6 +18,7 @@ public:
     void setName(const QString &name);
     QString name() const;
     QString error() const;
+    virtual bool canRunInThread() const;
 
 protected:
     bool m_isLoaded;

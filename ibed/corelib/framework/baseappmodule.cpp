@@ -66,3 +66,9 @@ QString BaseAppModule::error() const
 {
     return m_error;
 }
+
+
+bool BaseAppModule::canRunInThread() const
+{
+   return true;
+}

@@ -54,6 +54,12 @@ public:
      */
     virtual QString error(void) const = 0;
 
+    /**
+     * @brief is this module can run in thread that
+     *        is not the main thread
+     */
+    virtual bool canRunInThread(void) const  = 0;
+
 signals:
     void message(const QString &msg);
 
