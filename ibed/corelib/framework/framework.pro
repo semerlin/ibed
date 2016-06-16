@@ -12,20 +12,20 @@ TEMPLATE = lib
 DEFINES += FRAMEWORK_LIBRARY
 
 SOURCES += framework.cpp \
-    baseapplancher.cpp \
     simplestatemachine.cpp \
     baseappmodule.cpp \
-    modulemanger.cpp
+    modulemanger.cpp \
+    baseapplaunch.cpp
 
 HEADERS += framework.h\
         framework_global.h \
-    iapplancher.h \
-    baseapplancher.h \
     simplestatemachine.h \
     iappmodule.h \
     baseappmodule.h \
     modulemanger.h \
-    iapplancherwidget.h
+    baseapplaunch.h \
+    iapplaunch.h \
+    iapplaunchwidget.h
 
 unix {
     target.path = /usr/lib

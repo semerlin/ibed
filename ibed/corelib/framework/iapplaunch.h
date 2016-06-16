@@ -1,15 +1,15 @@
-#ifndef IAPPLANCHER_H
-#define IAPPLANCHER_H
+#ifndef IAPPLAUNCH_H
+#define IAPPLAUNCH_H
 
 #include "framework_global.h"
 
 /**
- * @brief application lanch framework
+ * @brief application launch framework
  */
-class FRAMEWORKSHARED_EXPORT IAppLancher
+class FRAMEWORKSHARED_EXPORT IAppLaunch
 {
 public:
-    IAppLancher() {}
+    IAppLaunch() {}
 
 public:
     /**

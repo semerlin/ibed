@@ -1,14 +1,14 @@
-#ifndef IAPPLANCHERWIDGET_H
-#define IAPPLANCHERWIDGET_H
+#ifndef IAPPLAUNCHRWIDGET_H
+#define IAPPLAUNCHRWIDGET_H
 
 #include "framework_global.h"
 #include <QWidget>
 
-class FRAMEWORKSHARED_EXPORT IAppLancherWidget : public QWidget
+class FRAMEWORKSHARED_EXPORT IAppLaunchWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit IAppLancherWidget(QWidget *parent = NULL) :
+    explicit IAppLaunchWidget(QWidget *parent = NULL) :
         QWidget(parent)
     {
     }
