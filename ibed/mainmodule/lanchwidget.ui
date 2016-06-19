@@ -13,9 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -33,9 +30,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="lanchFrame">
      <property name="styleSheet">
-      <string notr="true">background-image: url(:/res/images/screensave.jpg);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -133,7 +130,7 @@
         <item>
          <widget class="QLabel" name="label_message">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(191, 39, 39);</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Loading......</string>

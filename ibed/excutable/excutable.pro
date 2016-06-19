@@ -12,14 +12,11 @@ TARGET = excutable
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-    lanchwidget.cpp
+SOURCES += main.cpp
 
-HEADERS  += \
-    lanchwidget.h
+HEADERS  +=
 
-FORMS    += \
-    lanchwidget.ui
+FORMS    +=
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
 
@@ -53,3 +50,13 @@ unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
 
 INCLUDEPATH += $$PWD/../3rdpart/log4qt
 DEPENDPATH += $$PWD/../3rdpart/log4qt
+
+unix:!macx: LIBS += -L$$OUT_PWD/../commonunit/ -lcommonunit
+
+INCLUDEPATH += $$PWD/../commonunit
+DEPENDPATH += $$PWD/../commonunit
+
+unix:!macx: LIBS += -L$$OUT_PWD/../mainmodule/ -lmainmodule
+
+INCLUDEPATH += $$PWD/../mainmodule
+DEPENDPATH += $$PWD/../mainmodule

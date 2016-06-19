@@ -1,0 +1,12 @@
+#ifndef MAINMODULE_GLOBAL_H
+#define MAINMODULE_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(MAINMODULE_LIBRARY)
+#  define MAINMODULESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define MAINMODULESHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // MAINMODULE_GLOBAL_H

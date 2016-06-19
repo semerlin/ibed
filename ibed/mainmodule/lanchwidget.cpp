@@ -2,7 +2,7 @@
 #include "ui_lanchwidget.h"
 
 LanchWidget::LanchWidget(QWidget *parent) :
-    IAppLancherWidget(parent),
+    IAppLaunchWidget(parent),
     ui(new Ui::LanchWidget)
 {
     ui->setupUi(this);
