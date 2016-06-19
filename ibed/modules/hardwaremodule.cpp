@@ -2,6 +2,8 @@
 #include "powermange.h"
 #include "backlight.h"
 #include "serialportctrl.h"
+#include "applogger.h"
+
 
 HardwareModule::HardwareModule(const QString &name) :
     BaseAppModule(name)
@@ -11,7 +13,7 @@ HardwareModule::HardwareModule(const QString &name) :
 
 HardwareModule::~HardwareModule()
 {
-//    emit deleted();
+    emit deleted();
 }
 
 
@@ -23,6 +25,9 @@ HardwareModule &HardwareModule::instance()
 
 bool HardwareModule::load(const QVariant &val)
 {
+    Q_UNUSED(val)
+
+    AppLogger::instance().log()->debug("hardware");
     emit message(tr("init hardware..."));
     /*****backlight****/
     //set backlight to max brightness
@@ -38,6 +43,10 @@ bool HardwareModule::load(const QVariant &val)
 //    PowerMange::instance().addDevice(&Backlight::instance());
 //    PowerMange::instance().run();
 
+    m_isLoaded = true;
+
+    sleep(3);
+
     return true;
 }
 
@@ -45,5 +54,6 @@ void HardwareModule::unload()
 {
 //    PowerMange::instance().stop();
 //    PowerMange::instance().removeAllDevices();
+    m_isLoaded = false;
 }
 

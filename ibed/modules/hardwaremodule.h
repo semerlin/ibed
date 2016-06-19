@@ -13,9 +13,6 @@ public:
     bool load(const QVariant &val);
     void unload();
 
-public:
-
-
 private:
     HardwareModule(const QString &name);
     ~HardwareModule();
