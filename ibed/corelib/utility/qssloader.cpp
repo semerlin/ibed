@@ -51,9 +51,9 @@ bool QssLoader::loadQss(const QString &name)
         return false;
 
     file.open(QIODevice::ReadOnly);
-    file.readAll();
+    QByteArray data = file.readAll();
 
-    qApp->setStyleSheet(name);
+    qApp->setStyleSheet(data.constData());
     m_curQss = name;
     emit qssChanged(name);
 
