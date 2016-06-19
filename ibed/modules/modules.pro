@@ -9,6 +9,8 @@ QT       -= gui
 TARGET = modules
 TEMPLATE = lib
 
+include(../global.pri)
+
 DEFINES += MODULES_LIBRARY
 
 SOURCES += modules.cpp \
