@@ -141,6 +141,20 @@ public:
     void unloadModules(void);
 
     /**
+     * @brief set flag to true if ModuleManger run
+     *        out of main thread
+     * @param
+     */
+    void setOutMainThread(bool flag);
+
+    /**
+     * @brief return true if ModuleManger run out of
+     *        main thread
+     * @return
+     */
+    bool isOutMainThread(void) const;
+
+    /**
      * @brief error message if any error happens
      * @return
      */
@@ -149,6 +163,7 @@ public:
 
 signals:
     void moduleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status);
+    void outLoadModule(IAppModule *module, const QVariant &val);
 
 private slots:
     void onLoadModule(const QString &name, const QVariant &val);
@@ -159,6 +174,26 @@ private:
     QSet<IAppModule *> m_modules;
     QHash<QString, IAppModule *> m_moduleWithNames;
     QString m_error;
+    bool m_isOutMainThread;
 };
+
+
+/**
+ * @brief The ModuleMangerPrivate class is used
+ *        to process method in main thread, so this
+ *        class can handle modules that contains GUI
+ */
+class ModuleMangerPrivate : public QObject
+{
+    Q_OBJECT
+
+public:
+    ModuleMangerPrivate() {}
+
+private slots:
+    void onLoadModules(IAppModule *module, const QVariant &val);
+};
+
+
 
 #endif // MODULEMANGER_H

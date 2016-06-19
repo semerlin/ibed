@@ -20,6 +20,7 @@ BaseAppLaunch::BaseAppLaunch(IAppLaunchWidget *widget, ModuleManger *manger) :
     //load module may cost a lot of time, so move it to thread
     //don't use module that contains GUI, GUI must run in main thread
     m_moduleManger->moveToThread(m_thread);
+    m_moduleManger->setOutMainThread(true);
     m_thread->start();
 
 

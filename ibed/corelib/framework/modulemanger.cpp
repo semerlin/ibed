@@ -2,12 +2,17 @@
 #include "boost/foreach.hpp"
 #include "log4qt/logger.h"
 
-LOG4QT_DECLARE_STATIC_LOGGER(log,SimpleStateMachine)
+LOG4QT_DECLARE_STATIC_LOGGER(log, ModuleManger)
+
+static class ModuleMangerPrivate moduleMangerPrivate;
 
 ModuleManger::ModuleManger() :
-    m_error("No error")
+    m_error("No error"),
+    m_isOutMainThread(false)
 {
     qRegisterMetaType<ModuleManger::MODULE_STATUS>("ModuleManger::MODULE_STATUS");
+    connect(this, SIGNAL(outLoadModule(IAppModule*,QVariant)),
+            &moduleMangerPrivate, SLOT(onLoadModules(IAppModule*,QVariant)));
 }
 
 ModuleManger::~ModuleManger()
@@ -278,6 +283,16 @@ void ModuleManger::unloadModules()
     }
 }
 
+void ModuleManger::setOutMainThread(bool flag)
+{
+    m_isOutMainThread = flag;
+}
+
+bool ModuleManger::isOutMainThread() const
+{
+    return m_isOutMainThread;
+}
+
 QString ModuleManger::error() const
 {
     return m_error;
@@ -289,6 +304,15 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
 
     if(m_moduleWithNames.contains(name))
     {
+        if(m_isOutMainThread)
+        {
+            if(!m_moduleWithNames[name]->canRunInThread())
+            {
+                emit outLoadModule(m_moduleWithNames[name], val);
+                return ;
+            }
+        }
+
         if(!m_moduleWithNames[name]->isLoaded())
         {
             emit moduleChanged(m_moduleWithNames[name], MODULE_LOADING);
@@ -310,6 +334,15 @@ void ModuleManger::onLoadModules(const QVariant &val)
 
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
+        if(m_isOutMainThread)
+        {
+            if(!module->canRunInThread())
+            {
+                emit outLoadModule(module, val);
+                continue;
+            }
+        }
+
         if(!module->isLoaded())
         {
             emit moduleChanged(module, MODULE_LOADING);
@@ -334,3 +367,23 @@ void ModuleManger::onModuleDestroyed(void)
 }
 
 
+
+
+void ModuleMangerPrivate::onLoadModules(IAppModule *module, const QVariant &val)
+{
+    bool ret = false;
+    if(!module->isLoaded())
+    {
+//        emit moduleChanged(module, MODULE_LOADING);
+        ret = module->load(val);
+        if(!ret)
+        {
+//            m_error = module->error();
+//            emit moduleChanged(module, MODULE_LOAD_FAILED);
+//            break;
+        }
+        else
+        {}
+//            emit moduleChanged(module, MODULE_LOADED);
+    }
+}
