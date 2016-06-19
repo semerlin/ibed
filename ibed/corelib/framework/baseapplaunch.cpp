@@ -75,8 +75,6 @@ void BaseAppLaunch::onModuleChanged(IAppModule *module, ModuleManger::MODULE_STA
 {
     if(status == ModuleManger::MODULE_LOADING)
     {
-        m_widget->increaseStep();
-        QString name = module->name();
         m_widget->printMsg(tr("loading module '%1' ").arg(module->name()));
     }
     else if(status == ModuleManger::MODULE_LOADED)
