@@ -14,6 +14,8 @@ class LanchWidget : public IAppLaunchWidget
 public:
     explicit LanchWidget(QWidget *parent = 0);
     ~LanchWidget();
+public:
+    void setRange(int min, int max);
 
 public slots:
     void increaseStep();
@@ -21,6 +23,9 @@ public slots:
 
 private:
     Ui::LanchWidget *ui;
+    int m_currentVal;
+    int m_maxVal;
+    int m_minVal;
 };
 
 #endif // LANCHWIDGET_H
