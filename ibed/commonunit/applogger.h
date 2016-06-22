@@ -8,7 +8,7 @@ class COMMONUNITSHARED_EXPORT AppLogger
 {
 public:
     static AppLogger &instance(void);
-    void initialize(void);
+    bool initialize(void);
     Log4Qt::Logger *log();
 
 private:

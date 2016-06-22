@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += gui
 
 TARGET = commonunit
 TEMPLATE = lib
@@ -13,12 +13,14 @@ DEFINES += COMMONUNIT_LIBRARY
 
 SOURCES += commonunit.cpp \
     applogger.cpp \
-    appsetting.cpp
+    appsetting.cpp \
+    appuiconfig.cpp
 
 HEADERS += commonunit.h\
         commonunit_global.h \
     applogger.h \
-    appsetting.h
+    appsetting.h \
+    appuiconfig.h
 
 unix {
     target.path = /usr/lib
