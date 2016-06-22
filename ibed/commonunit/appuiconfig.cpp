@@ -43,14 +43,13 @@ QString AppUiConfig::font() const
 AppUiConfig::AppUiConfig() :
     m_font("")
 {
-
 }
 
 void AppUiConfig::setDefault()
 {
     QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
     setting.beginGroup("FONT");
-    setting.setValue("font", "./resource/ui/font/A.otf");
+    setting.setValue("font", "./resource/ui/font/W3.otf");
     QFontDatabase::addApplicationFont(m_font);
     setting.endGroup();
 }
