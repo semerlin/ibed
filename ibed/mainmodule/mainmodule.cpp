@@ -4,3 +4,8 @@
 MainModule::MainModule()
 {
 }
+
+void MainModule::startUp()
+{
+
+}

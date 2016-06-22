@@ -27,33 +27,36 @@ bool HardwareModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
 
+#ifdef TARGET_IMX
     AppLogger::instance().log()->debug("hardware");
     emit message(tr("init hardware..."));
     /*****backlight****/
     //set backlight to max brightness
     emit message(tr("aaaaaa"));
-//    Backlight::instance().setValue(Backlight::instance().maxValue());
+    Backlight::instance().setValue(Backlight::instance().maxValue());
     //serial
 
     /****powermange****/
     //init power mangement unit
     emit message(tr("bbbbbb"));
-//    PowerMange::instance().setIdleInterval(10);
-//    PowerMange::instance().setSuspendInterval(20);
-//    PowerMange::instance().addDevice(&Backlight::instance());
-//    PowerMange::instance().run();
+    PowerMange::instance().setIdleInterval(10);
+    PowerMange::instance().setSuspendInterval(20);
+    PowerMange::instance().addDevice(&Backlight::instance());
+    PowerMange::instance().run();
+#endif
 
     m_isLoaded = true;
 
-    sleep(3);
-
+    sleep(2);
     return true;
 }
 
 void HardwareModule::unload()
 {
-//    PowerMange::instance().stop();
-//    PowerMange::instance().removeAllDevices();
+#ifdef TARGET_IMX
+    PowerMange::instance().stop();
+    PowerMange::instance().removeAllDevices();
+#endif
     m_isLoaded = false;
 }
 

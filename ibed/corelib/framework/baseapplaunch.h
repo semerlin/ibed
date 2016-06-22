@@ -25,6 +25,7 @@ private slots:
 
 signals:
     void startLaunch(const QVariant &val);
+    void launchFinished();
 
 private:
     IAppLaunchWidget *m_widget;

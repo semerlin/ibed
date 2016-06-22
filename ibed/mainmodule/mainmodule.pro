@@ -13,12 +13,12 @@ DEFINES += MAINMODULE_LIBRARY
 
 SOURCES += mainmodule.cpp \
     appentry.cpp \
-    lanchwidget.cpp
+    launchwidget.cpp
 
 HEADERS += mainmodule.h\
         mainmodule_global.h \
     appentry.h \
-    lanchwidget.h
+    launchwidget.h
 
 unix {
     target.path = /usr/lib
@@ -43,7 +43,7 @@ INCLUDEPATH += $$PWD/../corelib/framework
 DEPENDPATH += $$PWD/../corelib/framework
 
 FORMS += \
-    lanchwidget.ui
+    launchwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
 

@@ -26,6 +26,8 @@ public:
         MODULE_RELOADING,
         MODULE_RELOADED,
         MODULE_RELOAD_FAILED,
+        MODULE_LOAD_FINISHED,
+        MODULE_RELOAD_FINISHED,
     }MODULE_STATUS;
 
 public:
@@ -160,6 +162,13 @@ public:
      */
     QString error(void) const;
 
+public:
+    /**
+     * @brief invoke this function to emit moduleChanged signal;
+     * @param
+     * @param
+     */
+    void moduleChanging(IAppModule *module, ModuleManger::MODULE_STATUS status);
 
 signals:
     void moduleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status);

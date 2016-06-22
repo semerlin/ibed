@@ -5,9 +5,11 @@
 
 class MAINMODULESHARED_EXPORT MainModule
 {
-
 public:
     MainModule();
+
+public:
+    void startUp(void);
 
 private:
 };

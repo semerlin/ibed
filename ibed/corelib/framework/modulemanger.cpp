@@ -298,6 +298,11 @@ QString ModuleManger::error() const
     return m_error;
 }
 
+void ModuleManger::moduleChanging(IAppModule *module, ModuleManger::MODULE_STATUS status)
+{
+    emit moduleChanged(module, status);
+}
+
 void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
 {
     bool ret = false;
@@ -357,6 +362,9 @@ void ModuleManger::onLoadModules(const QVariant &val)
                 emit moduleChanged(module, MODULE_LOADED);
         }
     }
+
+    if(ret)
+        emit moduleChanged(NULL, MODULE_LOAD_FINISHED);
 }
 
 void ModuleManger::onModuleDestroyed(void)
@@ -371,19 +379,21 @@ void ModuleManger::onModuleDestroyed(void)
 
 void ModuleMangerPrivate::onLoadModules(IAppModule *module, const QVariant &val)
 {
-    bool ret = false;
-    if(!module->isLoaded())
+    ModuleManger *manger = qobject_cast<ModuleManger *>(sender());
+    if(manger != NULL)
     {
-//        emit moduleChanged(module, MODULE_LOADING);
-        ret = module->load(val);
-        if(!ret)
+        bool ret = false;
+        if(!module->isLoaded())
         {
-//            m_error = module->error();
-//            emit moduleChanged(module, MODULE_LOAD_FAILED);
-//            break;
+            emit manger->moduleChanging(module, ModuleManger::MODULE_LOADING);
+            ret = module->load(val);
+            if(!ret)
+            {
+                emit manger->moduleChanging(module, ModuleManger::MODULE_LOAD_FAILED);
+            }
+            else
+                emit manger->moduleChanging(module, ModuleManger::MODULE_LOADED);
         }
-        else
-        {}
-//            emit moduleChanged(module, MODULE_LOADED);
     }
+
 }

@@ -80,12 +80,16 @@ void BaseAppLaunch::onModuleChanged(IAppModule *module, ModuleManger::MODULE_STA
     else if(status == ModuleManger::MODULE_LOADED)
     {
         m_widget->increaseStep();
-        m_widget->printMsg(tr("load module '%1' success").arg(module->name()));
+        m_widget->printMsg(tr("load module '%1' successgg").arg(module->name()));
     }
     else if(status == ModuleManger::MODULE_LOAD_FAILED)
     {
         m_widget->printMsg(tr("load module '%1 failed!").arg(module->name()));
         m_widget->printMsg(tr("error message = %1.").arg(module->error()));
+    }
+    else if(status == ModuleManger::MODULE_LOAD_FINISHED)
+    {
+        emit launchFinished();
     }
 }
 
