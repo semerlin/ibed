@@ -9,10 +9,12 @@ class COMMONUNITSHARED_EXPORT AppUiConfig
 public:
     static AppUiConfig &instance();
     bool initialize(void);
-    QString font(void) const;
+    QString enFont(void) const;
+    QString cnFont(void) const;
 
 private:
-    QString m_font;
+    QString m_cnFont;
+    QString m_enFont;
 
 private:
     AppUiConfig();
