@@ -23,7 +23,7 @@ public slots:
      * @brief print some lanch messages
      * @param msg
      */
-    virtual void printMsg(const QString &msg) {}
+    virtual void printMsg(const QString &msg) {Q_UNUSED(msg)}
 };
 
 #endif // IAPPLANCHERWIDGET_H
