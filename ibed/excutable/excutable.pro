@@ -23,10 +23,6 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
 INCLUDEPATH += $$PWD/../corelib/hardware
 DEPENDPATH += $$PWD/../corelib/hardware
 
-unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
-
-INCLUDEPATH += $$PWD/../corelib/hardware
-DEPENDPATH += $$PWD/../corelib/hardware
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
 
