@@ -3,9 +3,9 @@
 
 
 BaseAppModule::BaseAppModule(const QString &name) :
-    m_name(name),
-    m_error("No error"),
     m_isLoaded(false),
+    m_error("No error"),
+    m_name(name),
     m_val(QVariant(QVariant::Invalid))
 {
 }
