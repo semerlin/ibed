@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QPair>
 #include "appuiconfig.h"
+#include "util.h"
 
 QssModule &QssModule::instance()
 {
@@ -42,16 +43,15 @@ bool QssModule::load(const QVariant &val)
             fileName = name.mid(splash + 1);
         }
 
-        int dot = fileName.lastIndexOf('.');
-        shortCut = fileName.left(dot);
-
-        m_skins[shortCut] = name;
+        m_skins[Util::instance().fileName(fileName)] = name;
     }
 
+    QString shortCut = Util::instance().fileName(
+                AppUiConfig::instance().defaultQss());
 
     //load default qss
-    if(m_skins.contains(AppUiConfig::instance().defaultQss()))
-        ret = m_loader->loadQss(m_skins[AppUiConfig::instance().defaultQss()]);
+    if(m_skins.contains(shortCut))
+        ret = m_loader->loadQss(m_skins[shortCut]);
     else
         ret = m_loader->loadQss(m_skins.begin().value());
 

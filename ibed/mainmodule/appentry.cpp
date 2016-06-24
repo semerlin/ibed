@@ -6,6 +6,8 @@
 #include "appsetting.h"
 #include "applogger.h"
 #include "appuiconfig.h"
+#include "qssloader.h"
+#include <QDir>
 
 
 AppEntry &AppEntry::instance()
@@ -18,8 +20,6 @@ int AppEntry::run(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    int val = -1;
-
     m_widget = new LaunchWidget;
     m_manger = new ModuleManger;
 
@@ -28,12 +28,17 @@ int AppEntry::run(int argc, char **argv)
     AppUiConfig::instance().initialize();
 
     //init modules
-    m_manger->addModule(&HardwareModule::instance());
     m_manger->addModule(&QssModule::instance());
+    m_manger->addModule(&HardwareModule::instance());
 
 
-    //qss need load first
-    QssModule::instance().load(QVariant::Invalid);
+    //launch widget qss need load first
+    QssLoader qssLoader;
+    qssLoader.loadQss(AppUiConfig::instance().qssPath() +
+                      QDir::separator() +
+                      AppUiConfig::instance().launchQss());
+
+//    QssModule::instance().load(QVariant::Invalid);
 
     //start lanch
     m_widget->setRange(0, m_manger->unloadedModules().count());
@@ -48,6 +53,9 @@ int AppEntry::run(int argc, char **argv)
 
 void AppEntry::onLaunchFinished()
 {
+    //load modules that can't run in thread
+    m_manger->setOutMainThread(false);
+    m_manger->loadModules();
 //    m_widget->hide();
 }
 
