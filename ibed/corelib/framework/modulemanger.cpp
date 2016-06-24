@@ -180,10 +180,14 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
             if(!ret)
             {
                 m_error = m_moduleWithNames[name]->error();
+                log()->info(tr("load module '%1' failed-%2").arg(name).arg(m_error));
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD_FAILED);
             }
             else
+            {
+                log()->info(tr("load module '%1'"));
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOADED);
+            }
         }
     }
 
@@ -209,11 +213,15 @@ bool ModuleManger::loadModules(const QVariant &val)
             if(!ret)
             {
                 m_error = module->error();
+                log()->info(tr("load module '%1' failed-%2").arg(module->name()).arg(m_error));
                 emit moduleChanged(module, MODULE_LOAD_FAILED);
                 break;
             }
             else
+            {
+                log()->info(tr("load module '%1'").arg(module->name()));
                 emit moduleChanged(module, MODULE_LOADED);
+            }
         }
     }
 
@@ -345,10 +353,14 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
             if(!ret)
             {
                 m_error = m_moduleWithNames[name]->error();
+                log()->info(tr("load module '%1' failed-%2").arg(name).arg(m_error));
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOAD_FAILED);
             }
             else
+            {
+                log()->info(tr("load module '%1'").arg(name));
                 emit moduleChanged(m_moduleWithNames[name], MODULE_LOADED);
+            }
         }
     }
 }
@@ -374,11 +386,15 @@ void ModuleManger::onLoadModules(const QVariant &val)
             if(!ret)
             {
                 m_error = module->error();
+                log()->info(tr("load module '%1' failed-%2").arg(module->name()).arg(m_error));
                 emit moduleChanged(module, MODULE_LOAD_FAILED);
                 break;
             }
             else
+            {
+                log()->info(tr("load module '%1'").arg(module->name()));
                 emit moduleChanged(module, MODULE_LOADED);
+            }
         }
     }
 

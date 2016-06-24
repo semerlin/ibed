@@ -23,22 +23,24 @@ int AppEntry::run(int argc, char **argv)
     m_widget = new LaunchWidget;
     m_manger = new ModuleManger;
 
+    //load base configure
     AppSetting::instance().initialize();
     AppLogger::instance().initialize();
     AppUiConfig::instance().initialize();
 
+    AppLogger::instance().log()->info(tr("application startup"));
     //init modules
     m_manger->addModule(&QssModule::instance());
     m_manger->addModule(&HardwareModule::instance());
 
 
     //launch widget qss need load first
+    AppLogger::instance().log()->info("initialize launch widget ui");
     QssLoader qssLoader;
     qssLoader.loadQss(AppUiConfig::instance().qssPath() +
                       QDir::separator() +
                       AppUiConfig::instance().launchQss());
 
-//    QssModule::instance().load(QVariant::Invalid);
 
     //start lanch
     m_widget->setRange(0, m_manger->unloadedModules().count());
@@ -46,6 +48,7 @@ int AppEntry::run(int argc, char **argv)
     BaseAppLaunch launcher(m_widget, m_manger);
     connect(&launcher, SIGNAL(launchFinished()), this, SLOT(onLaunchFinished()));
 
+    AppLogger::instance().log()->info("start launch app modules");
     launcher.run(argc, argv);
 
     return app.exec();
@@ -56,7 +59,9 @@ void AppEntry::onLaunchFinished()
     //load modules that can't run in thread
     m_manger->setOutMainThread(false);
     m_manger->loadModules();
-//    m_widget->hide();
+
+    //load really finished
+    m_widget->hide();
 }
 
 AppEntry::AppEntry()
