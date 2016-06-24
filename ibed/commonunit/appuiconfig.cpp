@@ -16,20 +16,7 @@ bool AppUiConfig::initialize()
     QFile file(fileName);
     if(file.exists())
     {
-        //read config
-        QSettings setting(fileName, QSettings::IniFormat);
-        setting.beginGroup("FONT");
-        m_enFont = setting.value("en").toString();
-        m_cnFont = setting.value("cn").toString();
-        setting.endGroup();
-        QFontDatabase::addApplicationFont(m_enFont);
-        QFontDatabase::addApplicationFont(m_cnFont);
-
-        setting.beginGroup("QSS");
-        m_qssPath = setting.value("path").toString();
-        m_defaultQss = setting.value("default").toString();
-        m_launchQss = setting.value("launch").toString();
-        setting.endGroup();
+        loadValue(fileName);
     }
     else
     {
@@ -38,6 +25,7 @@ bool AppUiConfig::initialize()
 
         file.close();
         setDefault();
+        loadValue(fileName);
     }
 
     return true;
@@ -84,14 +72,30 @@ void AppUiConfig::setDefault()
     setting.beginGroup("FONT");
     setting.setValue("en", "./resource/ui/font/arial.otf");
     setting.setValue("cn", "./resource/ui/font/W3.otf");
-    QFontDatabase::addApplicationFont(m_enFont);
-    QFontDatabase::addApplicationFont(m_cnFont);
     setting.endGroup();
 
     setting.beginGroup("QSS");
     setting.setValue("path", "./resource/qss");
     setting.setValue("default", "default.qss");
     setting.setValue("launch", "launch.qss");
+    setting.endGroup();
+}
+
+void AppUiConfig::loadValue(const QString &name)
+{
+    //read config
+    QSettings setting(name, QSettings::IniFormat);
+    setting.beginGroup("FONT");
+    m_enFont = setting.value("en").toString();
+    m_cnFont = setting.value("cn").toString();
+    setting.endGroup();
+    QFontDatabase::addApplicationFont(m_enFont);
+    QFontDatabase::addApplicationFont(m_cnFont);
+
+    setting.beginGroup("QSS");
+    m_qssPath = setting.value("path").toString();
+    m_defaultQss = setting.value("default").toString();
+    m_launchQss = setting.value("launch").toString();
     setting.endGroup();
 }
 

@@ -25,6 +25,7 @@ private:
 private:
     AppUiConfig();
     void setDefault(void);
+    void loadValue(const QString &name);
 };
 
 #endif // APPUICONFIG_H
