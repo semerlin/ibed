@@ -4,15 +4,12 @@
 
 LOG4QT_DECLARE_STATIC_LOGGER(log, ModuleManger)
 
-static class ModuleMangerPrivate moduleMangerPrivate;
 
 ModuleManger::ModuleManger() :
     m_error("No error"),
     m_isOutMainThread(false)
 {
     qRegisterMetaType<ModuleManger::MODULE_STATUS>("ModuleManger::MODULE_STATUS");
-    connect(this, SIGNAL(outLoadModule(IAppModule*,QVariant)),
-            &moduleMangerPrivate, SLOT(onLoadModules(IAppModule*,QVariant)));
 }
 
 ModuleManger::~ModuleManger()
@@ -170,6 +167,12 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
 
     if(m_moduleWithNames.contains(name))
     {
+        if(m_isOutMainThread)
+        {
+            if(!m_moduleWithNames[name]->canRunInThread())
+                return false;
+        }
+
         if(!m_moduleWithNames[name]->isLoaded())
         {
             emit moduleChanged(m_moduleWithNames[name], MODULE_LOADING);
@@ -193,6 +196,12 @@ bool ModuleManger::loadModules(const QVariant &val)
 
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
+        if(m_isOutMainThread)
+        {
+            if(!module->canRunInThread())
+                continue;
+        }
+
         if(!module->isLoaded())
         {
             emit moduleChanged(module, MODULE_LOADING);
@@ -221,6 +230,12 @@ bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
         if(m_moduleWithNames[name]->isLoaded())
             m_moduleWithNames[name]->unload();
 
+        if(m_isOutMainThread)
+        {
+            if(!m_moduleWithNames[name]->canRunInThread())
+                return false;
+        }
+
         emit moduleChanged(m_moduleWithNames[name], MODULE_RELOADING);
         ret = m_moduleWithNames[name]->load(val);
         if(!ret)
@@ -243,6 +258,12 @@ bool ModuleManger::reloadModules(const QVariant &val)
     {
         if(module->isLoaded())
             module->unload();
+
+        if(m_isOutMainThread)
+        {
+            if(!module->canRunInThread())
+                continue;
+        }
 
         emit moduleChanged(module, MODULE_RELOADING);
         ret = module->load(val);
@@ -313,7 +334,6 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
         {
             if(!m_moduleWithNames[name]->canRunInThread())
             {
-                emit outLoadModule(m_moduleWithNames[name], val);
                 return ;
             }
         }
@@ -343,7 +363,6 @@ void ModuleManger::onLoadModules(const QVariant &val)
         {
             if(!module->canRunInThread())
             {
-                emit outLoadModule(module, val);
                 continue;
             }
         }
@@ -374,26 +393,3 @@ void ModuleManger::onModuleDestroyed(void)
         m_modules.remove(module);
 }
 
-
-
-
-void ModuleMangerPrivate::onLoadModules(IAppModule *module, const QVariant &val)
-{
-    ModuleManger *manger = qobject_cast<ModuleManger *>(sender());
-    if(manger != NULL)
-    {
-        bool ret = false;
-        if(!module->isLoaded())
-        {
-            emit manger->moduleChanging(module, ModuleManger::MODULE_LOADING);
-            ret = module->load(val);
-            if(!ret)
-            {
-                emit manger->moduleChanging(module, ModuleManger::MODULE_LOAD_FAILED);
-            }
-            else
-                emit manger->moduleChanging(module, ModuleManger::MODULE_LOADED);
-        }
-    }
-
-}
