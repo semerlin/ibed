@@ -58,6 +58,16 @@ QString AppUiConfig::qssPath() const
     return m_qssPath;
 }
 
+QString AppUiConfig::launchQss() const
+{
+    return m_launchQss;
+}
+
+QString AppUiConfig::defaultQss() const
+{
+    return m_defaultQss;
+}
+
 
 AppUiConfig::AppUiConfig() :
     m_cnFont(""),
