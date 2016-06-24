@@ -13,12 +13,14 @@ DEFINES += UTILITY_LIBRARY
 
 SOURCES += utility.cpp \
     qssloader.cpp \
-    systemcall.cpp
+    systemcall.cpp \
+    util.cpp
 
 HEADERS += utility.h\
         utility_global.h \
     qssloader.h \
-    systemcall.h
+    systemcall.h \
+    util.h
 
 unix {
     target.path = /usr/lib
