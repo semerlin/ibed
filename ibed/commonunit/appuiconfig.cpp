@@ -19,11 +19,17 @@ bool AppUiConfig::initialize()
         //read config
         QSettings setting(fileName, QSettings::IniFormat);
         setting.beginGroup("FONT");
-        m_enFont = setting.value("enFont").toString();
-        m_cnFont = setting.value("cnFont").toString();
+        m_enFont = setting.value("en").toString();
+        m_cnFont = setting.value("cn").toString();
         setting.endGroup();
         QFontDatabase::addApplicationFont(m_enFont);
         QFontDatabase::addApplicationFont(m_cnFont);
+
+        setting.beginGroup("QSS");
+        m_qssPath = setting.value("path").toString();
+        m_defaultQss = setting.value("default").toString();
+        m_launchQss = setting.value("launch").toString();
+        setting.endGroup();
     }
     else
     {
@@ -47,10 +53,18 @@ QString AppUiConfig::cnFont() const
     return m_cnFont;
 }
 
+QString AppUiConfig::qssPath() const
+{
+    return m_qssPath;
+}
+
 
 AppUiConfig::AppUiConfig() :
     m_cnFont(""),
-    m_enFont("")
+    m_enFont(""),
+    m_defaultQss(""),
+    m_launchQss(""),
+    m_qssPath("")
 {
 }
 
@@ -58,10 +72,16 @@ void AppUiConfig::setDefault()
 {
     QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
     setting.beginGroup("FONT");
-    setting.setValue("enFont", "./resource/ui/font/arial.otf");
-    setting.setValue("cnFont", "./resource/ui/font/W3.otf");
+    setting.setValue("en", "./resource/ui/font/arial.otf");
+    setting.setValue("cn", "./resource/ui/font/W3.otf");
     QFontDatabase::addApplicationFont(m_enFont);
     QFontDatabase::addApplicationFont(m_cnFont);
+    setting.endGroup();
+
+    setting.beginGroup("QSS");
+    setting.setValue("path", "./resource/qss");
+    setting.setValue("default", "default.qss");
+    setting.setValue("launch", "launch.qss");
     setting.endGroup();
 }
 
