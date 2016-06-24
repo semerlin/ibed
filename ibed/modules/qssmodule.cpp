@@ -3,7 +3,7 @@
 #include "qssloader.h"
 #include <QDir>
 #include <QPair>
-#include <QDebug>
+#include "appuiconfig.h"
 
 QssModule &QssModule::instance()
 {
@@ -30,7 +30,7 @@ bool QssModule::load(const QVariant &val)
 
     //make pair qss file and its short name, for example
     //"C:/test/default.qss" and "default"
-    QStringList qss = m_loader->findAllQss("./resource/qss");
+    QStringList qss = m_loader->findAllQss(AppUiConfig::instance().qssPath());
     foreach(const QString &name, qss)
     {
         QString fileName, shortCut;
@@ -49,9 +49,9 @@ bool QssModule::load(const QVariant &val)
     }
 
 
-    //load qss file named 'default' or the first qss file
-    if(m_skins.contains(tr("default")))
-        ret = m_loader->loadQss(m_skins[tr("default")]);
+    //load default qss
+    if(m_skins.contains(AppUiConfig::instance().defaultQss()))
+        ret = m_loader->loadQss(m_skins[AppUiConfig::instance().defaultQss()]);
     else
         ret = m_loader->loadQss(m_skins.begin().value());
 
