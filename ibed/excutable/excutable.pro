@@ -56,3 +56,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../mainmodule/ -lmainmodule
 
 INCLUDEPATH += $$PWD/../mainmodule
 DEPENDPATH += $$PWD/../mainmodule
+
+unix:!macx: LIBS += -L$$OUT_PWD/../controls/ -lcontrols
+
+INCLUDEPATH += $$PWD/../controls
+DEPENDPATH += $$PWD/../controls

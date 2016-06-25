@@ -54,3 +54,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
 
 INCLUDEPATH += $$PWD/../corelib/utility
 DEPENDPATH += $$PWD/../corelib/utility
+
+unix:!macx: LIBS += -L$$OUT_PWD/../controls/ -lcontrols
+
+INCLUDEPATH += $$PWD/../controls
+DEPENDPATH += $$PWD/../controls

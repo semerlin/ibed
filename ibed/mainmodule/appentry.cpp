@@ -1,5 +1,6 @@
 #include <QApplication>
-#include "appentry.h"
+#include "launchwidget.h"
+#include "modulemanger.h"
 #include "baseapplaunch.h"
 #include "hardwaremodule.h"
 #include "qssmodule.h"
@@ -7,8 +8,10 @@
 #include "applogger.h"
 #include "appuiconfig.h"
 #include "qssloader.h"
+#include "mainmodule.h"
 #include <QDir>
 
+#include "appentry.h"
 
 AppEntry &AppEntry::instance()
 {
@@ -62,6 +65,11 @@ void AppEntry::onLaunchFinished()
 
     //load really finished
     m_widget->hide();
+    delete m_widget;
+    m_widget = NULL;
+
+    //init main module and startup application
+    m_mainModule->initialize();
 }
 
 AppEntry::AppEntry()

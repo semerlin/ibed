@@ -2,8 +2,11 @@
 #define APPENTRY_H
 
 #include "mainmodule_global.h"
-#include "launchwidget.h"
-#include "modulemanger.h"
+#include <QObject>
+
+class LaunchWidget;
+class ModuleManger;
+class MainModule;
 
 class MAINMODULESHARED_EXPORT AppEntry : public QObject
 {
@@ -21,6 +24,7 @@ private slots:
 private:
     LaunchWidget *m_widget;
     ModuleManger *m_manger;
+    MainModule *m_mainModule;
 
 
 private:

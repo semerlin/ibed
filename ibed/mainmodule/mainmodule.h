@@ -9,7 +9,7 @@ public:
     MainModule();
 
 public:
-    void startUp(void);
+    bool initialize(void);
 
 private:
 };
