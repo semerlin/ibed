@@ -15,12 +15,12 @@ DEFINES += MODULES_LIBRARY
 
 SOURCES += modules.cpp \
     hardwaremodule.cpp \
-    qssmodule.cpp
+    thememodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
     hardwaremodule.h \
-    qssmodule.h
+    thememodule.h
 
 unix {
     target.path = /usr/lib

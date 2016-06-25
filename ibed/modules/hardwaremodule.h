@@ -7,15 +7,13 @@
 class MODULESSHARED_EXPORT HardwareModule : public BaseAppModule
 {
 public:
-    static HardwareModule &instance(void);
+    HardwareModule(const QString &name);
+    ~HardwareModule();
 
 public:
     bool load(const QVariant &val);
     void unload();
 
-private:
-    HardwareModule(const QString &name);
-    ~HardwareModule();
 };
 
 #endif // HARDWAREMODULE_H

@@ -17,12 +17,6 @@ HardwareModule::~HardwareModule()
 }
 
 
-HardwareModule &HardwareModule::instance()
-{
-    static HardwareModule m_hardware("Hardware");
-    return m_hardware;
-}
-
 bool HardwareModule::load(const QVariant &val)
 {
     Q_UNUSED(val)

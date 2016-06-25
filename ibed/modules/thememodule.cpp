@@ -1,18 +1,26 @@
 #include <QStringList>
-#include "qssmodule.h"
+#include "thememodule.h"
 #include "qssloader.h"
 #include <QDir>
 #include <QPair>
 #include "appuiconfig.h"
 #include "util.h"
 
-QssModule &QssModule::instance()
+
+ThemeModule::ThemeModule(const QString &name) :
+    BaseAppModule(name),
+    m_loader(NULL)
 {
-    static QssModule m_module("Qss");
-    return m_module;
+    m_themes.clear();
 }
 
-bool QssModule::load(const QVariant &val)
+ThemeModule::~ThemeModule()
+{
+    unload();
+    emit deleted();
+}
+
+bool ThemeModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
 
@@ -43,17 +51,17 @@ bool QssModule::load(const QVariant &val)
             fileName = name.mid(splash + 1);
         }
 
-        m_skins[Util::instance().fileName(fileName)] = name;
+        m_themes[Util::instance().fileName(fileName)] = name;
     }
 
     QString shortCut = Util::instance().fileName(
                 AppUiConfig::instance().defaultQss());
 
     //load default qss
-    if(m_skins.contains(shortCut))
-        ret = m_loader->loadQss(m_skins[shortCut]);
+    if(m_themes.contains(shortCut))
+        ret = m_loader->loadQss(m_themes[shortCut]);
     else
-        ret = m_loader->loadQss(m_skins.begin().value());
+        ret = m_loader->loadQss(m_themes.begin().value());
 
     if(ret)
         m_isLoaded = true;
@@ -61,11 +69,11 @@ bool QssModule::load(const QVariant &val)
     return ret;
 }
 
-void QssModule::unload()
+void ThemeModule::unload()
 {
     if(m_loader)
     {
-        m_skins.clear();
+        m_themes.clear();
         delete m_loader;
     }
 
@@ -73,32 +81,19 @@ void QssModule::unload()
     m_error = tr("No error");
 }
 
-bool QssModule::canRunInThread() const
+bool ThemeModule::canRunInThread() const
 {
     return false;
 }
 
-QStringList QssModule::skins()
+QStringList ThemeModule::themes()
 {
     QStringList skins;
-    for(QHash<QString, QString>::const_iterator iter = m_skins.begin();
-        iter != m_skins.end(); ++iter)
+    for(QHash<QString, QString>::const_iterator iter = m_themes.begin();
+        iter != m_themes.end(); ++iter)
     {
         skins << *iter;
     }
 
     return skins;
-}
-
-QssModule::QssModule(const QString &name) :
-    BaseAppModule(name),
-    m_loader(NULL)
-{
-    m_skins.clear();
-}
-
-QssModule::~QssModule()
-{
-    unload();
-    emit deleted();
 }
