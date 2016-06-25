@@ -13,12 +13,14 @@ DEFINES += CONTROLS_LIBRARY
 
 SOURCES += controls.cpp \
     maintopwidget.cpp \
-    mainbottomwidget.cpp
+    mainbottomwidget.cpp \
+    mainwidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
     maintopwidget.h \
-    mainbottomwidget.h
+    mainbottomwidget.h \
+    mainwidget.h
 
 unix {
     target.path = /usr/lib
@@ -27,4 +29,5 @@ unix {
 
 FORMS += \
     maintopwidget.ui \
-    mainbottomwidget.ui
+    mainbottomwidget.ui \
+    mainwidget.ui
