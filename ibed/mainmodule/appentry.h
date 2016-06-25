@@ -29,6 +29,7 @@ private:
 
 private:
     AppEntry();
+    ~AppEntry();
 
 };
 

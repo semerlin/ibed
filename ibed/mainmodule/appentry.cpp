@@ -3,7 +3,7 @@
 #include "modulemanger.h"
 #include "baseapplaunch.h"
 #include "hardwaremodule.h"
-#include "qssmodule.h"
+#include "thememodule.h"
 #include "appsetting.h"
 #include "applogger.h"
 #include "appuiconfig.h"
@@ -12,6 +12,8 @@
 #include <QDir>
 
 #include "appentry.h"
+
+HardwareModule *hardware;
 
 AppEntry &AppEntry::instance()
 {
@@ -33,8 +35,10 @@ int AppEntry::run(int argc, char **argv)
 
     AppLogger::instance().log()->info(tr("application startup"));
     //init modules
-    m_manger->addModule(&QssModule::instance());
-    m_manger->addModule(&HardwareModule::instance());
+    m_manger->addModule(new ThemeModule("Theme"));
+    hardware = new HardwareModule("Hardware");
+//    m_manger->addModule(new HardwareModule("Hardware");
+    m_manger->addModule(hardware);
 
 
     //launch widget qss need load first
@@ -68,6 +72,7 @@ void AppEntry::onLaunchFinished()
     delete m_widget;
     m_widget = NULL;
 
+
     //init main module and startup application
     m_mainModule->initialize();
 }
@@ -75,4 +80,16 @@ void AppEntry::onLaunchFinished()
 AppEntry::AppEntry()
 {
 
+}
+
+AppEntry::~AppEntry()
+{
+    if(m_widget)
+        delete m_widget;
+
+    if(m_manger)
+        delete m_manger;
+
+    if(m_mainModule)
+        delete m_mainModule;
 }

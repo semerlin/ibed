@@ -17,7 +17,6 @@ ThemeModule::ThemeModule(const QString &name) :
 ThemeModule::~ThemeModule()
 {
     unload();
-    emit deleted();
 }
 
 bool ThemeModule::load(const QVariant &val)

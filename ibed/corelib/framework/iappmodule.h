@@ -9,7 +9,7 @@ class FRAMEWORKSHARED_EXPORT IAppModule : public QObject
     Q_OBJECT
 public:
     IAppModule() {}
-    virtual ~IAppModule() {emit deleted();}
+    virtual ~IAppModule() {}
 
 public:
     /**
@@ -62,14 +62,6 @@ public:
 
 signals:
     void message(const QString &msg);
-
-    /**
-     * @brief when a dynamic malloced module deleted,
-     *        module should send this single in destructor,
-     *        so someone use a pointer point to this module
-     *        can know that the pointer is invalid
-     */
-    void deleted(void);
 };
 
 #endif // IAPPMODULE

@@ -25,7 +25,8 @@ void ModuleManger::addModule(IAppModule *module)
     m_modules.insert(module);
     m_moduleWithNames[module->name()] = module;
 
-    connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
+    connect(module, SIGNAL(destroyed(QObject*)),
+            this, SLOT(onModuleDestroyed(QObject*)), Qt::DirectConnection);
     emit moduleChanged(module, MODULE_ADD);
 }
 
@@ -36,7 +37,8 @@ void ModuleManger::addModules(const QSet<IAppModule *> &modules)
         m_modules.insert(module);
         m_moduleWithNames[module->name()] = module;
 
-        connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
+        connect(module, SIGNAL(destroyed(QObject*)),
+                this, SLOT(onModuleDestroyed(QObject*)), Qt::DirectConnection);
         emit moduleChanged(module, MODULE_ADD);
     }
 }
@@ -56,7 +58,8 @@ void ModuleManger::setModules(const QSet<IAppModule *> &modules)
     {
         m_moduleWithNames[module->name()] = module;
 
-        connect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
+        connect(module, SIGNAL(destroyed(QObject*)),
+                this, SLOT(onModuleDestroyed(QObject*)), Qt::DirectConnection);
         emit moduleChanged(module, MODULE_ADD);
     }
 }
@@ -66,7 +69,8 @@ void ModuleManger::removeModule(IAppModule *module)
     m_modules.remove(module);
     m_moduleWithNames.remove(module->name());
 
-    disconnect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
+    disconnect(module, SIGNAL(destroyed(QObject*)),
+               this, SLOT(onModuleDestroyed(QObject*)));
     emit moduleChanged(module, MODULE_REMOVE);
 }
 
@@ -78,7 +82,8 @@ void ModuleManger::removeModule(const QString &name)
         m_modules.remove(module);
         m_moduleWithNames.remove(name);
 
-        disconnect(module, SIGNAL(deleted()), this, SLOT(onModuleDestroyed()));
+        disconnect(module, SIGNAL(destroyed(QObject*)),
+                   this, SLOT(onModuleDestroyed(QObject*)));
         emit moduleChanged(module, MODULE_REMOVE);
     }
 }
@@ -410,10 +415,9 @@ void ModuleManger::onLoadModules(const QVariant &val)
         emit moduleChanged(NULL, MODULE_LOAD_FINISHED);
 }
 
-void ModuleManger::onModuleDestroyed(void)
+void ModuleManger::onModuleDestroyed(QObject *module)
 {
-    IAppModule *module = qobject_cast<IAppModule *>(sender());
     if(module)
-        m_modules.remove(module);
+        m_modules.remove(reinterpret_cast<IAppModule *>(module));
 }
 

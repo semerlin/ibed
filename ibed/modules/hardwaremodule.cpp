@@ -13,7 +13,6 @@ HardwareModule::HardwareModule(const QString &name) :
 
 HardwareModule::~HardwareModule()
 {
-    emit deleted();
 }
 
 
