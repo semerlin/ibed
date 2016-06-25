@@ -88,6 +88,14 @@ QSet<IAppModule *> ModuleManger::modules() const
     return m_modules;
 }
 
+IAppModule *ModuleManger::module(const QString &name)
+{
+    if(m_moduleWithNames.contains(name))
+        return m_moduleWithNames[name];
+
+    return NULL;
+}
+
 QStringList ModuleManger::moduleNames() const
 {
     QStringList ret;

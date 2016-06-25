@@ -72,6 +72,13 @@ public:
     QSet<IAppModule *> modules(void) const;
 
     /**
+     * @brief return module with given name
+     * @param name: module name
+     * @return
+     */
+    IAppModule* module(const QString &name);
+
+    /**
      * @brief return all module names
      * @return
      */
