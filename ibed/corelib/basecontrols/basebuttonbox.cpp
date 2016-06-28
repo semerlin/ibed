@@ -225,6 +225,8 @@ void BaseButtonBox::removeButton(int id)
 
 void BaseButtonBox::onButtonClicked()
 {
-    sender();
+    QAbstractButton *btn = qobject_cast<QAbstractButton *>(sender());
+    if(btn != NULL)
+        emit buttonClicked(m_buttons.key(btn));
 }
 
