@@ -1,5 +1,8 @@
+#include <QWidget>
+#include <QVariant>
 #include "util.h"
 #include <QString>
+#include <QStyle>
 
 Util &Util::instance()
 {
@@ -23,6 +26,19 @@ QString Util::fileSuffix(const QString &name)
         return name.right(dot);
     else
         return QString("");
+}
+
+void Util::changeQssWidgetProperty(QWidget *widget, const QString &property, const QVariant &val)
+{
+    widget->setProperty(property.toAscii().data(), val);
+    refreshWidget(widget);
+}
+
+void Util::refreshWidget(QWidget *widget)
+{
+    widget->style()->unpolish(widget);
+    widget->style()->polish(widget);
+    widget->update();
 }
 
 Util::Util()
