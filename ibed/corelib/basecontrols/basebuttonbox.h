@@ -124,7 +124,8 @@ private:
 template <typename T>
 bool BaseButtonBox::addButton(const QString &name)
 {
-    QAbstractButton *button = new T(name, this);
+    QAbstractButton *button = new T(this);
+    button->setText(name);
     if(button != NULL)
     {
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
