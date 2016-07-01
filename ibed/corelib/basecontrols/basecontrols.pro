@@ -12,11 +12,13 @@ TEMPLATE = lib
 DEFINES += BASECONTROLS_LIBRARY
 
 SOURCES += basecontrols.cpp \
-    basebuttonbox.cpp
+    basebuttonbox.cpp \
+    iconbuttonbox.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
-    basebuttonbox.h
+    basebuttonbox.h \
+    iconbuttonbox.h
 
 unix {
     target.path = /usr/lib

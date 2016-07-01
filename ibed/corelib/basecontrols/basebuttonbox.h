@@ -36,6 +36,15 @@ public:
     bool addButton(const QString &name);
 
     /**
+     * @brief add a icon based button, this is a template function,
+     *        T must be inheritd QAbstractButton
+     * @param button name
+     * @param icon name
+     */
+    template <typename T>
+    bool addButton(const QString &name, const QIcon &icon);
+
+    /**
      * @brief change button shown text
      * @param id: button position
      * @param newName: button new shown text
@@ -125,9 +134,9 @@ template <typename T>
 bool BaseButtonBox::addButton(const QString &name)
 {
     QAbstractButton *button = new T(this);
-    button->setText(name);
     if(button != NULL)
     {
+        button->setText(name);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         m_buttons[m_buttons.count()] = button;
         m_layout->addWidget(button);
@@ -139,6 +148,16 @@ bool BaseButtonBox::addButton(const QString &name)
     return true;
 
 }
+
+template <typename T>
+bool BaseButtonBox::addButton(const QString &name, const QIcon &icon)
+{
+    bool ret = addButton<T>(name);
+    button<T>(name)->setIcon(icon);
+
+    return ret;
+}
+
 
 template <typename T>
 const QList<T *> BaseButtonBox::buttons() const
@@ -169,7 +188,7 @@ T *BaseButtonBox::button(const QString &name) const
     {
         if(iter.value()->text() == name)
         {
-            return dynamic_cast<T>(iter.value());
+            return dynamic_cast<T *>(iter.value());
         }
     }
 
