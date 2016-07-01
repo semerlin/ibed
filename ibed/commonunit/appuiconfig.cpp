@@ -3,6 +3,25 @@
 #include <QFile>
 #include <QSettings>
 #include <QFontDatabase>
+#include <QStringList>
+
+/* static parameters */
+static const QStringList s_allParams = QStringList()
+        << "Font_en"
+        << "Font_zh"
+        << "QssPath"
+        << "LaunchQss"
+        << "DefaultQss";
+
+static const QStringList s_fontParams = QStringList()
+        << "Font_en"
+        << "Font_zh";
+
+static const QStringList s_qssParams = QStringList()
+        << "QssPath"
+        << "LaunchQss"
+        << "DefaultQss";
+
 
 AppUiConfig &AppUiConfig::instance()
 {
@@ -31,53 +50,59 @@ bool AppUiConfig::initialize()
     return true;
 }
 
-QString AppUiConfig::enFont() const
+QVariant AppUiConfig::value(AppUiConfig::Parameter param) const
 {
-    return m_enFont;
+    if(s_allParams.count() > param)
+    {
+        QString name = s_allParams.at(param);
+
+        if((s_fontParams.contains(name)) ||
+           (s_qssParams.contains(name)))
+        {
+            return m_params[name];
+        }
+    }
+
+    return QVariant(QVariant::Invalid);
 }
 
-QString AppUiConfig::cnFont() const
+void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
 {
-    return m_cnFont;
+    if(s_allParams.count() > param)
+    {
+        QString name = s_allParams.at(param);
+
+        if((s_fontParams.contains(name)) ||
+           (s_qssParams.contains(name)))
+        {
+            m_params[name] = val;
+        }
+    }
 }
 
-QString AppUiConfig::qssPath() const
+void AppUiConfig::save()
 {
-    return m_qssPath;
+
 }
 
-QString AppUiConfig::launchQss() const
+AppUiConfig::AppUiConfig()
 {
-    return m_launchQss;
+
 }
 
-QString AppUiConfig::defaultQss() const
-{
-    return m_defaultQss;
-}
-
-
-AppUiConfig::AppUiConfig() :
-    m_cnFont(""),
-    m_enFont(""),
-    m_defaultQss(""),
-    m_launchQss(""),
-    m_qssPath("")
-{
-}
 
 void AppUiConfig::setDefault()
 {
     QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
     setting.beginGroup("FONT");
     setting.setValue("en", "./resource/ui/font/arial.otf");
-    setting.setValue("cn", "./resource/ui/font/W3.otf");
+    setting.setValue("zh", "./resource/ui/font/W3.otf");
     setting.endGroup();
 
     setting.beginGroup("QSS");
     setting.setValue("path", "./resource/qss");
-    setting.setValue("default", "default.qss");
     setting.setValue("launch", "launch.qss");
+    setting.setValue("default", "default.qss");
     setting.endGroup();
 }
 
@@ -86,16 +111,16 @@ void AppUiConfig::loadValue(const QString &name)
     //read config
     QSettings setting(name, QSettings::IniFormat);
     setting.beginGroup("FONT");
-    m_enFont = setting.value("en").toString();
-    m_cnFont = setting.value("cn").toString();
+    m_params["Font_en"] = setting.value("en").toString();
+    m_params["Font_zh"] = setting.value("zh").toString();
     setting.endGroup();
-    QFontDatabase::addApplicationFont(m_enFont);
-    QFontDatabase::addApplicationFont(m_cnFont);
+    QFontDatabase::addApplicationFont(m_params["Font_en"].toString());
+    QFontDatabase::addApplicationFont(m_params["Font_zh"].toString());
 
     setting.beginGroup("QSS");
-    m_qssPath = setting.value("path").toString();
-    m_defaultQss = setting.value("default").toString();
-    m_launchQss = setting.value("launch").toString();
+    m_params["QssPath"] = setting.value("path").toString();
+    m_params["LaunchQss"] = setting.value("launch").toString();
+    m_params["DefaultQss"] = setting.value("default").toString();
     setting.endGroup();
 }
 

@@ -3,29 +3,35 @@
 
 #include "commonunit_global.h"
 #include <QString>
+#include <QHash>
+
+class QVariant;
 
 class COMMONUNITSHARED_EXPORT AppUiConfig
 {
 public:
+    typedef enum
+    {
+        Font_en,
+        Font_zh,
+        QssPath,
+        LaunchQss,
+        DefaultQss,
+
+        Param_count,
+    }Parameter;
+public:
     static AppUiConfig &instance();
     bool initialize(void);
-    QString enFont(void) const;
-    QString cnFont(void) const;
-    QString qssPath(void) const;
-    QString launchQss(void) const;
-    QString defaultQss(void) const;
-
-private:
-    QString m_cnFont;
-    QString m_enFont;
-    QString m_defaultQss;
-    QString m_launchQss;
-    QString m_qssPath;
+    QVariant value(Parameter param) const;
+    void setValue(Parameter param, const QVariant &val);
+    void save();
 
 private:
     AppUiConfig();
     void setDefault(void);
     void loadValue(const QString &name);
+    QHash<QString, QVariant> m_params;
 };
 
 #endif // APPUICONFIG_H
