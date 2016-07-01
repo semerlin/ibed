@@ -82,7 +82,17 @@ void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
 
 void AppUiConfig::save()
 {
+    QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
+    setting.beginGroup("FONT");
+    setting.setValue("en", m_params["Font_en"].toString());
+    setting.setValue("zh", m_params["Font_zh"].toString());
+    setting.endGroup();
 
+    setting.beginGroup("QSS");
+    setting.setValue("path", m_params["QssPath"].toString());
+    setting.setValue("launch", m_params["LaunchQss"].toString());
+    setting.setValue("default", m_params["DefaultQss"].toString());
+    setting.endGroup();
 }
 
 AppUiConfig::AppUiConfig()
