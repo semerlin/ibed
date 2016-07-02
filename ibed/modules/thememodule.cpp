@@ -38,7 +38,8 @@ bool ThemeModule::load(const QVariant &val)
 
     //make pair qss file and its short name, for example
     //"C:/test/default.qss" and "default"
-    QStringList qss = m_loader->findAllQss(AppUiConfig::instance().qssPath());
+    QStringList qss = m_loader->findAllQss(AppUiConfig::instance().
+                                           value(AppUiConfig::QssPath).toString());
     foreach(const QString &name, qss)
     {
         QString fileName, shortCut;
@@ -54,7 +55,8 @@ bool ThemeModule::load(const QVariant &val)
     }
 
     QString shortCut = Util::instance().fileName(
-                AppUiConfig::instance().defaultQss());
+                AppUiConfig::instance().
+                value(AppUiConfig::DefaultQss).toString());
 
     //load default qss
     if(m_themes.contains(shortCut))

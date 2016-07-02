@@ -10,10 +10,9 @@
 #include "qssloader.h"
 #include "mainmodule.h"
 #include <QDir>
-
+#include <QTextCodec>
 #include "appentry.h"
 
-HardwareModule *hardware;
 
 AppEntry &AppEntry::instance()
 {
@@ -25,8 +24,16 @@ int AppEntry::run(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    m_widget = new LaunchWidget;
-    m_manger = new ModuleManger;
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+        QTextCodec::setCodecForLocale(codec);
+        QTextCodec::setCodecForCStrings(codec);
+        QTextCodec::setCodecForTr(codec);
+
+    if(m_widget == NULL)
+        m_widget = new LaunchWidget;
+
+    if(m_manger == NULL)
+        m_manger = new ModuleManger;
 
     //load base configure
     AppSetting::instance().initialize();
@@ -36,17 +43,15 @@ int AppEntry::run(int argc, char **argv)
     AppLogger::instance().log()->info(tr("application startup"));
     //init modules
     m_manger->addModule(new ThemeModule("Theme"));
-    hardware = new HardwareModule("Hardware");
-//    m_manger->addModule(new HardwareModule("Hardware");
-    m_manger->addModule(hardware);
+    m_manger->addModule(new HardwareModule("Hardware"));
 
 
     //launch widget qss need load first
     AppLogger::instance().log()->info("initialize launch widget ui");
     QssLoader qssLoader;
-    qssLoader.loadQss(AppUiConfig::instance().qssPath() +
+    qssLoader.loadQss(AppUiConfig::instance().value(AppUiConfig::QssPath).toString() +
                       QDir::separator() +
-                      AppUiConfig::instance().launchQss());
+                      AppUiConfig::instance().value(AppUiConfig::LaunchQss).toString());
 
 
     //start lanch
@@ -74,10 +79,15 @@ void AppEntry::onLaunchFinished()
 
 
     //init main module and startup application
+    if(m_mainModule == NULL)
+        m_mainModule = new MainModule;
     m_mainModule->initialize();
 }
 
-AppEntry::AppEntry()
+AppEntry::AppEntry() :
+    m_widget(NULL),
+    m_manger(NULL),
+    m_mainModule(NULL)
 {
 
 }

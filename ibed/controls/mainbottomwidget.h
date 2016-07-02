@@ -15,6 +15,18 @@ public:
     explicit MainBottomWidget(QWidget *parent = 0);
     ~MainBottomWidget();
 
+public:
+    void lowlightButtons();
+
+signals:
+    void buttonClicked(int id);
+
+private:
+    void lowlightButtons(int except);
+
+private slots:
+    void onButtonClicked(int id);
+
 private:
     Ui::MainBottomWidget *ui;
 };

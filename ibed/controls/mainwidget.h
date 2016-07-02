@@ -8,6 +8,7 @@ class MainWidget;
 }
 
 class MainTopWidget;
+class MainBottomWidget;
 
 class MainWidget : public QWidget
 {
@@ -19,10 +20,12 @@ public:
 
 private slots:
     void onTopWidgetButtonClick(int id);
+    void onBottomWidgetButtonClick(int id);
 
 private:
     Ui::MainWidget *ui;
     MainTopWidget *m_topWidget;
+    MainBottomWidget *m_bottomWidget;
 };
 
 #endif // MAINWIDGET_H

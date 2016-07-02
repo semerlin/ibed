@@ -19,13 +19,13 @@ public:
     ~MainTopWidget();
 
 public:
-    QPushButton *button(int id) const;
-    const QList<QPushButton *> buttons() const;
-private:
-    void lowlightButtons(void);
+    void lowlightButtons();
 
 signals:
     void buttonClicked(int id);
+
+private:
+    void lowlightButtons(int except);
 
 private slots:
     void onButtonClicked(int id);

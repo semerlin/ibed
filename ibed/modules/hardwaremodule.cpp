@@ -40,7 +40,7 @@ bool HardwareModule::load(const QVariant &val)
 
     m_isLoaded = true;
 
-    sleep(2);
+    sleep(1);
     return true;
 }
 

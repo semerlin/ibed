@@ -3,6 +3,8 @@
 
 #include "mainmodule_global.h"
 
+class MainWidget;
+
 class MAINMODULESHARED_EXPORT MainModule
 {
 public:
@@ -12,6 +14,7 @@ public:
     bool initialize(void);
 
 private:
+    MainWidget *m_mainWidget;
 };
 
 #endif // MAINMODULE_H

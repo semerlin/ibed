@@ -30,15 +30,15 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="BaseButtonBox" name="widgetTop" native="true"/>
+    <widget class="IconButtonBox" name="widgetTop" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BaseButtonBox</class>
+   <class>IconButtonBox</class>
    <extends>QWidget</extends>
-   <header>basebuttonbox.h</header>
+   <header>iconbuttonbox.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

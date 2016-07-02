@@ -1,13 +1,14 @@
-#include "mainmodule.h"
 #include "mainwidget.h"
+#include "mainmodule.h"
 
-
-MainModule::MainModule()
+MainModule::MainModule() :
+    m_mainWidget(new MainWidget)
 {
 }
 
 bool MainModule::initialize()
 {
-    MainWidget *widget = new MainWidget;
-    widget->show();
+    m_mainWidget->show();
+
+    return true;
 }

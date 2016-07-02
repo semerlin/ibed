@@ -14,13 +14,15 @@ DEFINES += CONTROLS_LIBRARY
 SOURCES += controls.cpp \
     maintopwidget.cpp \
     mainbottomwidget.cpp \
-    mainwidget.cpp
+    mainwidget.cpp \
+    baseinfowidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
     maintopwidget.h \
     mainbottomwidget.h \
-    mainwidget.h
+    mainwidget.h \
+    baseinfowidget.h
 
 unix {
     target.path = /usr/lib
@@ -30,4 +32,15 @@ unix {
 FORMS += \
     maintopwidget.ui \
     mainbottomwidget.ui \
-    mainwidget.ui
+    mainwidget.ui \
+    baseinfowidget.ui
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
+
+INCLUDEPATH += $$PWD/../corelib/basecontrols
+DEPENDPATH += $$PWD/../corelib/basecontrols
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
+
+INCLUDEPATH += $$PWD/../corelib/utility
+DEPENDPATH += $$PWD/../corelib/utility
