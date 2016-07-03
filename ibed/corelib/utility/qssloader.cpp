@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QApplication>
+#include <QWidget>
 
 QssLoader::QssLoader() :
     m_curQss(QString())
@@ -55,7 +56,22 @@ bool QssLoader::loadQss(const QString &name)
 
     qApp->setStyleSheet(data.constData());
     m_curQss = name;
-    emit qssChanged(name);
+    emit appQssChanged(name);
+
+    return true;
+}
+
+bool QssLoader::loadQss(QWidget *widget, const QString &name)
+{
+    QFile file(name);
+    if(!file.exists())
+        return false;
+
+    file.open(QIODevice::ReadOnly);
+    QByteArray data = file.readAll();
+
+    widget->setStyleSheet(data.constData());
+    emit widgetQssChanged(widget, name);
 
     return true;
 }

@@ -54,6 +54,14 @@ public:
     bool loadQss(const QString &name);
 
     /**
+     * @brief load the assigned qss file for a appoint widget
+     * @param widget: widget
+     * @param name: qss file name
+     * @return
+     */
+    bool loadQss(QWidget *widget, const QString &name);
+
+    /**
      * @brief current active qss style
      * @return
      */
@@ -63,7 +71,9 @@ public:
     }
 
 signals:
-    void qssChanged(const QString &name);
+    void appQssChanged(const QString &name);
+    void widgetQssChanged(QWidget *widget, const QString &name);
+
 
 private:
     QString m_curQss;
