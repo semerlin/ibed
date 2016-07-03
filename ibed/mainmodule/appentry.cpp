@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QTextCodec>
 #include "appentry.h"
+#include <QResource>
 
 
 AppEntry &AppEntry::instance()
@@ -24,10 +25,13 @@ int AppEntry::run(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
+    QResource::registerResource("./resource/ui/launch.rcc");
+
+    //support chinese
     QTextCodec *codec = QTextCodec::codecForName("utf8");
-        QTextCodec::setCodecForLocale(codec);
-        QTextCodec::setCodecForCStrings(codec);
-        QTextCodec::setCodecForTr(codec);
+    QTextCodec::setCodecForLocale(codec);
+    QTextCodec::setCodecForCStrings(codec);
+    QTextCodec::setCodecForTr(codec);
 
     if(m_widget == NULL)
         m_widget = new LaunchWidget;
@@ -49,7 +53,7 @@ int AppEntry::run(int argc, char **argv)
     //launch widget qss need load first
     AppLogger::instance().log()->info("initialize launch widget ui");
     QssLoader qssLoader;
-    qssLoader.loadQss(AppUiConfig::instance().value(AppUiConfig::QssPath).toString() +
+    qssLoader.loadQss(m_widget, AppUiConfig::instance().value(AppUiConfig::QssPath).toString() +
                       QDir::separator() +
                       AppUiConfig::instance().value(AppUiConfig::LaunchQss).toString());
 
