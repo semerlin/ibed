@@ -5,7 +5,7 @@
 #include <QPair>
 #include "appuiconfig.h"
 #include "util.h"
-
+#include <QResource>
 
 ThemeModule::ThemeModule(const QString &name) :
     BaseAppModule(name),
@@ -22,6 +22,9 @@ ThemeModule::~ThemeModule()
 bool ThemeModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+
+    //register resource
+    QResource::registerResource("./resource/ui/res.rcc");
 
     bool ret = false;
 

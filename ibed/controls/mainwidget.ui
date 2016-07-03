@@ -98,6 +98,9 @@
        <height>360</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <property name="spacing">
        <number>0</number>
@@ -118,6 +121,18 @@
        <layout class="QVBoxLayout" name="verticalLayoutMiddle">
         <property name="spacing">
          <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>18</number>
+        </property>
+        <property name="topMargin">
+         <number>18</number>
+        </property>
+        <property name="rightMargin">
+         <number>18</number>
+        </property>
+        <property name="bottomMargin">
+         <number>18</number>
         </property>
        </layout>
       </item>

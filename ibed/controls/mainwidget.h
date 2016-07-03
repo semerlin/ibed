@@ -9,6 +9,7 @@ class MainWidget;
 
 class MainTopWidget;
 class MainBottomWidget;
+class BaseInfoWidget;
 
 class MainWidget : public QWidget
 {
@@ -26,6 +27,7 @@ private:
     Ui::MainWidget *ui;
     MainTopWidget *m_topWidget;
     MainBottomWidget *m_bottomWidget;
+    BaseInfoWidget *m_baseInfoWidget;
 };
 
 #endif // MAINWIDGET_H

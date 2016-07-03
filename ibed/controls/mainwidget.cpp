@@ -2,6 +2,7 @@
 #include "ui_mainwidget.h"
 #include "maintopwidget.h"
 #include "mainbottomwidget.h"
+#include "baseinfowidget.h"
 #include "boost/foreach.hpp"
 #include <QPushButton>
 #include "util.h"
@@ -10,7 +11,8 @@ MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWidget),
     m_topWidget(new MainTopWidget(this)),
-    m_bottomWidget(new MainBottomWidget(this))
+    m_bottomWidget(new MainBottomWidget(this)),
+    m_baseInfoWidget(new BaseInfoWidget(this))
 {
     ui->setupUi(this);
 
@@ -21,6 +23,9 @@ MainWidget::MainWidget(QWidget *parent) :
 
     ui->verticalLayoutBottom->addWidget(m_bottomWidget);
     connect(m_bottomWidget, SIGNAL(buttonClicked(int)), this, SLOT(onBottomWidgetButtonClick(int)));
+
+    ui->verticalLayoutMiddle->addWidget(m_baseInfoWidget);
+    m_baseInfoWidget->show();
 
 }
 

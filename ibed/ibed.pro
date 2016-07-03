@@ -9,5 +9,5 @@ SUBDIRS += \
     controls \
     modules \
     commonunit \
-    resource \
-    mainmodule
+    mainmodule \
+    resource

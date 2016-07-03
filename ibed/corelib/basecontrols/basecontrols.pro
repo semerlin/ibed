@@ -13,12 +13,14 @@ DEFINES += BASECONTROLS_LIBRARY
 
 SOURCES += basecontrols.cpp \
     basebuttonbox.cpp \
-    iconbuttonbox.cpp
+    iconbuttonbox.cpp \
+    basewidget.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
     basebuttonbox.h \
-    iconbuttonbox.h
+    iconbuttonbox.h \
+    basewidget.h
 
 unix {
     target.path = /usr/lib
