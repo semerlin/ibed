@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/images/screensave.jpg</file>
+        <file>res/images/advise.png</file>
+        <file>res/images/bed.png</file>
+        <file>res/images/checkin.png</file>
+        <file>res/images/doctor.png</file>
+        <file>res/images/eat.png</file>
+        <file>res/images/medicine.png</file>
+        <file>res/images/nurse.png</file>
     </qresource>
 </RCC>

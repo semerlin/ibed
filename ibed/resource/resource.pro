@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-06-15T20:12:46
+# Project created by QtCreator 2016-07-02T23:29:39
 #
 #-------------------------------------------------
 
@@ -21,4 +21,5 @@ unix {
 }
 
 RESOURCES += \
-    res.qrc
+    res.qrc \
+    launch.qrc

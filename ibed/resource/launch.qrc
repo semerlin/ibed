@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>launch/launch.jpg</file>
+    </qresource>
+</RCC>
