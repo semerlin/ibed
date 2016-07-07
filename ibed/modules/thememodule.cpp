@@ -54,10 +54,10 @@ bool ThemeModule::load(const QVariant &val)
             fileName = name.mid(splash + 1);
         }
 
-        m_themes[Util::instance().fileName(fileName)] = name;
+        m_themes[Util::fileName(fileName)] = name;
     }
 
-    QString shortCut = Util::instance().fileName(
+    QString shortCut = Util::fileName(
                 AppUiConfig::instance().
                 value(AppUiConfig::DefaultQss).toString());
 

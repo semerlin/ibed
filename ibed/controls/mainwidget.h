@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QMap>
 
 namespace Ui {
 class MainWidget;
@@ -10,6 +11,8 @@ class MainWidget;
 class MainTopWidget;
 class MainBottomWidget;
 class BaseInfoWidget;
+class AdviseWidget;
+class QAbstractButton;
 
 class MainWidget : public QWidget
 {
@@ -24,10 +27,18 @@ private slots:
     void onBottomWidgetButtonClick(int id);
 
 private:
+    void connectBtnAndWidget(void);
+
+private:
     Ui::MainWidget *ui;
+    QWidget *m_lastWidget;
     MainTopWidget *m_topWidget;
     MainBottomWidget *m_bottomWidget;
     BaseInfoWidget *m_baseInfoWidget;
+    AdviseWidget *m_adviseWidget;
+
+private:
+    QMap<int, QWidget *> m_btnWidgets;
 };
 
 #endif // MAINWIDGET_H

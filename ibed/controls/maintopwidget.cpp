@@ -13,29 +13,30 @@ MainTopWidget::MainTopWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widgetTop->setSpacing(40);
+    ui->widgetTop->setContentsMargins(20, 0, 20, 0);
 
     ui->widgetTop->addButton<BUTTON_TYPE>(tr("Patient"));
-    ui->widgetTop->setButtonIcon(0, QStringList()
+    ui->widgetTop->setButtonIcons(0, QStringList()
                                  << "./resource/ui/icon/baseinfo_l.png"
                                  << "./resource/ui/icon/baseinfo_h.png");
 
     ui->widgetTop->addButton<BUTTON_TYPE>(tr("Advise"));
-    ui->widgetTop->setButtonIcon(1, QStringList()
+    ui->widgetTop->setButtonIcons(1, QStringList()
                                  << "./resource/ui/icon/advise_l.png"
                                  << "./resource/ui/icon/advise_h.png");
 
     ui->widgetTop->addButton<BUTTON_TYPE>(tr("In Out"));
-    ui->widgetTop->setButtonIcon(2, QStringList()
+    ui->widgetTop->setButtonIcons(2, QStringList()
                                  << "./resource/ui/icon/inout_l.png"
                                  << "./resource/ui/icon/inout_h.png");
 
     ui->widgetTop->addButton<BUTTON_TYPE>(tr("Education"));
-    ui->widgetTop->setButtonIcon(3, QStringList()
+    ui->widgetTop->setButtonIcons(3, QStringList()
                                  << "./resource/ui/icon/education_l.png"
                                  << "./resource/ui/icon/education_h.png");
 
     ui->widgetTop->addButton<BUTTON_TYPE>(tr("Setting"));
-    ui->widgetTop->setButtonIcon(4, QStringList()
+    ui->widgetTop->setButtonIcons(4, QStringList()
                                  << "./resource/ui/icon/setting_l.png"
                                  << "./resource/ui/icon/setting_h.png");
 
@@ -60,7 +61,7 @@ void MainTopWidget::lowlightButtons()
     int count = buttons.count();
     BOOST_FOREACH(BUTTON_TYPE *btn, buttons)
     {
-        Util::instance().changeQssWidgetProperty(btn, "highlight", false);
+        Util::changeQssWidgetProperty(btn, "highlight", false);
     }
 
     for(int i = 0; i < count; i++)
@@ -76,7 +77,7 @@ void MainTopWidget::lowlightButtons(int except)
     int count = buttons.count();
     BOOST_FOREACH(BUTTON_TYPE *btn, buttons)
     {
-        Util::instance().changeQssWidgetProperty(btn, "highlight", false);
+        Util::changeQssWidgetProperty(btn, "highlight", false);
     }
 
     for(int i = 0; i < count; i++)
@@ -89,7 +90,7 @@ void MainTopWidget::lowlightButtons(int except)
 void MainTopWidget::onButtonClicked(int id)
 {
     lowlightButtons(id);
-    Util::instance().changeQssWidgetProperty(ui->widgetTop->button<BUTTON_TYPE>(id), "highlight", true);
+    Util::changeQssWidgetProperty(ui->widgetTop->button<BUTTON_TYPE>(id), "highlight", true);
     ui->widgetTop->changeToIcon(id, 1);
 
     emit buttonClicked(id);

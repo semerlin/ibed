@@ -7,5 +7,11 @@
         <file>res/images/eat.png</file>
         <file>res/images/medicine.png</file>
         <file>res/images/nurse.png</file>
+        <file>res/images/longadvise_h.png</file>
+        <file>res/images/longadvise_l.png</file>
+        <file>res/images/refresh_h.png</file>
+        <file>res/images/refresh_l.png</file>
+        <file>res/images/shortadvise_h.png</file>
+        <file>res/images/shortadvise_l.png</file>
     </qresource>
 </RCC>

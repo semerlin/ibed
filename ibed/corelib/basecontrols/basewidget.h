@@ -10,7 +10,7 @@
 class BASECONTROLSSHARED_EXPORT BaseWidget : public QWidget
 {
 public:
-    explicit BaseWidget(QWidget *parent);
+    explicit BaseWidget(QWidget *parent = 0);
     virtual ~BaseWidget() {}
 
 protected:

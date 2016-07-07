@@ -4,11 +4,6 @@
 #include <QString>
 #include <QStyle>
 
-Util &Util::instance()
-{
-    static Util m_util;
-    return m_util;
-}
 
 QString Util::fileName(const QString &name)
 {

@@ -1,7 +1,7 @@
 #ifndef BASEBUTTONBOX_H
 #define BASEBUTTONBOX_H
 
-#include <QWidget>
+#include "basewidget.h"
 #include <QHash>
 #include <QAbstractButton>
 #include <QLayout>
@@ -11,7 +11,7 @@ class BaseButtonBox;
 }
 
 
-class BaseButtonBox : public QWidget
+class BaseButtonBox : public BaseWidget
 {
     Q_OBJECT
 
@@ -94,6 +94,15 @@ public:
      * @param spacing: layout spacing
      */
     void setSpacing(int spacing);
+
+    /**
+     * @brief set contents margins
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    void setContentsMargins(int left, int top, int right, int bottom);
 
 public:
     /**

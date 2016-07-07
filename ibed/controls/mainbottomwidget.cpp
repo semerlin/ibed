@@ -12,14 +12,15 @@ MainBottomWidget::MainBottomWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widgetBottom->setSpacing(100);
+    ui->widgetBottom->setContentsMargins(100, 0, 100, 0);
 
     ui->widgetBottom->addButton<BUTTON_TYPE>(tr("Bed"));
-    ui->widgetBottom->setButtonIcon(0, QStringList()
+    ui->widgetBottom->setButtonIcons(0, QStringList()
                                  << "./resource/ui/icon/bedcontrol_l.png"
                                  << "./resource/ui/icon/bedcontrol_h.png");
 
     ui->widgetBottom->addButton<BUTTON_TYPE>(tr("Infusion"));
-    ui->widgetBottom->setButtonIcon(1, QStringList()
+    ui->widgetBottom->setButtonIcons(1, QStringList()
                                  << "./resource/ui/icon/infusion_l.png"
                                  << "./resource/ui/icon/infusion_h.png");
 
@@ -37,7 +38,7 @@ void MainBottomWidget::lowlightButtons()
     int count = buttons.count();
     BOOST_FOREACH(BUTTON_TYPE *btn, buttons)
     {
-        Util::instance().changeQssWidgetProperty(btn, "highlight", false);
+        Util::changeQssWidgetProperty(btn, "highlight", false);
     }
 
     for(int i = 0; i < count; i++)
@@ -52,7 +53,7 @@ void MainBottomWidget::lowlightButtons(int except)
     int count = buttons.count();
     BOOST_FOREACH(BUTTON_TYPE *btn, buttons)
     {
-        Util::instance().changeQssWidgetProperty(btn, "highlight", false);
+        Util::changeQssWidgetProperty(btn, "highlight", false);
     }
 
     for(int i = 0; i < count; i++)
@@ -65,7 +66,7 @@ void MainBottomWidget::lowlightButtons(int except)
 void MainBottomWidget::onButtonClicked(int id)
 {
     lowlightButtons(id);
-    Util::instance().changeQssWidgetProperty(ui->widgetBottom->button<BUTTON_TYPE>(id), "highlight", true);
+    Util::changeQssWidgetProperty(ui->widgetBottom->button<BUTTON_TYPE>(id), "highlight", true);
     ui->widgetBottom->changeToIcon(id, 1);
 
     emit buttonClicked(id);

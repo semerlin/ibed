@@ -18,7 +18,9 @@ SOURCES += controls.cpp \
     baseinfowidget.cpp \
     bednumwidget.cpp \
     patientinfowidget.cpp \
-    patientadvisewidget.cpp
+    patientadvisewidget.cpp \
+    advisewidget.cpp \
+    adviseinfowidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -28,7 +30,9 @@ HEADERS += controls.h\
     baseinfowidget.h \
     bednumwidget.h \
     patientinfowidget.h \
-    patientadvisewidget.h
+    patientadvisewidget.h \
+    advisewidget.h \
+    adviseinfowidget.h
 
 unix {
     target.path = /usr/lib
@@ -42,7 +46,8 @@ FORMS += \
     baseinfowidget.ui \
     bednumwidget.ui \
     patientinfowidget.ui \
-    patientadvisewidget.ui
+    patientadvisewidget.ui \
+    advisewidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 

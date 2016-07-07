@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 
 BaseButtonBox::BaseButtonBox(QWidget *parent) :
-    QWidget(parent),
+    BaseWidget(parent),
     ui(new Ui::BaseButtonBox),
     m_orientation(Qt::Horizontal)
 
@@ -20,7 +20,7 @@ BaseButtonBox::BaseButtonBox(QWidget *parent) :
 }
 
 BaseButtonBox::BaseButtonBox(Qt::Orientation orientation, QWidget *parent) :
-    QWidget(parent),
+    BaseWidget(parent),
     ui(new Ui::BaseButtonBox),
     m_orientation(orientation)
 {
@@ -90,6 +90,11 @@ void BaseButtonBox::clearButtons()
 void BaseButtonBox::setSpacing(int spacing)
 {
     m_layout->setSpacing(spacing);
+}
+
+void BaseButtonBox::setContentsMargins(int left, int top, int right, int bottom)
+{
+   m_layout->setContentsMargins(left, top, right, bottom);
 }
 
 
