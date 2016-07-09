@@ -1,12 +1,13 @@
 #include "adviseinfowidget.h"
 #include <QAbstractTableModel>
 #include <QModelIndex>
+#include <QHeaderView>
 
-class AdviseInfoPrivate : public QAbstractTableModel
+class AdviseInfoModel : public QAbstractTableModel
 {
 public:
-    AdviseInfoPrivate(QObject *parent = 0);
-    AdviseInfoPrivate(const QList<QStringList> &info, QObject *parent = 0);
+    AdviseInfoModel(QObject *parent = 0);
+    AdviseInfoModel(const QList<QStringList> &info, QObject *parent = 0);
 
 public:
     void clearData(void);
@@ -24,27 +25,30 @@ private:
 };
 
 AdviseInfoWidget::AdviseInfoWidget(QWidget *parent) :
-    QTableView(parent),
-    d(new AdviseInfoPrivate)
+    LineTableView(Qt::Vertical, parent),
+    m_model(new AdviseInfoModel)
 {
-    d->clearData();
+    m_model->clearData();
+    verticalHeader()->hide();
 
-    setModel(d);
+    setModel(m_model);
+    setAlternatingRowColors(true);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 void AdviseInfoWidget::clearData()
 {
-    d->clearData();
+    m_model->clearData();
 }
 
 void AdviseInfoWidget::appendData(const QStringList &data)
 {
-    d->appendData(data);
+    m_model->appendData(data);
 }
 
 
 
-AdviseInfoPrivate::AdviseInfoPrivate(QObject *parent) :
+AdviseInfoModel::AdviseInfoModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     m_header = QStringList()
@@ -58,7 +62,7 @@ AdviseInfoPrivate::AdviseInfoPrivate(QObject *parent) :
             << "End Time";
 }
 
-AdviseInfoPrivate::AdviseInfoPrivate(const QList<QStringList> &info, QObject *parent) :
+AdviseInfoModel::AdviseInfoModel(const QList<QStringList> &info, QObject *parent) :
     QAbstractTableModel(parent)
 {
     m_adviseInfo = info;
@@ -74,31 +78,31 @@ AdviseInfoPrivate::AdviseInfoPrivate(const QList<QStringList> &info, QObject *pa
             << "End Time";
 }
 
-void AdviseInfoPrivate::clearData()
+void AdviseInfoModel::clearData()
 {
     m_adviseInfo.clear();
 }
 
-void AdviseInfoPrivate::appendData(const QStringList &info)
+void AdviseInfoModel::appendData(const QStringList &info)
 {
     m_adviseInfo.append(info);
 }
 
-int AdviseInfoPrivate::rowCount(const QModelIndex &parent) const
+int AdviseInfoModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return m_adviseInfo.count();
 }
 
-int AdviseInfoPrivate::columnCount(const QModelIndex &parent) const
+int AdviseInfoModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return m_header.count();
 }
 
-QVariant AdviseInfoPrivate::data(const QModelIndex &index, int role) const
+QVariant AdviseInfoModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid())
         return QVariant();
@@ -125,7 +129,7 @@ QVariant AdviseInfoPrivate::data(const QModelIndex &index, int role) const
         return QVariant();
 }
 
-QVariant AdviseInfoPrivate::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AdviseInfoModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation)
 

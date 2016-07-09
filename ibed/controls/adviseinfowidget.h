@@ -1,11 +1,10 @@
 #ifndef ADVISEINFOWIDGET_H
 #define ADVISEINFOWIDGET_H
 
-#include <QTableView>
+#include "linetableview.h"
+class AdviseInfoModel;
 
-class AdviseInfoPrivate;
-
-class AdviseInfoWidget : public QTableView
+class AdviseInfoWidget : public LineTableView
 {
     Q_OBJECT
 
@@ -17,7 +16,7 @@ public slots:
     void appendData(const QStringList &data);
 
 private:
-    AdviseInfoPrivate *d;
+    AdviseInfoModel *m_model;
 };
 
 #endif // ADVISEINFOWIDGET_H

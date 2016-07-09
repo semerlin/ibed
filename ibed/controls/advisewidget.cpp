@@ -38,12 +38,20 @@ AdviseWidget::AdviseWidget(QWidget *parent) :
 
     m_adviseInfo.append(new AdviseInfoWidget);
     m_adviseInfo.append(new AdviseInfoWidget);
-    ui->stackedWidget->addWidget(m_adviseInfo.at(0));
+    ui->verticalLayoutTemp->addWidget(m_adviseInfo.at(0));
+    ui->verticalLayoutLong->addWidget(m_adviseInfo.at(1));
+    m_adviseInfo.at(0)->setObjectName("tempAdvise");
+    m_adviseInfo.at(1)->setObjectName("longAdvise");
     m_adviseInfo.at(0)->appendData(QStringList() << "a" << "a");
-    ui->stackedWidget->addWidget(m_adviseInfo.at(1));
-    m_adviseInfo.at(1)->appendData(QStringList() << "b" << "b");
-    ui->stackedWidget->setCurrentIndex(1);
-    m_adviseInfo.at(0)->show();
+    m_adviseInfo.at(0)->appendData(QStringList() << "b" << "b");
+    m_adviseInfo.at(0)->appendData(QStringList() << "c" << "c");
+    m_adviseInfo.at(0)->appendData(QStringList() << "d" << "d");
+
+    m_adviseInfo.at(1)->appendData(QStringList() << "1" << "1");
+    m_adviseInfo.at(1)->appendData(QStringList() << "2" << "2");
+    m_adviseInfo.at(1)->appendData(QStringList() << "3" << "3");
+    m_adviseInfo.at(1)->appendData(QStringList() << "4" << "4");
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 AdviseWidget::~AdviseWidget()
@@ -88,7 +96,5 @@ void AdviseWidget::onButtonClicked(int id)
     ui->widgetTabBar->changeToIcon(id, 1);
 
     ui->stackedWidget->setCurrentIndex(id);
-    m_adviseInfo.at(id ^ 1)->hide();
-    m_adviseInfo.at(id)->show();
 }
 

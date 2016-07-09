@@ -15,14 +15,16 @@ SOURCES += basecontrols.cpp \
     basebuttonbox.cpp \
     iconbuttonbox.cpp \
     basewidget.cpp \
-    iconpushbutton.cpp
+    iconpushbutton.cpp \
+    linetableview.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
     basebuttonbox.h \
     iconbuttonbox.h \
     basewidget.h \
-    iconpushbutton.h
+    iconpushbutton.h \
+    linetableview.h
 
 unix {
     target.path = /usr/lib
