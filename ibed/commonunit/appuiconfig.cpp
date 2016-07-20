@@ -95,7 +95,13 @@ void AppUiConfig::save()
     setting.endGroup();
 }
 
-AppUiConfig::AppUiConfig()
+QString AppUiConfig::fontFamily() const
+{
+   return m_fontFamily;
+}
+
+AppUiConfig::AppUiConfig() :
+    m_fontFamily("")
 {
 
 }
@@ -105,7 +111,7 @@ void AppUiConfig::setDefault()
 {
     QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
     setting.beginGroup("FONT");
-    setting.setValue("en", "./resource/ui/font/arial.otf");
+    setting.setValue("en", "./resource/ui/font/arial.ttf");
     setting.setValue("zh", "./resource/ui/font/W3.otf");
     setting.endGroup();
 
@@ -125,7 +131,9 @@ void AppUiConfig::loadValue(const QString &name)
     m_params["Font_zh"] = setting.value("zh").toString();
     setting.endGroup();
     QFontDatabase::addApplicationFont(m_params["Font_en"].toString());
-    QFontDatabase::addApplicationFont(m_params["Font_zh"].toString());
+    int id = QFontDatabase::addApplicationFont(m_params["Font_zh"].toString());
+    QStringList list = QFontDatabase::applicationFontFamilies(id);
+    m_fontFamily = list.at(0);
 
     setting.beginGroup("QSS");
     m_params["QssPath"] = setting.value("path").toString();

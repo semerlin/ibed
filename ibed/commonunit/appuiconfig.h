@@ -27,11 +27,14 @@ public:
     void setValue(Parameter param, const QVariant &val);
     void save();
 
+    QString fontFamily(void) const;
+
 private:
     AppUiConfig();
     void setDefault(void);
     void loadValue(const QString &name);
     QHash<QString, QVariant> m_params;
+    QString m_fontFamily;
 };
 
 #endif // APPUICONFIG_H
