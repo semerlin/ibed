@@ -1,11 +1,25 @@
 #ifndef MUSICPLAYLISTDELEGATE_H
 #define MUSICPLAYLISTDELEGATE_H
 
+#include <QStyledItemDelegate>
+#include "basecontrols_global.h"
 
-class MusicPlayListDelegate
+class BASECONTROLSSHARED_EXPORT MusicPlayListDelegate : public QStyledItemDelegate
 {
 public:
-    MusicPlayListDelegate();
+    explicit MusicPlayListDelegate(QObject *parent = 0);
+
+public:
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+protected:
+    void calWidthAndHeight(const QStyleOptionViewItem &option, const QModelIndex &index,
+                           int &nameWidth, int &textWidth, int &extraWidth, int &height) const;
 };
 
 #endif // MUSICPLAYLISTDELEGATE_H

@@ -3,7 +3,6 @@
 
 #include "basecontrols_global.h"
 #include <QListView>
-#include "editlabellistitem.h"
 #include <QStyledItemDelegate>
 
 class EditLabelListItem;

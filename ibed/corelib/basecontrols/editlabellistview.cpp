@@ -1,3 +1,4 @@
+#include "editlabellistitem.h"
 #include "editlabellistmodel.h"
 #include "editlabellistview.h"
 #include "editlabellistdelegate.h"
