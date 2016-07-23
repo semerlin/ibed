@@ -4,6 +4,9 @@
 #include <QSettings>
 #include <QFontDatabase>
 #include <QStringList>
+#include <QColor>
+#include "util.h"
+#include <QDebug>
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
@@ -11,7 +14,8 @@ static const QStringList s_allParams = QStringList()
         << "Font_zh"
         << "QssPath"
         << "LaunchQss"
-        << "DefaultQss";
+        << "DefaultQss"
+        << "InoutEditColor";
 
 static const QStringList s_fontParams = QStringList()
         << "Font_en"
@@ -21,6 +25,9 @@ static const QStringList s_qssParams = QStringList()
         << "QssPath"
         << "LaunchQss"
         << "DefaultQss";
+
+static const QStringList s_colorParams = QStringList()
+        << "InoutEditColor";
 
 
 AppUiConfig &AppUiConfig::instance()
@@ -61,6 +68,10 @@ QVariant AppUiConfig::value(AppUiConfig::Parameter param) const
         {
             return m_params[name];
         }
+        else if(s_colorParams.contains(name))
+        {
+            return Util::stringListToColor(m_params[name].toStringList()).rgb();
+        }
     }
 
     return QVariant(QVariant::Invalid);
@@ -71,12 +82,7 @@ void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
     if(s_allParams.count() > param)
     {
         QString name = s_allParams.at(param);
-
-        if((s_fontParams.contains(name)) ||
-           (s_qssParams.contains(name)))
-        {
-            m_params[name] = val;
-        }
+        m_params[name] = val;
     }
 }
 
@@ -120,6 +126,11 @@ void AppUiConfig::setDefault()
     setting.setValue("launch", "launch.qss");
     setting.setValue("default", "default.qss");
     setting.endGroup();
+
+    setting.beginGroup("COLOR");
+    setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
+    setting.endGroup();
+
 }
 
 void AppUiConfig::loadValue(const QString &name)
@@ -127,8 +138,8 @@ void AppUiConfig::loadValue(const QString &name)
     //read config
     QSettings setting(name, QSettings::IniFormat);
     setting.beginGroup("FONT");
-    m_params["Font_en"] = setting.value("en").toString();
-    m_params["Font_zh"] = setting.value("zh").toString();
+    m_params["Font_en"] = setting.value("en");
+    m_params["Font_zh"] = setting.value("zh");
     setting.endGroup();
     QFontDatabase::addApplicationFont(m_params["Font_en"].toString());
     int id = QFontDatabase::addApplicationFont(m_params["Font_zh"].toString());
@@ -136,9 +147,14 @@ void AppUiConfig::loadValue(const QString &name)
     m_fontFamily = list.at(0);
 
     setting.beginGroup("QSS");
-    m_params["QssPath"] = setting.value("path").toString();
-    m_params["LaunchQss"] = setting.value("launch").toString();
-    m_params["DefaultQss"] = setting.value("default").toString();
+    m_params["QssPath"] = setting.value("path");
+    m_params["LaunchQss"] = setting.value("launch");
+    m_params["DefaultQss"] = setting.value("default");
     setting.endGroup();
+
+    setting.beginGroup("COLOR");
+    m_params["InoutEditColor"] = setting.value("inoutEditColor");
+    setting.endGroup();
+
 }
 

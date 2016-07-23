@@ -17,6 +17,7 @@ public:
         QssPath,
         LaunchQss,
         DefaultQss,
+        InoutEditColor,
 
         Param_count,
     }Parameter;
