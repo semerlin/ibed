@@ -13,5 +13,7 @@
         <file>res/images/refresh_l.png</file>
         <file>res/images/shortadvise_h.png</file>
         <file>res/images/shortadvise_l.png</file>
+        <file>res/images/upload_h.png</file>
+        <file>res/images/upload_l.png</file>
     </qresource>
 </RCC>

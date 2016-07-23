@@ -1,6 +1,7 @@
 #ifndef ADVISEWIDGET_H
 #define ADVISEWIDGET_H
 
+#include "controls_global.h"
 #include <QWidget>
 
 namespace Ui {
@@ -10,7 +11,7 @@ class AdviseWidget;
 class QTableView;
 class AdviseInfoWidget;
 
-class AdviseWidget : public QWidget
+class CONTROLSSHARED_EXPORT AdviseWidget : public QWidget
 {
     Q_OBJECT
 

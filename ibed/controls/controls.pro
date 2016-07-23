@@ -20,7 +20,10 @@ SOURCES += controls.cpp \
     patientinfowidget.cpp \
     patientadvisewidget.cpp \
     advisewidget.cpp \
-    adviseinfowidget.cpp
+    adviseinfowidget.cpp \
+    inoutwidget.cpp \
+    inouteditlabellistdelegate.cpp \
+    educationwidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -32,7 +35,10 @@ HEADERS += controls.h\
     patientinfowidget.h \
     patientadvisewidget.h \
     advisewidget.h \
-    adviseinfowidget.h
+    adviseinfowidget.h \
+    inoutwidget.h \
+    inouteditlabellistdelegate.h \
+    educationwidget.h
 
 unix {
     target.path = /usr/lib
@@ -47,7 +53,9 @@ FORMS += \
     bednumwidget.ui \
     patientinfowidget.ui \
     patientadvisewidget.ui \
-    advisewidget.ui
+    advisewidget.ui \
+    inoutwidget.ui \
+    educationwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 
@@ -58,3 +66,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
 
 INCLUDEPATH += $$PWD/../corelib/utility
 DEPENDPATH += $$PWD/../corelib/utility
+
+unix:!macx: LIBS += -L$$OUT_PWD/../commonunit/ -lcommonunit
+
+INCLUDEPATH += $$PWD/../commonunit
+DEPENDPATH += $$PWD/../commonunit

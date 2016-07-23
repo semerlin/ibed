@@ -1,13 +1,14 @@
 #ifndef BEDNUMWIDGET_H
 #define BEDNUMWIDGET_H
 
+#include "controls_global.h"
 #include "basewidget.h"
 
 namespace Ui {
 class BedNumWidget;
 }
 
-class BedNumWidget : public BaseWidget
+class CONTROLSSHARED_EXPORT BedNumWidget : public BaseWidget
 {
     Q_OBJECT
 

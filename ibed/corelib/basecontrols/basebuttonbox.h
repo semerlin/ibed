@@ -5,13 +5,14 @@
 #include <QHash>
 #include <QAbstractButton>
 #include <QLayout>
+#include "basecontrols_global.h"
 
 namespace Ui {
 class BaseButtonBox;
 }
 
 
-class BaseButtonBox : public BaseWidget
+class BASECONTROLSSHARED_EXPORT BaseButtonBox : public BaseWidget
 {
     Q_OBJECT
 

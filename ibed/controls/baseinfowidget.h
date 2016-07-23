@@ -1,13 +1,14 @@
 #ifndef BASEINFOWIDGET_H
 #define BASEINFOWIDGET_H
 
+#include "controls_global.h"
 #include <QWidget>
 
 namespace Ui {
 class BaseInfoWidget;
 }
 
-class BaseInfoWidget : public QWidget
+class CONTROLSSHARED_EXPORT BaseInfoWidget : public QWidget
 {
     Q_OBJECT
 

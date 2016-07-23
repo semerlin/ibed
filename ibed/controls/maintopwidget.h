@@ -1,6 +1,7 @@
 #ifndef MAINTOPWIDGET_H
 #define MAINTOPWIDGET_H
 
+#include "controls_global.h"
 #include <QWidget>
 
 
@@ -10,7 +11,7 @@ class MainTopWidget;
 
 class QPushButton;
 
-class MainTopWidget : public QWidget
+class CONTROLSSHARED_EXPORT MainTopWidget : public QWidget
 {
     Q_OBJECT
 

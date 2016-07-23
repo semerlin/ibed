@@ -1,13 +1,14 @@
 #ifndef MAINBOTTOMWIDGET_H
 #define MAINBOTTOMWIDGET_H
 
+#include "controls_global.h"
 #include <QWidget>
 
 namespace Ui {
 class MainBottomWidget;
 }
 
-class MainBottomWidget : public QWidget
+class CONTROLSSHARED_EXPORT MainBottomWidget : public QWidget
 {
     Q_OBJECT
 

@@ -1,6 +1,7 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include "controls_global.h"
 #include <QWidget>
 #include <QMap>
 
@@ -12,9 +13,10 @@ class MainTopWidget;
 class MainBottomWidget;
 class BaseInfoWidget;
 class AdviseWidget;
-class QAbstractButton;
+class InOutWidget;
+class EducationWidget;
 
-class MainWidget : public QWidget
+class CONTROLSSHARED_EXPORT MainWidget : public QWidget
 {
     Q_OBJECT
 
@@ -36,6 +38,8 @@ private:
     MainBottomWidget *m_bottomWidget;
     BaseInfoWidget *m_baseInfoWidget;
     AdviseWidget *m_adviseWidget;
+    InOutWidget *m_inOutWidget;
+    EducationWidget *m_educationWidget;
 
 private:
     QMap<int, QWidget *> m_btnWidgets;

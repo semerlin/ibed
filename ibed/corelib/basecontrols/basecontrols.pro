@@ -16,7 +16,16 @@ SOURCES += basecontrols.cpp \
     iconbuttonbox.cpp \
     basewidget.cpp \
     iconpushbutton.cpp \
-    linetableview.cpp
+    linetableview.cpp \
+    labellineedit.cpp \
+    editlabellistitem.cpp \
+    editlabellistdelegate.cpp \
+    editlabellistmodel.cpp \
+    editlabellistview.cpp \
+    musicplaylistitem.cpp \
+    musicplaylistview.cpp \
+    musicplaylistmodel.cpp \
+    musicplaylistdelegate.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
@@ -24,7 +33,16 @@ HEADERS += basecontrols.h\
     iconbuttonbox.h \
     basewidget.h \
     iconpushbutton.h \
-    linetableview.h
+    linetableview.h \
+    labellineedit.h \
+    editlabellistitem.h \
+    editlabellistdelegate.h \
+    editlabellistmodel.h \
+    editlabellistview.h \
+    musicplaylistitem.h \
+    musicplaylistview.h \
+    musicplaylistmodel.h \
+    musicplaylistdelegate.h
 
 unix {
     target.path = /usr/lib
@@ -32,4 +50,5 @@ unix {
 }
 
 FORMS += \
-    basebuttonbox.ui
+    basebuttonbox.ui \
+    labellineedit.ui

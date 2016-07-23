@@ -1,13 +1,14 @@
 #ifndef PATIENTINFOWIDGET_H
 #define PATIENTINFOWIDGET_H
 
+#include "controls_global.h"
 #include "basewidget.h"
 
 namespace Ui {
 class PatientInfoWidget;
 }
 
-class PatientInfoWidget : public BaseWidget
+class CONTROLSSHARED_EXPORT PatientInfoWidget : public BaseWidget
 {
     Q_OBJECT
 

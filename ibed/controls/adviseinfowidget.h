@@ -1,10 +1,11 @@
 #ifndef ADVISEINFOWIDGET_H
 #define ADVISEINFOWIDGET_H
 
+#include "controls_global.h"
 #include "linetableview.h"
 class AdviseInfoModel;
 
-class AdviseInfoWidget : public LineTableView
+class CONTROLSSHARED_EXPORT AdviseInfoWidget : public LineTableView
 {
     Q_OBJECT
 

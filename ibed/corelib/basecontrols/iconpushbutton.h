@@ -1,9 +1,10 @@
 #ifndef ICONPUSHBUTTON_H
 #define ICONPUSHBUTTON_H
 
+#include "basecontrols_global.h"
 #include <QPushButton>
 
-class IconPushButton : public QPushButton
+class BASECONTROLSSHARED_EXPORT IconPushButton : public QPushButton
 {
     Q_OBJECT
 

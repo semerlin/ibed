@@ -1,9 +1,10 @@
 #ifndef LINETABLEVIEW_H
 #define LINETABLEVIEW_H
 
+#include "basecontrols_global.h"
 #include <QTableView>
 
-class LineTableView : public QTableView
+class BASECONTROLSSHARED_EXPORT LineTableView : public QTableView
 {
 public:
     LineTableView(QWidget *parent = 0);
