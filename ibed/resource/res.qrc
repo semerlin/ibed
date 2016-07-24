@@ -15,5 +15,11 @@
         <file>res/images/shortadvise_l.png</file>
         <file>res/images/upload_h.png</file>
         <file>res/images/upload_l.png</file>
+        <file>res/images/pause.png</file>
+        <file>res/images/pause_select.png</file>
+        <file>res/images/play.png</file>
+        <file>res/images/play_select.png</file>
+        <file>res/images/stop.png</file>
+        <file>res/images/stop_select.png</file>
     </qresource>
 </RCC>

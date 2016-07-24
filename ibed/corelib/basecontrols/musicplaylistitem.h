@@ -15,8 +15,8 @@ class BASECONTROLSSHARED_EXPORT MusicPlayListItem
 
 public:
     explicit MusicPlayListItem();
-    explicit MusicPlayListItem(const QString &name, const QString &text,
-                               const QString &extraName);
+    explicit MusicPlayListItem(const QString &name, const QString &iconPlay,
+                               const QString &iconPause, const QString &iconStop);
     MusicPlayListItem(const MusicPlayListItem &item);
 
     ~MusicPlayListItem();
@@ -29,17 +29,22 @@ public:
 public:
     inline void setName(const QString &name)
     {
-        setData(Qt::UserRole, name);
+        setData(Qt::DisplayRole, name);
     }
 
-    inline void setText(const QString &text)
+    inline void setPlayIcon(const QString &icon)
     {
-        setData(Qt::DisplayRole, text);
+        setData(Qt::UserRole, icon);
     }
 
-    inline void setExtraName(const QString &extra)
+    inline void setPauseIcon(const QString &icon)
     {
-        setData(Qt::UserRole + 1, extra);
+        setData(Qt::UserRole + 1, icon);
+    }
+
+    inline void setStopIcon(const QString &icon)
+    {
+        setData(Qt::UserRole + 2, icon);
     }
 
     inline void setSizeHint(const QSize &size)
@@ -57,11 +62,10 @@ public:
         setData(Qt::TextAlignmentRole, alignment);
     }
 
-    inline void setStrech(int name, int text, int extra)
+    inline void setStrech(int name, int icon)
     {
-        setData(Qt::UserRole + 2, name);
-        setData(Qt::UserRole + 3, text);
-        setData(Qt::UserRole + 4, extra);
+        setData(Qt::UserRole + 3, name);
+        setData(Qt::UserRole + 4, icon);
     }
 
     inline QSize sizeHint(void) const
@@ -75,26 +79,15 @@ public:
         return data(Qt::SizeHintRole).value<QFont>();
     }
 
-    inline QString text(void) const
-    {
-        return data(Qt::DisplayRole).toString();
-    }
-
     inline QString name(void) const
     {
-        return data(Qt::UserRole).toString();
-    }
-
-    inline QString extraName(void) const
-    {
-        return data(Qt::UserRole + 1).toString();
+        return data(Qt::DisplayRole).toString();
     }
 
     inline int textAlignment(void) const
     {
         return data(Qt::TextAlignmentRole).toInt();
     }
-
 
 
     MusicPlayListItem& operator=(const MusicPlayListItem &item);

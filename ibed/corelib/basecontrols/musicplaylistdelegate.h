@@ -12,14 +12,10 @@ public:
 public:
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 protected:
     void calWidthAndHeight(const QStyleOptionViewItem &option, const QModelIndex &index,
-                           int &nameWidth, int &textWidth, int &extraWidth, int &height) const;
+                           int &nameWidth, int &iconWidth, int &height) const;
 };
 
 #endif // MUSICPLAYLISTDELEGATE_H

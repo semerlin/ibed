@@ -44,22 +44,22 @@ MusicPlayListItem::MusicPlayListItem() :
 {
     int alignment = Qt::AlignVCenter | Qt::AlignLeft;
     setData(Qt::TextAlignmentRole, alignment);
-    setData(Qt::UserRole + 2, 1);
     setData(Qt::UserRole + 3, 1);
     setData(Qt::UserRole + 4, 1);
 }
 
-MusicPlayListItem::MusicPlayListItem(const QString &name, const QString &text,
-                                     const QString &extraName) :
+
+MusicPlayListItem::MusicPlayListItem(const QString &name, const QString &iconPlay,
+                                     const QString &iconPause, const QString &iconStop) :
     m_view(NULL),
     d(new MusicPlayListItemPrivate(this))
 {
-    setData(Qt::UserRole, name);
-    setData(Qt::DisplayRole, text);
-    setData(Qt::UserRole + 1, extraName);
+    setData(Qt::DisplayRole, name);
+    setData(Qt::UserRole, iconPlay);
+    setData(Qt::UserRole + 1, iconPause);
+    setData(Qt::UserRole + 2, iconStop);
     int alignment = Qt::AlignVCenter | Qt::AlignLeft;
     setData(Qt::TextAlignmentRole, alignment);
-    setData(Qt::UserRole + 2, 1);
     setData(Qt::UserRole + 3, 1);
     setData(Qt::UserRole + 4, 1);
 }

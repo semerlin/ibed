@@ -18,6 +18,8 @@ MusicPlayListView::MusicPlayListView(QWidget *parent) :
 {
     setModel(m_model);
     setItemDelegate(m_delegate);
+    connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(onClicked(const QModelIndex&)));
+
 }
 
 MusicPlayListView::~MusicPlayListView()
@@ -27,14 +29,6 @@ MusicPlayListView::~MusicPlayListView()
 
     if(m_delegate)
         delete m_delegate;
-}
-
-void MusicPlayListView::setDelegate(QStyledItemDelegate *delegate)
-{
-    if(delegate != NULL)
-        setItemDelegate(delegate);
-    else
-        setItemDelegate(m_delegate);
 }
 
 
@@ -78,11 +72,16 @@ void MusicPlayListView::setSizeHint(const QSize &size)
     }
 }
 
-void MusicPlayListView::setStrech(int name, int text, int extra)
+void MusicPlayListView::setStrech(int name, int icon)
 {
     QList<MusicPlayListItem *> items = m_model->allItems();
     for(int i = 0; i < items.count(); ++i)
     {
-        items.at(i)->setStrech(name, text, extra);
+        items.at(i)->setStrech(name, icon);
     }
+}
+
+void MusicPlayListView::onClicked(const QModelIndex &index)
+{
+    emit itemClicked(m_model->item(index));
 }

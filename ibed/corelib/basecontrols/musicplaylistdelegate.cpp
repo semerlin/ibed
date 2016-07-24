@@ -3,6 +3,7 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QLineEdit>
+#include "formula.h"
 
 
 MusicPlayListDelegate::MusicPlayListDelegate(QObject *parent) :
@@ -18,17 +19,30 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     {
         painter->save();
 
-        int nameWidth = 0, textWidth = 0, extraWidth = 0, height = 0;
-        calWidthAndHeight(option, index, nameWidth, textWidth, extraWidth, height);
+        int nameWidth = 0, iconWidth = 0, height = 0;
+        calWidthAndHeight(option, index, nameWidth, iconWidth, height);
 
         QRect nameRect = QRect(option.rect.topLeft(), QSize(nameWidth - 5, height));
-        QRect textRect = QRect(option.rect.topLeft() + QPoint(nameWidth, 0) , QSize(textWidth - 5, height));
-        QRect extraRect = QRect(option.rect.topLeft() + QPoint(nameWidth + textWidth, 0) , QSize(extraWidth - 5, height));
+        QRect playIconRect = QRect(option.rect.topLeft() + QPoint(nameWidth, 0) , QSize(iconWidth - 5, height));
+        QRect pauseIconRect = QRect(playIconRect.topLeft()  + QPoint(iconWidth, 0), QSize(iconWidth - 5, height));
+        QRect stopIconRect = QRect(pauseIconRect.topLeft() + QPoint(iconWidth, 0) , QSize(iconWidth - 5, height));
 
         painter->setFont(index.data(Qt::FontRole).value<QFont>());
-        painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::UserRole).toString());
-        painter->drawText(textRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::DisplayRole).toString());
-        painter->drawText(extraRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::UserRole + 1).toString());
+        painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::DisplayRole).toString());
+
+        QPixmap picPlay = QPixmap(index.data(Qt::UserRole).toString());
+        painter->drawPixmap(Formula::rectInRectPosition(picPlay.rect(), playIconRect, Qt::AlignCenter),
+                            picPlay);
+
+        QPixmap picPause = QPixmap(index.data(Qt::UserRole + 1).toString());
+        painter->drawPixmap(Formula::rectInRectPosition(picPause.rect(), pauseIconRect, Qt::AlignCenter),
+                            picPause);
+
+
+        QPixmap picStop = QPixmap(index.data(Qt::UserRole + 2).toString());
+        painter->drawPixmap(Formula::rectInRectPosition(picStop.rect(), stopIconRect, Qt::AlignCenter),
+                            picStop);
+
 
         painter->restore();
     }
@@ -38,60 +52,8 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     }
 }
 
-QWidget *MusicPlayListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    Q_UNUSED(option)
-    Q_UNUSED(index)
-
-    QLineEdit *editor = new QLineEdit(parent);
-    return editor;
-}
-
-void MusicPlayListDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-{
-    QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
-    if(lineEdit)
-    {
-        lineEdit->setText(index.data(Qt::DisplayRole).toString());
-    }
-}
-
-void MusicPlayListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-    QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
-    if(lineEdit)
-    {
-        model->setData(index, lineEdit->text(), Qt::EditRole);
-    }
-}
-
-void MusicPlayListDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    int nameWidth = 0, textWidth = 0, extraWidth = 0, height = 0;
-    calWidthAndHeight(option, index, nameWidth, textWidth, extraWidth, height);
-
-    QFont font = index.data(Qt::FontRole).value<QFont>();
-    int fontHeight = QFontMetrics(font).height();
-
-    //calucate verical offet
-    int offset = 0;
-    int alignment = index.data(Qt::TextAlignmentRole).toInt();
-    if(alignment & Qt::AlignBottom)
-    {
-        offset = height - fontHeight;
-    }
-    else if(alignment & Qt::AlignVCenter)
-    {
-        offset = (height - fontHeight) / 2;
-    }
-
-    QRect decorationRect = QRect(option.rect.topLeft() + QPoint(nameWidth, offset-4), QSize(textWidth, fontHeight+8));
-    editor->setGeometry(decorationRect);
-    editor->setFont(font);
-}
-
 void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option, const QModelIndex &index,
-                                              int &nameWidth, int &textWidth, int &extraWidth, int &height) const
+                                              int &nameWidth, int &iconWidth, int &height) const
 {
     int itemHeight = -1;
     int width = -1;
@@ -114,30 +76,24 @@ void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     if(width == -1)
         width = view->size().width();
 
-    int nameStrech = index.data(Qt::UserRole + 2).toInt();
+    int nameStrech = index.data(Qt::UserRole + 3).toInt();
     if(nameStrech < 0)
         nameStrech = 0;
 
-    int textStrech = index.data(Qt::UserRole + 3).toInt();;
-    if(textStrech < 0)
-        textStrech = 0;
+    int iconStrech = index.data(Qt::UserRole + 4).toInt();;
+    if(iconStrech < 0)
+        iconStrech = 0;
 
-    int extraStrech = index.data(Qt::UserRole + 4).toInt();
-    if(extraStrech < 0)
-        extraStrech = 0;
-
-    int strechSum = nameStrech + textStrech + extraStrech;
+    int strechSum = nameStrech + iconStrech * 3;
     if(strechSum == 0)
     {
         nameStrech = 1;
-        textStrech = 1;
-        extraStrech = 1;
-        strechSum = 3;
+        iconStrech = 1;
+        strechSum = 4;
     }
 
     nameWidth = width / strechSum * nameStrech;
-    textWidth = width / strechSum * textStrech;
-    extraWidth = width / strechSum * extraStrech;
+    iconWidth = width / strechSum * iconStrech;
 
     height = itemHeight;
 

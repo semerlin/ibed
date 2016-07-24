@@ -52,3 +52,8 @@ unix {
 FORMS += \
     basebuttonbox.ui \
     labellineedit.ui
+
+unix:!macx: LIBS += -L$$OUT_PWD/../utility/ -lutility
+
+INCLUDEPATH += $$PWD/../utility
+DEPENDPATH += $$PWD/../utility

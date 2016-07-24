@@ -44,10 +44,6 @@ bool MusicPlayListModel::setData(const QModelIndex &index, const QVariant &value
 
 
     m_items.at(index.row())->setData(role, value);
-    if(role == Qt::EditRole)
-    {
-        m_items.at(index.row())->setData(Qt::DisplayRole, value);
-    }
 
     return true;
 }
@@ -57,7 +53,7 @@ Qt::ItemFlags MusicPlayListModel::flags(const QModelIndex &index) const
     if((!index.isValid()) && (index.row() >= m_items.count()))
         return 0;
 
-    return (Qt::ItemIsEditable | Qt::ItemIsEnabled);
+    return Qt::ItemIsEnabled;
 }
 
 bool MusicPlayListModel::insertRow(int row, MusicPlayListItem *item)

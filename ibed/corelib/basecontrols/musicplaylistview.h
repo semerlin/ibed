@@ -19,14 +19,19 @@ public:
     ~MusicPlayListView();
 
 public:
-    void setDelegate(QStyledItemDelegate *delegate);
     void addItem(MusicPlayListItem *item);
     void insertItem(int row, MusicPlayListItem *item);
     void clear(void);
     MusicPlayListItem *item(int row);
     void setFont(const QFont &font);
     void setSizeHint(const QSize &size);
-    void setStrech(int name, int text, int extra);
+    void setStrech(int name, int icon);
+
+signals:
+    void itemClicked(MusicPlayListItem *item);
+
+private slots:
+    void onClicked(const QModelIndex &index);
 
 private:
     MusicPlayListModel *m_model;
