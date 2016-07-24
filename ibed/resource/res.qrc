@@ -21,5 +21,8 @@
         <file>res/images/play_select.png</file>
         <file>res/images/stop.png</file>
         <file>res/images/stop_select.png</file>
+        <file>res/images/pause_press.png</file>
+        <file>res/images/play_press.png</file>
+        <file>res/images/stop_press.png</file>
     </qresource>
 </RCC>

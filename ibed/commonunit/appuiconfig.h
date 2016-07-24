@@ -18,6 +18,7 @@ public:
         LaunchQss,
         DefaultQss,
         InoutEditColor,
+        MusicSelectBackground,
 
         Param_count,
     }Parameter;

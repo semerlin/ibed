@@ -5,6 +5,7 @@
 #include <QFont>
 #include <QSize>
 #include <QVariant>
+#include <QBrush>
 
 class MusicPlayListView;
 class MusicPlayListItemPrivate;
@@ -68,6 +69,21 @@ public:
         setData(Qt::UserRole + 4, icon);
     }
 
+    inline void setSelectionBackground(const QBrush &color)
+    {
+        setData(Qt::UserRole + 5, color);
+    }
+
+    inline void setSelected(bool flag)
+    {
+        setData(Qt::UserRole + 6, flag);
+    }
+
+//    inline void setPlayIconHidden(bool flag)
+//    {
+//        setData()
+//    }
+
     inline QSize sizeHint(void) const
     {
         return data(Qt::SizeHintRole).toSize();
@@ -110,9 +126,14 @@ public:
         return data(Qt::TextAlignmentRole).toInt();
     }
 
+    inline QBrush selectionBackground(void) const
+    {
+        return data(Qt::UserRole + 5).value<QBrush>();
+    }
+
     inline bool isSelected(void) const
     {
-        return data(Qt::UserRole + 5).toBool();
+        return data(Qt::UserRole + 6).toBool();
     }
 
 
@@ -122,5 +143,6 @@ private:
     MusicPlayListView *m_view;
     MusicPlayListItemPrivate *d;
 };
+
 
 #endif // MUSICLISTPLAYITEM_H

@@ -46,6 +46,8 @@ MusicPlayListItem::MusicPlayListItem() :
     setData(Qt::TextAlignmentRole, alignment);
     setData(Qt::UserRole + 3, 1);
     setData(Qt::UserRole + 4, 1);
+    setData(Qt::UserRole + 5, QColor(0, 96, 169));
+    setData(Qt::UserRole + 6, false);
 }
 
 
@@ -62,6 +64,8 @@ MusicPlayListItem::MusicPlayListItem(const QString &name, const QString &iconPla
     setData(Qt::TextAlignmentRole, alignment);
     setData(Qt::UserRole + 3, 1);
     setData(Qt::UserRole + 4, 1);
+    setData(Qt::UserRole + 5, QColor(0, 96, 169));
+    setData(Qt::UserRole + 6, false);
 }
 
 MusicPlayListItem::MusicPlayListItem(const MusicPlayListItem &item)
@@ -94,7 +98,7 @@ void MusicPlayListItem::setData(int role, const QVariant &value)
         d->m_values.append(MusicPlayItemData(role, value));
 
     if(m_view != NULL)
-        m_view->m_model->itemChanged(this);
+        m_view->model()->itemChanged(this);
 }
 
 QVariant MusicPlayListItem::data(int role) const
@@ -112,8 +116,9 @@ QVariant MusicPlayListItem::data(int role) const
 
 MusicPlayListItem *MusicPlayListItem::clone() const
 {
-   return new MusicPlayListItem(*this);
+    return new MusicPlayListItem(*this);
 }
+
 
 MusicPlayListItem &MusicPlayListItem::operator=(const MusicPlayListItem &item)
 {

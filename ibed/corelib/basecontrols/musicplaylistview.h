@@ -8,6 +8,7 @@
 class MusicPlayListItem;
 class MusicPlayListDelegate;
 class MusicPlayListModel;
+class MusicPlayListViewPrivate;
 
 class BASECONTROLSSHARED_EXPORT MusicPlayListView : public QListView
 {
@@ -20,6 +21,7 @@ public:
     ~MusicPlayListView();
 
 public:
+    MusicPlayListModel *model(void) const;
     void addItem(MusicPlayListItem *item);
     void insertItem(int row, MusicPlayListItem *item);
     void clear(void);
@@ -27,16 +29,22 @@ public:
     void setFont(const QFont &font);
     void setSizeHint(const QSize &size);
     void setStrech(int name, int icon);
+    void setSelectionBackground(const QBrush &brush);
 
 signals:
     void itemClicked(MusicPlayListItem *item);
+    void currentItemChanged(MusicPlayListItem *current, MusicPlayListItem *previous);
+    void iconClicked(MusicPlayListItem *item, int index);
+
+protected:
+    void mousePressEvent(QMouseEvent *event);
 
 private slots:
     void onClicked(const QModelIndex &index);
 
 private:
-    MusicPlayListModel *m_model;
-    MusicPlayListDelegate *m_delegate;
+    MusicPlayListViewPrivate *d;
+
 };
 
 #endif // MusicPlayListView_H

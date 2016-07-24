@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QLineEdit>
 #include "formula.h"
+#include <QPalette>
 
 
 MusicPlayListDelegate::MusicPlayListDelegate(QObject *parent) :
@@ -19,9 +20,9 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     if(index.isValid())
     {
-
         MusicPlayListView *view = qobject_cast<MusicPlayListView *>(parent());
-        MusicPlayListItem *item = view->m_model->item(index);
+        MusicPlayListItem *item = view->model()->item(index);
+
         painter->save();
 
         int nameWidth = 0, iconWidth = 0, height = 0;
@@ -31,6 +32,9 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         QRect playIconRect = QRect(option.rect.topLeft() + QPoint(nameWidth, 0) , QSize(iconWidth - 5, height));
         QRect pauseIconRect = QRect(playIconRect.topLeft()  + QPoint(iconWidth, 0), QSize(iconWidth - 5, height));
         QRect stopIconRect = QRect(pauseIconRect.topLeft() + QPoint(iconWidth, 0) , QSize(iconWidth - 5, height));
+
+        if(item->isSelected())
+            painter->fillRect(option.rect, item->selectionBackground());
 
         painter->setFont(item->font());
         painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), item->name());
@@ -63,7 +67,7 @@ void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     int itemHeight = -1;
     int width = -1;
     MusicPlayListView *view = qobject_cast<MusicPlayListView *>(parent());
-    MusicPlayListItem *item = view->m_model->item(index);
+    MusicPlayListItem *item = view->model()->item(index);
 
     if(!index.data(Qt::SizeHintRole).isValid())
     {

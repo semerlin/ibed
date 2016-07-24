@@ -15,7 +15,8 @@ static const QStringList s_allParams = QStringList()
         << "QssPath"
         << "LaunchQss"
         << "DefaultQss"
-        << "InoutEditColor";
+        << "InoutEditColor"
+        << "MusicSelectBackground";
 
 static const QStringList s_fontParams = QStringList()
         << "Font_en"
@@ -27,7 +28,8 @@ static const QStringList s_qssParams = QStringList()
         << "DefaultQss";
 
 static const QStringList s_colorParams = QStringList()
-        << "InoutEditColor";
+        << "InoutEditColor"
+        << "MusicSelectBackground";
 
 
 AppUiConfig &AppUiConfig::instance()
@@ -129,6 +131,7 @@ void AppUiConfig::setDefault()
 
     setting.beginGroup("COLOR");
     setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
+    setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
 
 }
@@ -154,6 +157,7 @@ void AppUiConfig::loadValue(const QString &name)
 
     setting.beginGroup("COLOR");
     m_params["InoutEditColor"] = setting.value("inoutEditColor");
+    m_params["MusicSelectBackground"] = setting.value("musicSelectBackground");
     setting.endGroup();
 
 }
