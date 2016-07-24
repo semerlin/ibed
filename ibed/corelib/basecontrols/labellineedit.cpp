@@ -56,3 +56,10 @@ void LabelLineEdit::setExtraNameVisible(bool flag)
 {
     ui->labelExtraName->setVisible(flag);
 }
+
+void LabelLineEdit::setLayoutStrech(int name, int text, int extra)
+{
+    ui->horizontalLayout->setStretch(0, name);
+    ui->horizontalLayout->setStretch(1, text);
+    ui->horizontalLayout->setStretch(2, extra);
+}

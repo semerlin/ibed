@@ -2,7 +2,6 @@
 #include "ui_educationwidget.h"
 #include "appuiconfig.h"
 #include "musicplaylistitem.h"
-#include <QDebug>
 
 EducationWidget::EducationWidget(QWidget *parent) :
     QWidget(parent),
@@ -76,7 +75,6 @@ void EducationWidget::onCurrentItemChanged(MusicPlayListItem *current, MusicPlay
 
 void EducationWidget::onIconClicked(MusicPlayListItem *item, int index)
 {
-    qDebug() << "Pressed...\n";
     switch(index)
     {
     case 0:

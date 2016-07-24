@@ -6,6 +6,7 @@
 #include "advisewidget.h"
 #include "inoutwidget.h"
 #include "educationwidget.h"
+#include "settingwidget.h"
 #include "boost/foreach.hpp"
 #include <QPushButton>
 #include "util.h"
@@ -19,7 +20,8 @@ MainWidget::MainWidget(QWidget *parent) :
     m_baseInfoWidget(new BaseInfoWidget(this)),
     m_adviseWidget(new AdviseWidget(this)),
     m_inOutWidget(new InOutWidget(this)),
-    m_educationWidget(new EducationWidget(this))
+    m_educationWidget(new EducationWidget(this)),
+    m_settingWidget(new SettingWidget(this))
 {
     ui->setupUi(this);
 
@@ -35,10 +37,12 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->verticalLayoutMiddle->addWidget(m_adviseWidget);
     ui->verticalLayoutMiddle->addWidget(m_inOutWidget);
     ui->verticalLayoutMiddle->addWidget(m_educationWidget);
+    ui->verticalLayoutMiddle->addWidget(m_settingWidget);
     m_baseInfoWidget->show();
     m_adviseWidget->hide();
     m_inOutWidget->hide();
     m_educationWidget->hide();
+    m_settingWidget->hide();
 
     m_lastWidget = m_baseInfoWidget;
 
@@ -85,6 +89,7 @@ void MainWidget::connectBtnAndWidget()
     m_btnWidgets[1] = m_adviseWidget;
     m_btnWidgets[2] = m_inOutWidget;
     m_btnWidgets[3] = m_educationWidget;
+    m_btnWidgets[4] = m_settingWidget;
 }
 
 

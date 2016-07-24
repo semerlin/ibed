@@ -25,7 +25,8 @@ SOURCES += basecontrols.cpp \
     musicplaylistitem.cpp \
     musicplaylistview.cpp \
     musicplaylistmodel.cpp \
-    musicplaylistdelegate.cpp
+    musicplaylistdelegate.cpp \
+    labelslider.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
@@ -42,7 +43,8 @@ HEADERS += basecontrols.h\
     musicplaylistitem.h \
     musicplaylistview.h \
     musicplaylistmodel.h \
-    musicplaylistdelegate.h
+    musicplaylistdelegate.h \
+    labelslider.h
 
 unix {
     target.path = /usr/lib
@@ -51,7 +53,8 @@ unix {
 
 FORMS += \
     basebuttonbox.ui \
-    labellineedit.ui
+    labellineedit.ui \
+    labelslider.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../utility/ -lutility
 

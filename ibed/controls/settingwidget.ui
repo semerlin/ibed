@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingWidget</class>
+ <widget class="QWidget" name="SettingWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>681</width>
+    <height>418</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="LocalEthWidget" name="widgetLocalEth" native="true"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="ServerEthWidget" name="widgetServerEth" native="true"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="ScreenWidget" name="widgetScreenWidget" native="true"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="SoundWidget" name="widgetSound" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LocalEthWidget</class>
+   <extends>QWidget</extends>
+   <header>localethwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ServerEthWidget</class>
+   <extends>QWidget</extends>
+   <header>serverethwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ScreenWidget</class>
+   <extends>QWidget</extends>
+   <header>screenwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SoundWidget</class>
+   <extends>QWidget</extends>
+   <header>soundwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -15,6 +15,7 @@ class BaseInfoWidget;
 class AdviseWidget;
 class InOutWidget;
 class EducationWidget;
+class SettingWidget;
 
 class CONTROLSSHARED_EXPORT MainWidget : public QWidget
 {
@@ -40,6 +41,7 @@ private:
     AdviseWidget *m_adviseWidget;
     InOutWidget *m_inOutWidget;
     EducationWidget *m_educationWidget;
+    SettingWidget *m_settingWidget;
 
 private:
     QMap<int, QWidget *> m_btnWidgets;

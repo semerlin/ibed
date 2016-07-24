@@ -23,7 +23,12 @@ SOURCES += controls.cpp \
     adviseinfowidget.cpp \
     inoutwidget.cpp \
     inouteditlabellistdelegate.cpp \
-    educationwidget.cpp
+    educationwidget.cpp \
+    settingwidget.cpp \
+    localethwidget.cpp \
+    serverethwidget.cpp \
+    screenwidget.cpp \
+    soundwidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -38,7 +43,12 @@ HEADERS += controls.h\
     adviseinfowidget.h \
     inoutwidget.h \
     inouteditlabellistdelegate.h \
-    educationwidget.h
+    educationwidget.h \
+    settingwidget.h \
+    localethwidget.h \
+    serverethwidget.h \
+    screenwidget.h \
+    soundwidget.h
 
 unix {
     target.path = /usr/lib
@@ -55,7 +65,12 @@ FORMS += \
     patientadvisewidget.ui \
     advisewidget.ui \
     inoutwidget.ui \
-    educationwidget.ui
+    educationwidget.ui \
+    settingwidget.ui \
+    localethwidget.ui \
+    serverethwidget.ui \
+    screenwidget.ui \
+    soundwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 
