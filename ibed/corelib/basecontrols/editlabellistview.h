@@ -13,6 +13,7 @@ class BASECONTROLSSHARED_EXPORT EditLabelListView : public QListView
 {
     Q_OBJECT
     friend class EditLabelListItem;
+    friend class EditLabelListDelegate;
 
 public:
     EditLabelListView(QWidget *parent = 0);

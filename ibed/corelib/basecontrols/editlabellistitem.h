@@ -72,7 +72,7 @@ public:
 
     inline QFont font(void) const
     {
-        return data(Qt::SizeHintRole).value<QFont>();
+        return data(Qt::FontRole).value<QFont>();
     }
 
     inline QString text(void) const
@@ -93,6 +93,13 @@ public:
     inline int textAlignment(void) const
     {
         return data(Qt::TextAlignmentRole).toInt();
+    }
+
+    inline void strech(int &name, int &text, int &extra)
+    {
+        name = data(Qt::UserRole + 2).toInt();
+        text = data(Qt::UserRole + 3).toInt();
+        extra = data(Qt::UserRole + 4).toInt();
     }
 
 

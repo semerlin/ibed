@@ -13,6 +13,7 @@ class BASECONTROLSSHARED_EXPORT MusicPlayListView : public QListView
 {
     Q_OBJECT
     friend class MusicPlayListItem;
+    friend class MusicPlayListDelegate;
 
 public:
     MusicPlayListView(QWidget *parent = 0);

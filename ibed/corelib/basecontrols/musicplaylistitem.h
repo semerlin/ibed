@@ -76,7 +76,7 @@ public:
 
     inline QFont font(void) const
     {
-        return data(Qt::SizeHintRole).value<QFont>();
+        return data(Qt::FontRole).value<QFont>();
     }
 
     inline QString name(void) const
@@ -84,9 +84,35 @@ public:
         return data(Qt::DisplayRole).toString();
     }
 
+    inline QString playIcon(void) const
+    {
+        return data(Qt::UserRole).toString();
+    }
+
+    inline QString pauseIcon(void) const
+    {
+        return data(Qt::UserRole + 1).toString();
+    }
+
+    inline QString stopIcon(void) const
+    {
+        return data(Qt::UserRole + 2).toString();
+    }
+
+    inline void strech(int &name, int &icon) const
+    {
+        name = data(Qt::UserRole + 3).toInt();
+        icon = data(Qt::UserRole + 4).toInt();
+    }
+
     inline int textAlignment(void) const
     {
         return data(Qt::TextAlignmentRole).toInt();
+    }
+
+    inline bool isSelected(void) const
+    {
+        return data(Qt::UserRole + 5).toBool();
     }
 
 

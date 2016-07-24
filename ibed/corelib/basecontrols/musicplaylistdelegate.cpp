@@ -1,4 +1,6 @@
 #include "musicplaylistdelegate.h"
+#include "musicplaylistmodel.h"
+#include "musicplaylistitem.h"
 #include "musicplaylistview.h"
 #include <QStyledItemDelegate>
 #include <QPainter>
@@ -17,6 +19,9 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     if(index.isValid())
     {
+
+        MusicPlayListView *view = qobject_cast<MusicPlayListView *>(parent());
+        MusicPlayListItem *item = view->m_model->item(index);
         painter->save();
 
         int nameWidth = 0, iconWidth = 0, height = 0;
@@ -27,19 +32,19 @@ void MusicPlayListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         QRect pauseIconRect = QRect(playIconRect.topLeft()  + QPoint(iconWidth, 0), QSize(iconWidth - 5, height));
         QRect stopIconRect = QRect(pauseIconRect.topLeft() + QPoint(iconWidth, 0) , QSize(iconWidth - 5, height));
 
-        painter->setFont(index.data(Qt::FontRole).value<QFont>());
-        painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::DisplayRole).toString());
+        painter->setFont(item->font());
+        painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), item->name());
 
-        QPixmap picPlay = QPixmap(index.data(Qt::UserRole).toString());
+        QPixmap picPlay = QPixmap(item->playIcon());
         painter->drawPixmap(Formula::rectInRectPosition(picPlay.rect(), playIconRect, Qt::AlignCenter),
                             picPlay);
 
-        QPixmap picPause = QPixmap(index.data(Qt::UserRole + 1).toString());
+        QPixmap picPause = QPixmap(item->pauseIcon());
         painter->drawPixmap(Formula::rectInRectPosition(picPause.rect(), pauseIconRect, Qt::AlignCenter),
                             picPause);
 
 
-        QPixmap picStop = QPixmap(index.data(Qt::UserRole + 2).toString());
+        QPixmap picStop = QPixmap(item->stopIcon());
         painter->drawPixmap(Formula::rectInRectPosition(picStop.rect(), stopIconRect, Qt::AlignCenter),
                             picStop);
 
@@ -58,6 +63,8 @@ void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     int itemHeight = -1;
     int width = -1;
     MusicPlayListView *view = qobject_cast<MusicPlayListView *>(parent());
+    MusicPlayListItem *item = view->m_model->item(index);
+
     if(!index.data(Qt::SizeHintRole).isValid())
     {
         itemHeight = sizeHint(option, index).height();
@@ -65,7 +72,7 @@ void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     }
     else
     {
-        QSize size = index.data(Qt::SizeHintRole).toSize();
+        QSize size = item->sizeHint();
         itemHeight = size.height();
         width = size.width();
     }
@@ -76,11 +83,11 @@ void MusicPlayListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     if(width == -1)
         width = view->size().width();
 
-    int nameStrech = index.data(Qt::UserRole + 3).toInt();
+    int nameStrech = 0, iconStrech = 0;
+    item->strech(nameStrech, iconStrech);
     if(nameStrech < 0)
         nameStrech = 0;
 
-    int iconStrech = index.data(Qt::UserRole + 4).toInt();;
     if(iconStrech < 0)
         iconStrech = 0;
 

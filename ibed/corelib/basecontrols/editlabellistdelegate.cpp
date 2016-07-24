@@ -1,4 +1,6 @@
 #include "editlabellistdelegate.h"
+#include "editlabellistitem.h"
+#include "editlabellistmodel.h"
 #include "editlabellistview.h"
 #include <QStyledItemDelegate>
 #include <QPainter>
@@ -16,6 +18,9 @@ void EditLabelListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     if(index.isValid())
     {
+        EditLabelListView *view = qobject_cast<EditLabelListView *>(parent());
+        EditLabelListItem *item = view->m_model->item(index);
+
         painter->save();
 
         int nameWidth = 0, textWidth = 0, extraWidth = 0, height = 0;
@@ -25,10 +30,10 @@ void EditLabelListDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         QRect textRect = QRect(option.rect.topLeft() + QPoint(nameWidth, 0) , QSize(textWidth - 5, height));
         QRect extraRect = QRect(option.rect.topLeft() + QPoint(nameWidth + textWidth, 0) , QSize(extraWidth - 5, height));
 
-        painter->setFont(index.data(Qt::FontRole).value<QFont>());
-        painter->drawText(nameRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::UserRole).toString());
-        painter->drawText(textRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::DisplayRole).toString());
-        painter->drawText(extraRect, index.data(Qt::TextAlignmentRole).toInt(), index.data(Qt::UserRole + 1).toString());
+        painter->setFont(item->font());
+        painter->drawText(nameRect, item->textAlignment(), item->name());
+        painter->drawText(textRect, item->textAlignment(), item->text());
+        painter->drawText(extraRect, item->textAlignment(), item->extraName());
 
         painter->restore();
     }
@@ -96,6 +101,8 @@ void EditLabelListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     int itemHeight = -1;
     int width = -1;
     EditLabelListView *view = qobject_cast<EditLabelListView *>(parent());
+    EditLabelListItem *item = view->m_model->item(index);
+
     if(!index.data(Qt::SizeHintRole).isValid())
     {
         itemHeight = sizeHint(option, index).height();
@@ -103,7 +110,7 @@ void EditLabelListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     }
     else
     {
-        QSize size = index.data(Qt::SizeHintRole).toSize();
+        QSize size = item->sizeHint();
         itemHeight = size.height();
         width = size.width();
     }
@@ -114,15 +121,14 @@ void EditLabelListDelegate::calWidthAndHeight(const QStyleOptionViewItem &option
     if(width == -1)
         width = view->size().width();
 
-    int nameStrech = index.data(Qt::UserRole + 2).toInt();
+    int nameStrech = 0, textStrech = 0, extraStrech = 0;
+    item->strech(nameStrech, textStrech, extraStrech);
     if(nameStrech < 0)
         nameStrech = 0;
 
-    int textStrech = index.data(Qt::UserRole + 3).toInt();;
     if(textStrech < 0)
         textStrech = 0;
 
-    int extraStrech = index.data(Qt::UserRole + 4).toInt();
     if(extraStrech < 0)
         extraStrech = 0;
 
