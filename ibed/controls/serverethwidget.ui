@@ -28,6 +28,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
      <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
@@ -42,9 +45,40 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelPic">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>140</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
         <string>TextLabel</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelName">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -82,6 +116,22 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="LabelLineEdit" name="widgetIp" native="true"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>18</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="LabelLineEdit" name="widgetPort" native="true"/>

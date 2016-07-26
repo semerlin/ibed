@@ -15,6 +15,13 @@ public:
     explicit LabelSlider(QWidget *parent = 0);
     ~LabelSlider();
 
+public slots:
+    void setInfo(const QString &info);
+    void setPercent(const QString &percent);
+    void setSpacing(int spacing);
+    void setContentsMargins(int left, int top, int right, int bottom);
+
+
 private:
     Ui::LabelSlider *ui;
 };

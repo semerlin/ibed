@@ -28,7 +28,9 @@ SOURCES += controls.cpp \
     localethwidget.cpp \
     serverethwidget.cpp \
     screenwidget.cpp \
-    soundwidget.cpp
+    soundwidget.cpp \
+    infusionwidget.cpp \
+    bedwidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -48,7 +50,9 @@ HEADERS += controls.h\
     localethwidget.h \
     serverethwidget.h \
     screenwidget.h \
-    soundwidget.h
+    soundwidget.h \
+    infusionwidget.h \
+    bedwidget.h
 
 unix {
     target.path = /usr/lib
@@ -70,7 +74,9 @@ FORMS += \
     localethwidget.ui \
     serverethwidget.ui \
     screenwidget.ui \
-    soundwidget.ui
+    soundwidget.ui \
+    infusionwidget.ui \
+    bedwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 

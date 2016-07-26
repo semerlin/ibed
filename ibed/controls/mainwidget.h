@@ -16,6 +16,8 @@ class AdviseWidget;
 class InOutWidget;
 class EducationWidget;
 class SettingWidget;
+class InfusionWidget;
+class BedWidget;
 
 class CONTROLSSHARED_EXPORT MainWidget : public QWidget
 {
@@ -42,9 +44,12 @@ private:
     InOutWidget *m_inOutWidget;
     EducationWidget *m_educationWidget;
     SettingWidget *m_settingWidget;
+    BedWidget *m_bedWidget;
+    InfusionWidget *m_infusionWidget;
 
 private:
-    QMap<int, QWidget *> m_btnWidgets;
+    QMap<int, QWidget *> m_topBtnWidgets;
+    QMap<int, QWidget *> m_bottomBtnWidgets;
 };
 
 #endif // MAINWIDGET_H

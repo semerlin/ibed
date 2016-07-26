@@ -7,6 +7,8 @@
 #include "inoutwidget.h"
 #include "educationwidget.h"
 #include "settingwidget.h"
+#include "bedwidget.h"
+#include "infusionwidget.h"
 #include "boost/foreach.hpp"
 #include <QPushButton>
 #include "util.h"
@@ -21,7 +23,9 @@ MainWidget::MainWidget(QWidget *parent) :
     m_adviseWidget(new AdviseWidget(this)),
     m_inOutWidget(new InOutWidget(this)),
     m_educationWidget(new EducationWidget(this)),
-    m_settingWidget(new SettingWidget(this))
+    m_settingWidget(new SettingWidget(this)),
+    m_bedWidget(new BedWidget(this)),
+    m_infusionWidget(new InfusionWidget(this))
 {
     ui->setupUi(this);
 
@@ -38,11 +42,16 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->verticalLayoutMiddle->addWidget(m_inOutWidget);
     ui->verticalLayoutMiddle->addWidget(m_educationWidget);
     ui->verticalLayoutMiddle->addWidget(m_settingWidget);
+    ui->verticalLayoutMiddle->addWidget(m_bedWidget);
+    ui->verticalLayoutMiddle->addWidget(m_infusionWidget);
+
     m_baseInfoWidget->show();
     m_adviseWidget->hide();
     m_inOutWidget->hide();
     m_educationWidget->hide();
     m_settingWidget->hide();
+    m_bedWidget->hide();
+    m_infusionWidget->hide();
 
     m_lastWidget = m_baseInfoWidget;
 
@@ -60,11 +69,11 @@ void MainWidget::onTopWidgetButtonClick(int id)
     //lowlight buttons if clicked
     m_bottomWidget->lowlightButtons();
 
-    if((m_lastWidget != m_btnWidgets[id]) && (m_btnWidgets[id] != NULL))
+    if((m_lastWidget != m_topBtnWidgets[id]) && (m_topBtnWidgets[id] != NULL))
     {
         m_lastWidget->hide();
-        m_btnWidgets[id]->show();
-        m_lastWidget = m_btnWidgets[id];
+        m_topBtnWidgets[id]->show();
+        m_lastWidget = m_topBtnWidgets[id];
     }
 }
 
@@ -73,23 +82,25 @@ void MainWidget::onBottomWidgetButtonClick(int id)
     //lowlight buttons if clicked
     m_topWidget->lowlightButtons();
 
-    switch(id)
+    if((m_lastWidget != m_bottomBtnWidgets[id]) && (m_bottomBtnWidgets[id] != NULL))
     {
-    case 0:
-        break;
-    default:
-        break;
+        m_lastWidget->hide();
+        m_bottomBtnWidgets[id]->show();
+        m_lastWidget = m_bottomBtnWidgets[id];
     }
 }
 
 void MainWidget::connectBtnAndWidget()
 {
-    m_btnWidgets.clear();
-    m_btnWidgets[0] = m_baseInfoWidget;
-    m_btnWidgets[1] = m_adviseWidget;
-    m_btnWidgets[2] = m_inOutWidget;
-    m_btnWidgets[3] = m_educationWidget;
-    m_btnWidgets[4] = m_settingWidget;
+    m_topBtnWidgets.clear();
+    m_topBtnWidgets[0] = m_baseInfoWidget;
+    m_topBtnWidgets[1] = m_adviseWidget;
+    m_topBtnWidgets[2] = m_inOutWidget;
+    m_topBtnWidgets[3] = m_educationWidget;
+    m_topBtnWidgets[4] = m_settingWidget;
+
+    m_bottomBtnWidgets[0] = m_bedWidget;
+    m_bottomBtnWidgets[1] = m_infusionWidget;
 }
 
 
