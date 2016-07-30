@@ -20,7 +20,8 @@ public:
     ~InOutWidget();
 
 private slots:
-    void on_pushButtonUpload_clicked();
+    void onPushButtonPress();
+    void onPushButtonReleased();
     void onLowlightButton(void);
 
 private:

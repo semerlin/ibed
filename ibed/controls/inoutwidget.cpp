@@ -16,10 +16,12 @@ InOutWidget::InOutWidget(QWidget *parent) :
                                     << ":/res/images/upload_l.png"
                                     << ":/res/images/upload_h.png");
 
-    ui->pushButtonUpload->setText(tr("Upload"));
+    ui->pushButtonUpload->setText(QT_TRANSLATE_NOOP("InOut", "上传"));
+    connect(ui->pushButtonUpload, SIGNAL(pressed()), this, SLOT(onPushButtonPress()));
+    connect(ui->pushButtonUpload, SIGNAL(released()), this, SLOT(onPushButtonReleased()));
 
-    ui->labelIn->setText(tr("Intake"));
-    ui->labelOut->setText(tr("Output"));
+    ui->labelIn->setText(QT_TRANSLATE_NOOP("InOut", "入量"));
+    ui->labelOut->setText(QT_TRANSLATE_NOOP("InOut", "出量"));
 
     QFont font(AppUiConfig::instance().fontFamily());
     font.setPixelSize(12);
@@ -64,11 +66,16 @@ InOutWidget::~InOutWidget()
     delete m_outDelegate;
 }
 
-void InOutWidget::on_pushButtonUpload_clicked()
+void InOutWidget::onPushButtonPress()
 {
     Util::changeQssWidgetProperty(ui->pushButtonUpload, "highlight", true);
     ui->pushButtonUpload->changeToIcon(1);
-    QTimer::singleShot(150, this, SLOT(onLowlightButton()));
+}
+
+void InOutWidget::onPushButtonReleased()
+{
+    Util::changeQssWidgetProperty(ui->pushButtonUpload, "highlight", false);
+    ui->pushButtonUpload->changeToIcon(0);
 }
 
 void InOutWidget::onLowlightButton()

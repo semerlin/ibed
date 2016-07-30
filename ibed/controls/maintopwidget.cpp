@@ -15,27 +15,27 @@ MainTopWidget::MainTopWidget(QWidget *parent) :
     ui->widgetTop->setSpacing(40);
     ui->widgetTop->setContentsMargins(20, 0, 20, 0);
 
-    ui->widgetTop->addButton<BUTTON_TYPE>(tr("Patient"));
+    ui->widgetTop->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("TopWidget", "基本信息"));
     ui->widgetTop->setButtonIcons(0, QStringList()
                                  << "./resource/ui/icon/baseinfo_l.png"
                                  << "./resource/ui/icon/baseinfo_h.png");
 
-    ui->widgetTop->addButton<BUTTON_TYPE>(tr("Advise"));
+    ui->widgetTop->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("TopWidget", "医嘱内容"));
     ui->widgetTop->setButtonIcons(1, QStringList()
                                  << "./resource/ui/icon/advise_l.png"
                                  << "./resource/ui/icon/advise_h.png");
 
-    ui->widgetTop->addButton<BUTTON_TYPE>(tr("In Out"));
+    ui->widgetTop->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("TopWidget", "出入量"));
     ui->widgetTop->setButtonIcons(2, QStringList()
                                  << "./resource/ui/icon/inout_l.png"
                                  << "./resource/ui/icon/inout_h.png");
 
-    ui->widgetTop->addButton<BUTTON_TYPE>(tr("Education"));
+    ui->widgetTop->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("TopWidget", "医疗宣教"));
     ui->widgetTop->setButtonIcons(3, QStringList()
                                  << "./resource/ui/icon/education_l.png"
                                  << "./resource/ui/icon/education_h.png");
 
-    ui->widgetTop->addButton<BUTTON_TYPE>(tr("Setting"));
+    ui->widgetTop->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("TopWidget", "系统设置"));
     ui->widgetTop->setButtonIcons(4, QStringList()
                                  << "./resource/ui/icon/setting_l.png"
                                  << "./resource/ui/icon/setting_h.png");

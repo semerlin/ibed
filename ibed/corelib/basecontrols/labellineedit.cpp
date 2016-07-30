@@ -63,3 +63,8 @@ void LabelLineEdit::setLayoutStrech(int name, int text, int extra)
     ui->horizontalLayout->setStretch(1, text);
     ui->horizontalLayout->setStretch(2, extra);
 }
+
+void LabelLineEdit::setSpacing(int spacing)
+{
+    ui->horizontalLayout->setSpacing(spacing);
+}

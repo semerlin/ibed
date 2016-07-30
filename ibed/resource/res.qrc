@@ -28,5 +28,39 @@
         <file>res/images/screen.png</file>
         <file>res/images/server.png</file>
         <file>res/images/sound.png</file>
+        <file>res/images/bedcontrol.png</file>
+        <file>res/images/left1_h.png</file>
+        <file>res/images/left1_l.png</file>
+        <file>res/images/left2_h.png</file>
+        <file>res/images/left2_l.png</file>
+        <file>res/images/leftup1.png</file>
+        <file>res/images/right1-1-01.png</file>
+        <file>res/images/right1-2_h.png</file>
+        <file>res/images/right2_h.png</file>
+        <file>res/images/right2_l.png</file>
+        <file>res/images/right4_h.png</file>
+        <file>res/images/right4_l.png</file>
+        <file>res/images/right5_h.png</file>
+        <file>res/images/right5_l.png</file>
+        <file>res/images/right6_h.png</file>
+        <file>res/images/right6_l.png</file>
+        <file>res/images/right7_h.png</file>
+        <file>res/images/right7_l.png</file>
+        <file>res/images/right8_h.png</file>
+        <file>res/images/right8_l.png</file>
+        <file>res/images/right9_h.png</file>
+        <file>res/images/right9_l.png</file>
+        <file>res/images/right10_h.png</file>
+        <file>res/images/right10_l.png</file>
+        <file>res/images/right11_h.png</file>
+        <file>res/images/right11_l.png</file>
+        <file>res/images/right12_h.png</file>
+        <file>res/images/right12_l.png</file>
+        <file>res/images/right13_h.png</file>
+        <file>res/images/right13_l.png</file>
+        <file>res/images/right14_h.png</file>
+        <file>res/images/right14_l.png</file>
+        <file>res/images/rightup1.png</file>
+        <file>res/images/weight.png</file>
     </qresource>
 </RCC>

@@ -50,7 +50,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>adsfsdf</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -67,7 +67,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="labelIn">
+        <widget class="QLabel" name="labelOut">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -100,7 +100,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="labelOut">
+        <widget class="QLabel" name="labelIn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>

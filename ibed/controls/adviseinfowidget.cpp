@@ -52,14 +52,14 @@ AdviseInfoModel::AdviseInfoModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     m_header = QStringList()
-            << "Num"
-            << "Type"
-            << "Name"
-            << "Record Time"
-            << "Code"
-            << "Detail"
-            << "Status"
-            << "End Time";
+            << QT_TRANSLATE_NOOP("AdviseInfo", "编号")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "类别")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "医生姓名")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "记录时间")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "医嘱编码")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "内容")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "状态")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "结束时间");
 }
 
 AdviseInfoModel::AdviseInfoModel(const QList<QStringList> &info, QObject *parent) :
@@ -68,14 +68,14 @@ AdviseInfoModel::AdviseInfoModel(const QList<QStringList> &info, QObject *parent
     m_adviseInfo = info;
 
     m_header = QStringList()
-            << "Num"
-            << "Type"
-            << "Name"
-            << "Record Time"
-            << "Code"
-            << "Detail"
-            << "Status"
-            << "End Time";
+            << QT_TRANSLATE_NOOP("AdviseInfo", "编号")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "类别")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "医生姓名")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "记录时间")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "医嘱编码")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "内容")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "状态")
+            << QT_TRANSLATE_NOOP("AdviseInfo", "结束时间");
 }
 
 void AdviseInfoModel::clearData()

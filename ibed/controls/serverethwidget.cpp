@@ -8,12 +8,12 @@ ServerEthWidget::ServerEthWidget(QWidget *parent) :
     ui->setupUi(this);
 
     ui->widgetIp->setLayoutStrech(2, 4, 1);
-    ui->widgetIp->setName("IP");
+    ui->widgetIp->setName(QT_TRANSLATE_NOOP("Server", "IP地址"));
     ui->widgetPort->setLayoutStrech(2, 4, 1);
-    ui->widgetPort->setName("Port");
+    ui->widgetPort->setName(QT_TRANSLATE_NOOP("Server", "端口"));
 
     ui->labelPic->setPixmap(QPixmap(":/res/images/server.png"));
-    ui->labelName->setText("服务器网络设置");
+    ui->labelName->setText(QT_TRANSLATE_NOOP("Server", "服务器网络设置"));
 
 }
 

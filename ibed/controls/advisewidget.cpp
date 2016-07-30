@@ -15,14 +15,16 @@ AdviseWidget::AdviseWidget(QWidget *parent) :
                                     << ":/res/images/refresh_l.png"
                                     << ":/res/images/refresh_h.png");
 
-    ui->pushButtonRefresh->setText(tr("Update"));
+    ui->pushButtonRefresh->setText(QT_TRANSLATE_NOOP("AdviseInfo", "更新"));
+    connect(ui->pushButtonRefresh, SIGNAL(pressed()), this, SLOT(onPushButtonPress()));
+    connect(ui->pushButtonRefresh, SIGNAL(released()), this, SLOT(onPushButtonReleased()));
 
-    ui->widgetTabBar->addButton<QPushButton>(tr("Temp Advise"));
+    ui->widgetTabBar->addButton<QPushButton>(QT_TRANSLATE_NOOP("AdviseInfo", "临时医嘱"));
     ui->widgetTabBar->setButtonIcons(0, QStringList()
                                  << ":/res/images/shortadvise_l.png"
                                  << ":/res/images/shortadvise_h.png");
 
-    ui->widgetTabBar->addButton<QPushButton>(tr("Long Advise"));
+    ui->widgetTabBar->addButton<QPushButton>(QT_TRANSLATE_NOOP("AdviseInfo", "长期医嘱"));
     ui->widgetTabBar->setButtonIcons(1, QStringList()
                                  << ":/res/images/longadvise_l.png"
                                  << ":/res/images/longadvise_h.png");
@@ -59,17 +61,18 @@ AdviseWidget::~AdviseWidget()
     delete ui;
 }
 
-void AdviseWidget::on_pushButtonRefresh_clicked()
+
+
+void AdviseWidget::onPushButtonPress()
 {
     Util::changeQssWidgetProperty(ui->pushButtonRefresh, "highlight", true);
     ui->pushButtonRefresh->changeToIcon(1);
-    QTimer::singleShot(150, this, SLOT(onLowlightPushButton()));
 }
 
-void AdviseWidget::onLowlightPushButton()
+void AdviseWidget::onPushButtonReleased()
 {
-    ui->pushButtonRefresh->changeToIcon(0);
     Util::changeQssWidgetProperty(ui->pushButtonRefresh, "highlight", false);
+    ui->pushButtonRefresh->changeToIcon(0);
 }
 
 

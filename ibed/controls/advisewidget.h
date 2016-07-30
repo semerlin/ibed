@@ -20,7 +20,8 @@ public:
     ~AdviseWidget();
 
 private slots:
-    void on_pushButtonRefresh_clicked();
+    void onPushButtonPress();
+    void onPushButtonReleased();
     void onLowlightPushButton();
     void onButtonClicked(int id);
 

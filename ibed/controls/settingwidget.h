@@ -15,6 +15,10 @@ public:
     explicit SettingWidget(QWidget *parent = 0);
     ~SettingWidget();
 
+private slots:
+    void onPushButtonPress();
+    void onPushButtonReleased();
+
 private:
     Ui::SettingWidget *ui;
 };

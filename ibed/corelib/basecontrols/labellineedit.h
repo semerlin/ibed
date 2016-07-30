@@ -29,6 +29,7 @@ public slots:
     void setNameVisible(bool flag);
     void setExtraNameVisible(bool flag);
     void setLayoutStrech(int name, int text, int extra);
+    void setSpacing(int spacing);
 
 private:
     Ui::LabelLineEdit *ui;

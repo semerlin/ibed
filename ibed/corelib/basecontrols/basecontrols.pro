@@ -26,7 +26,8 @@ SOURCES += basecontrols.cpp \
     musicplaylistview.cpp \
     musicplaylistmodel.cpp \
     musicplaylistdelegate.cpp \
-    labelslider.cpp
+    labelslider.cpp \
+    circleprogressbar.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
@@ -44,7 +45,8 @@ HEADERS += basecontrols.h\
     musicplaylistview.h \
     musicplaylistmodel.h \
     musicplaylistdelegate.h \
-    labelslider.h
+    labelslider.h \
+    circleprogressbar.h
 
 unix {
     target.path = /usr/lib

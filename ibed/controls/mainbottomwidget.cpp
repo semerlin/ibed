@@ -14,12 +14,12 @@ MainBottomWidget::MainBottomWidget(QWidget *parent) :
     ui->widgetBottom->setSpacing(100);
     ui->widgetBottom->setContentsMargins(100, 0, 100, 0);
 
-    ui->widgetBottom->addButton<BUTTON_TYPE>(tr("Bed"));
+    ui->widgetBottom->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("BottomWidget", "病床控制"));
     ui->widgetBottom->setButtonIcons(0, QStringList()
                                  << "./resource/ui/icon/bedcontrol_l.png"
                                  << "./resource/ui/icon/bedcontrol_h.png");
 
-    ui->widgetBottom->addButton<BUTTON_TYPE>(tr("Infusion"));
+    ui->widgetBottom->addButton<BUTTON_TYPE>(QT_TRANSLATE_NOOP("BottomWidget", "输液控制"));
     ui->widgetBottom->setButtonIcons(1, QStringList()
                                  << "./resource/ui/icon/infusion_l.png"
                                  << "./resource/ui/icon/infusion_h.png");
