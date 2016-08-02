@@ -4,6 +4,7 @@
 #include "boost/foreach.hpp"
 #include <QStringList>
 #include <QThread>
+#include <QTimer>
 
 LOG4QT_DECLARE_STATIC_LOGGER(log,SimpleStateMachine)
 
@@ -11,21 +12,14 @@ LOG4QT_DECLARE_STATIC_LOGGER(log,SimpleStateMachine)
 BaseAppLaunch::BaseAppLaunch(IAppLaunchWidget *widget, ModuleManger *manger) :
     m_widget(widget),
     m_moduleManger(manger),
-    m_thread(new QThread)
+    m_extVal(QVariant())
 {
     Q_ASSERT(m_moduleManger != NULL);
     Q_ASSERT(m_widget != NULL);
 
 
-    //load module may cost a lot of time, so move it to thread
-    //don't use module that contains GUI, GUI must run in main thread
-    m_moduleManger->moveToThread(m_thread);
-    m_moduleManger->setOutMainThread(true);
-    m_thread->start();
-
-
     connect(this, SIGNAL(startLaunch(const QVariant&)),
-            m_moduleManger, SLOT(onLoadModules(const QVariant&)));
+            m_moduleManger, SLOT(onLoadModules(const QVariant&)), Qt::QueuedConnection);
 
     connect(m_moduleManger, SIGNAL(moduleChanged(IAppModule*,ModuleManger::MODULE_STATUS)),
             this, SLOT(onModuleChanged(IAppModule*,ModuleManger::MODULE_STATUS)));
@@ -44,9 +38,6 @@ BaseAppLaunch::~BaseAppLaunch()
         disconnect(m_moduleManger, SIGNAL(moduleChanged(IAppModule*,ModuleManger::MODULE_STATUS)),
                    this, SLOT(onModuleChanged(IAppModule*,ModuleManger::MODULE_STATUS)));
     }
-
-    if(m_thread->isRunning())
-        m_thread->quit();
 }
 
 int BaseAppLaunch::run(int argc, char **argv)
@@ -59,10 +50,9 @@ int BaseAppLaunch::run(int argc, char **argv)
         val << argv[i];
     }
 
-    QVariant moduleVal = QVariant(val);
-
-    emit startLaunch(moduleVal);
-
+    m_extVal = val;
+    //wait a little minute to let m_widget shown
+    QTimer::singleShot(100, this, SLOT(onStartLaunch()));
     return 0;
 }
 
@@ -91,6 +81,11 @@ void BaseAppLaunch::onModuleChanged(IAppModule *module, ModuleManger::MODULE_STA
     {
         emit launchFinished();
     }
+}
+
+void BaseAppLaunch::onStartLaunch()
+{
+    emit startLaunch(m_extVal);
 }
 
 

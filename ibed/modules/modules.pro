@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += gui
 
 TARGET = modules
 TEMPLATE = lib
@@ -15,12 +15,14 @@ DEFINES += MODULES_LIBRARY
 
 SOURCES += modules.cpp \
     hardwaremodule.cpp \
-    thememodule.cpp
+    thememodule.cpp \
+    uimodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
     hardwaremodule.h \
-    thememodule.h
+    thememodule.h \
+    uimodule.h
 
 unix {
     target.path = /usr/lib
@@ -54,3 +56,13 @@ unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
 
 INCLUDEPATH += $$PWD/../3rdpart/log4qt
 DEPENDPATH += $$PWD/../3rdpart/log4qt
+
+unix:!macx: LIBS += -L$$OUT_PWD/../controls/ -lcontrols
+
+INCLUDEPATH += $$PWD/../controls
+DEPENDPATH += $$PWD/../controls
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
+
+INCLUDEPATH += $$PWD/../corelib/basecontrols
+DEPENDPATH += $$PWD/../corelib/basecontrols

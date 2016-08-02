@@ -1,0 +1,29 @@
+#ifndef STANDBYWIDGET_H
+#define STANDBYWIDGET_H
+
+#include "controls_global.h"
+#include "basewidget.h"
+
+namespace Ui {
+class StandbyWidget;
+}
+
+class CONTROLSSHARED_EXPORT StandbyWidget : public BaseWidget
+{
+    Q_OBJECT
+
+public:
+    explicit StandbyWidget(QWidget *parent = 0);
+    ~StandbyWidget();
+
+public slots:
+    void setName(const QString &name);
+    void setBedNum(int num);
+    void setNursery(int level);
+    void setAge(int age);
+
+private:
+    Ui::StandbyWidget *ui;
+};
+
+#endif // STANDBYWIDGET_H

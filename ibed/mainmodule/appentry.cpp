@@ -3,6 +3,7 @@
 #include "modulemanger.h"
 #include "baseapplaunch.h"
 #include "hardwaremodule.h"
+#include "uimodule.h"
 #include "thememodule.h"
 #include "appsetting.h"
 #include "applogger.h"
@@ -13,6 +14,7 @@
 #include <QTextCodec>
 #include "appentry.h"
 #include <QResource>
+#include "mainwidget.h"
 
 
 AppEntry &AppEntry::instance()
@@ -33,11 +35,8 @@ int AppEntry::run(int argc, char **argv)
     QTextCodec::setCodecForCStrings(codec);
     QTextCodec::setCodecForTr(codec);
 
-    if(m_widget == NULL)
-        m_widget = new LaunchWidget;
-
-    if(m_manger == NULL)
-        m_manger = new ModuleManger;
+    m_widget = new LaunchWidget;
+    m_manger = new ModuleManger;
 
     //load base configure
     AppSetting::instance().initialize();
@@ -46,6 +45,7 @@ int AppEntry::run(int argc, char **argv)
 
     AppLogger::instance().log()->info(tr("application startup"));
     //init modules
+    m_manger->addModule(new UiModule("Ui"));
     m_manger->addModule(new ThemeModule("Theme"));
     m_manger->addModule(new HardwareModule("Hardware"));
 
@@ -72,38 +72,28 @@ int AppEntry::run(int argc, char **argv)
 
 void AppEntry::onLaunchFinished()
 {
-    //load modules that can't run in thread
-    m_manger->setOutMainThread(false);
-    m_manger->loadModules();
-
     //load really finished
     m_widget->hide();
     delete m_widget;
     m_widget = NULL;
 
-
-    //init main module and startup application
-    if(m_mainModule == NULL)
-        m_mainModule = new MainModule;
-    m_mainModule->initialize();
+    //show main widget
+    UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
+    if(ui != NULL)
+    {
+        ui->mainWidget()->show();
+    }
 }
 
 AppEntry::AppEntry() :
     m_widget(NULL),
-    m_manger(NULL),
-    m_mainModule(NULL)
+    m_manger(NULL)
 {
 
 }
 
 AppEntry::~AppEntry()
 {
-    if(m_widget)
-        delete m_widget;
-
-    if(m_manger)
-        delete m_manger;
-
-    if(m_mainModule)
-        delete m_mainModule;
+    delete m_widget;
+    delete m_manger;
 }

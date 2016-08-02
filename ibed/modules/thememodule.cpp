@@ -23,9 +23,6 @@ bool ThemeModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
 
-    //register resource
-    QResource::registerResource("./resource/ui/res.rcc");
-
     bool ret = false;
 
     if(m_loader == NULL)
@@ -45,7 +42,7 @@ bool ThemeModule::load(const QVariant &val)
                                            value(AppUiConfig::QssPath).toString());
     foreach(const QString &name, qss)
     {
-        QString fileName, shortCut;
+        QString fileName;
         int splash = name.lastIndexOf(QDir::separator());
         if(splash == -1)
             fileName = name;
@@ -70,6 +67,7 @@ bool ThemeModule::load(const QVariant &val)
     if(ret)
         m_isLoaded = true;
 
+//    sleep(2);
     return ret;
 }
 
@@ -83,11 +81,6 @@ void ThemeModule::unload()
 
     m_isLoaded = false;
     m_error = tr("No error");
-}
-
-bool ThemeModule::canRunInThread() const
-{
-    return false;
 }
 
 QStringList ThemeModule::themes()

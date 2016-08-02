@@ -14,7 +14,7 @@ public:
     virtual ~BaseWidget() {}
 
 protected:
-    virtual void paintEvent(QPaintEvent *);
+    virtual void paintEvent(QPaintEvent *event);
 };
 
 #endif // BASEWIDGET_H

@@ -22,6 +22,7 @@ public:
 
 private slots:
     void onModuleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status);
+    void onStartLaunch();
 
 signals:
     void startLaunch(const QVariant &val);
@@ -30,7 +31,7 @@ signals:
 private:
     IAppLaunchWidget *m_widget;
     ModuleManger *m_moduleManger;
-    QThread *m_thread;
+    QVariant m_extVal;
 };
 
 #endif // BASEAPPLANCHER_H

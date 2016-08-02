@@ -62,5 +62,15 @@
         <file>res/images/right14_l.png</file>
         <file>res/images/rightup1.png</file>
         <file>res/images/weight.png</file>
+        <file>res/images/bedweight.png</file>
+        <file>res/images/brightness.png</file>
+        <file>res/images/infusion.png</file>
+        <file>res/images/sound1.png</file>
+        <file>res/images/temper.png</file>
+        <file>res/images/answer.png</file>
+        <file>res/images/cancel.png</file>
+        <file>res/images/progress.png</file>
+        <file>res/images/call.png</file>
+        <file>res/images/standby.png</file>
     </qresource>
 </RCC>

@@ -1,13 +1,14 @@
 #ifndef SOUNDWIDGET_H
 #define SOUNDWIDGET_H
 
+#include "controls_global.h"
 #include "basewidget.h"
 
 namespace Ui {
 class SoundWidget;
 }
 
-class SoundWidget : public BaseWidget
+class CONTROLSSHARED_EXPORT SoundWidget : public BaseWidget
 {
     Q_OBJECT
 

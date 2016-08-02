@@ -24,6 +24,7 @@ private slots:
 
 private:
     Ui::EducationWidget *ui;
+    int m_height;
 };
 
 #endif // EDUCATIONWIDGET_H

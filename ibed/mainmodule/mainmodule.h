@@ -4,6 +4,9 @@
 #include "mainmodule_global.h"
 
 class MainWidget;
+class StandbyWidget;
+class CallDialog;
+class ProgressDialog;
 
 class MAINMODULESHARED_EXPORT MainModule
 {
@@ -15,6 +18,9 @@ public:
 
 private:
     MainWidget *m_mainWidget;
+    StandbyWidget *m_standbyWidget;
+    CallDialog *m_callDialog;
+    ProgressDialog *m_progressDialog;
 };
 
 #endif // MAINMODULE_H

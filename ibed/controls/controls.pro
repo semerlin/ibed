@@ -30,7 +30,10 @@ SOURCES += controls.cpp \
     screenwidget.cpp \
     soundwidget.cpp \
     infusionwidget.cpp \
-    bedwidget.cpp
+    bedwidget.cpp \
+    standbywidget.cpp \
+    calldialog.cpp \
+    progressdialog.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -52,7 +55,10 @@ HEADERS += controls.h\
     screenwidget.h \
     soundwidget.h \
     infusionwidget.h \
-    bedwidget.h
+    bedwidget.h \
+    standbywidget.h \
+    calldialog.h \
+    progressdialog.h
 
 unix {
     target.path = /usr/lib
@@ -76,7 +82,10 @@ FORMS += \
     screenwidget.ui \
     soundwidget.ui \
     infusionwidget.ui \
-    bedwidget.ui
+    bedwidget.ui \
+    standbywidget.ui \
+    calldialog.ui \
+    progressdialog.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 

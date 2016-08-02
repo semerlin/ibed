@@ -22,7 +22,6 @@ public:
 private slots:
     void onPushButtonPress();
     void onPushButtonReleased();
-    void onLowlightPushButton();
     void onButtonClicked(int id);
 
 private:

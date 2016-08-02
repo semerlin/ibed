@@ -24,8 +24,6 @@ private slots:
 private:
     LaunchWidget *m_widget;
     ModuleManger *m_manger;
-    MainModule *m_mainModule;
-
 
 private:
     AppEntry();

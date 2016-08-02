@@ -78,6 +78,8 @@ public:
      */
     IAppModule* module(const QString &name);
 
+    template <typename T>
+    T *moduleConvert(const QString &name);
     /**
      * @brief return all module names
      * @return
@@ -192,6 +194,17 @@ private:
     bool m_isOutMainThread;
 };
 
+
+template <typename T>
+T* ModuleManger::moduleConvert(const QString &name)
+{
+    if(m_moduleWithNames.contains(name))
+    {
+        return dynamic_cast<T *>(m_moduleWithNames[name]);
+    }
+    else
+        return NULL;
+}
 
 
 

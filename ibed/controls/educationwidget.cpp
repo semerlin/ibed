@@ -5,13 +5,14 @@
 
 EducationWidget::EducationWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::EducationWidget)
+    ui(new Ui::EducationWidget),
+    m_height(0)
 {
     ui->setupUi(this);
 
     QFont font(AppUiConfig::instance().fontFamily());
     font.setPixelSize(12);
-    int height = QFontMetrics(font).height() + 15;
+    m_height = QFontMetrics(font).height() + 15;
 
     ui->listView->addItem(new MusicPlayListItem("           曲目1:",
                                                 ":/res/images/play.png",
@@ -28,7 +29,7 @@ EducationWidget::EducationWidget(QWidget *parent) :
                                                 ":/res/images/pause.png",
                                                 ":/res/images/stop.png"));
     ui->listView->setFont(font);
-    ui->listView->setSizeHint(QSize(-1, height));
+    ui->listView->setSizeHint(QSize(-1, m_height));
     ui->listView->setStrech(6, 1);
     ui->listView->setAlternatingRowColors(true);
     ui->listView->setEditTriggers(QAbstractItemView::CurrentChanged);
@@ -59,6 +60,7 @@ void EducationWidget::onCurrentItemChanged(MusicPlayListItem *current, MusicPlay
     if(previous != NULL)
     {
         previous->setSelected(false);
+        previous->setSizeHint(QSize(-1, m_height));
         previous->setPlayIcon(":/res/images/play.png");
         previous->setPauseIcon(":/res/images/pause.png");
         previous->setStopIcon(":/res/images/stop.png");
@@ -67,6 +69,7 @@ void EducationWidget::onCurrentItemChanged(MusicPlayListItem *current, MusicPlay
     if(current != NULL)
     {
         current->setSelected(true);
+        current->setSizeHint(QSize(-1, m_height * 1.5));
         current->setPlayIcon(":/res/images/play_select.png");
         current->setPauseIcon(":/res/images/pause_select.png");
         current->setStopIcon(":/res/images/stop_select.png");

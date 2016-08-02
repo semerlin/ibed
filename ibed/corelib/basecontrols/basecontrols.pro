@@ -27,7 +27,11 @@ SOURCES += basecontrols.cpp \
     musicplaylistmodel.cpp \
     musicplaylistdelegate.cpp \
     labelslider.cpp \
-    circleprogressbar.cpp
+    circleprogressbar.cpp \
+    dotlabel.cpp \
+    baselabel.cpp \
+    pixmaplabel.cpp \
+    basedialog.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
@@ -46,7 +50,11 @@ HEADERS += basecontrols.h\
     musicplaylistmodel.h \
     musicplaylistdelegate.h \
     labelslider.h \
-    circleprogressbar.h
+    circleprogressbar.h \
+    dotlabel.h \
+    baselabel.h \
+    pixmaplabel.h \
+    basedialog.h
 
 unix {
     target.path = /usr/lib
@@ -56,7 +64,9 @@ unix {
 FORMS += \
     basebuttonbox.ui \
     labellineedit.ui \
-    labelslider.ui
+    labelslider.ui \
+    dotlabel.ui \
+    pixmaplabel.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../utility/ -lutility
 

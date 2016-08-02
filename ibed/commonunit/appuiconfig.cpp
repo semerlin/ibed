@@ -101,6 +101,12 @@ void AppUiConfig::save()
     setting.setValue("launch", m_params["LaunchQss"].toString());
     setting.setValue("default", m_params["DefaultQss"].toString());
     setting.endGroup();
+
+    setting.beginGroup("COLOR");
+    setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
+    setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
+    setting.endGroup();
+
 }
 
 QString AppUiConfig::fontFamily() const

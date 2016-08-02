@@ -16,7 +16,6 @@ public:
 public:
     bool load(const QVariant &val);
     void unload();
-    bool canRunInThread() const;
     QStringList themes(void);
 
 private:

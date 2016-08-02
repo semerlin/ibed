@@ -63,10 +63,3 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 
 INCLUDEPATH += $$PWD/../corelib/basecontrols
 DEPENDPATH += $$PWD/../corelib/basecontrols
-
-
-
-unix:!macx: LIBS += -L$$OUT_PWD/../resource/ -lresource
-
-INCLUDEPATH += $$PWD/../resource
-DEPENDPATH += $$PWD/../resource

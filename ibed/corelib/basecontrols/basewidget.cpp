@@ -9,8 +9,10 @@ BaseWidget::BaseWidget(QWidget *parent) :
 
 }
 
-void BaseWidget::paintEvent(QPaintEvent *)
+void BaseWidget::paintEvent(QPaintEvent *event)
 {
+    QWidget::paintEvent(event);
+
     QStyleOption opt;
 
     opt.init(this);
