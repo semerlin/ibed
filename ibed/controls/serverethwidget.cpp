@@ -1,5 +1,6 @@
 #include "serverethwidget.h"
 #include "ui_serverethwidget.h"
+#include "servermanger.h"
 
 ServerEthWidget::ServerEthWidget(QWidget *parent) :
     BaseWidget(parent),
@@ -15,9 +16,39 @@ ServerEthWidget::ServerEthWidget(QWidget *parent) :
     ui->labelPic->setPixmap(QPixmap(":/res/images/server.png"));
     ui->labelName->setText(QT_TRANSLATE_NOOP("Server", "服务器网络设置"));
 
+    ui->labelStatus->setText(QT_TRANSLATE_NOOP("Server", "未链接"));
+
+    ui->pushButtonConnect->setText(QT_TRANSLATE_NOOP("Server", "连 接"));
+
+    ui->widgetIp->setText(ServerManger::instance().
+                          address(ServerManger::Default));
+
+    ui->widgetPort->setText(QString::number(ServerManger::instance().
+                                            port(ServerManger::Default)));
 }
 
 ServerEthWidget::~ServerEthWidget()
 {
     delete ui;
+}
+
+QString ServerEthWidget::ip() const
+{
+    return ui->widgetIp->text();
+}
+
+quint16 ServerEthWidget::port() const
+{
+    return ui->widgetPort->text().toUInt();
+}
+
+void ServerEthWidget::setStatusText(const QString &text)
+{
+    ui->labelStatus->setText(text);
+}
+
+void ServerEthWidget::on_pushButtonConnect_clicked()
+{
+    ui->labelStatus->setText(QT_TRANSLATE_NOOP("Server", "正在连接..."));
+    emit reconnect(ui->widgetIp->text(), ui->widgetPort->text().toUInt());
 }

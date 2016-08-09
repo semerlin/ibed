@@ -12,6 +12,8 @@ class ProgressDialog;
 
 class MODULESSHARED_EXPORT UiModule : public BaseAppModule
 {
+    Q_OBJECT
+
 public:
     UiModule(const QString &name);
     ~UiModule();
@@ -21,7 +23,27 @@ public:
     void unload();
 
 public:
-    MainWidget *mainWidget(void) const;
+    void showMainWidget();
+
+signals:
+    void reconnect(const QString &ip, quint16 port);
+
+private slots:
+    void onRegistered();
+    void onRegisterTimeout();
+    void onDisconnect();
+    void onNameChanged(const QString &name);
+    void onSexChanged(const QString &sex);
+    void onAgeChanged(const QString &age);
+    void onBedChanged(const QString &bed);
+    void onLevelChanged(const QString &level);
+    void onTimeChanged(const QString &time);
+    void onDoctorChanged(const QString &doctor);
+    void onEatChanged(const QString &eat);
+    void onNurseChanged(const QString &nurse);
+    void onAdviseChanged(const QString &advise);
+    void onAllergyChanged(const QString &allergy);
+
 
 private:
     MainWidget *m_mainWidget;

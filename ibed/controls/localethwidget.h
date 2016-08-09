@@ -15,6 +15,11 @@ public:
     explicit LocalEthWidget(QWidget *parent = 0);
     ~LocalEthWidget();
 
+public:
+    QString ip(void) const;
+    QString netmask(void) const;
+    QString gateway(void) const;
+
 private:
     Ui::LocalEthWidget *ui;
 };

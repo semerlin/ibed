@@ -14,13 +14,17 @@ DEFINES += COMMONUNIT_LIBRARY
 SOURCES += commonunit.cpp \
     applogger.cpp \
     appsetting.cpp \
-    appuiconfig.cpp
+    appuiconfig.cpp \
+    servermanger.cpp \
+    netconfig.cpp
 
 HEADERS += commonunit.h\
         commonunit_global.h \
     applogger.h \
     appsetting.h \
-    appuiconfig.h
+    appuiconfig.h \
+    servermanger.h \
+    netconfig.h
 
 unix {
     target.path = /usr/lib

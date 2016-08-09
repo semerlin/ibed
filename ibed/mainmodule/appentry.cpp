@@ -2,9 +2,6 @@
 #include "launchwidget.h"
 #include "modulemanger.h"
 #include "baseapplaunch.h"
-#include "hardwaremodule.h"
-#include "uimodule.h"
-#include "thememodule.h"
 #include "appsetting.h"
 #include "applogger.h"
 #include "appuiconfig.h"
@@ -36,7 +33,6 @@ int AppEntry::run(int argc, char **argv)
     QTextCodec::setCodecForTr(codec);
 
     m_widget = new LaunchWidget;
-    m_manger = new ModuleManger;
 
     //load base configure
     AppSetting::instance().initialize();
@@ -44,11 +40,9 @@ int AppEntry::run(int argc, char **argv)
     AppUiConfig::instance().initialize();
 
     AppLogger::instance().log()->info(tr("application startup"));
-    //init modules
-    m_manger->addModule(new UiModule("Ui"));
-    m_manger->addModule(new ThemeModule("Theme"));
-    m_manger->addModule(new HardwareModule("Hardware"));
 
+    //init main module
+    m_mainModule = new MainModule;
 
     //launch widget qss need load first
     AppLogger::instance().log()->info("initialize launch widget ui");
@@ -59,9 +53,9 @@ int AppEntry::run(int argc, char **argv)
 
 
     //start lanch
-    m_widget->setRange(0, m_manger->unloadedModules().count());
+    m_widget->setRange(0, m_mainModule->manger()->unloadedModules().count());
 
-    BaseAppLaunch launcher(m_widget, m_manger);
+    BaseAppLaunch launcher(m_widget, m_mainModule->manger());
     connect(&launcher, SIGNAL(launchFinished()), this, SLOT(onLaunchFinished()));
 
     AppLogger::instance().log()->info("start launch app modules");
@@ -72,22 +66,19 @@ int AppEntry::run(int argc, char **argv)
 
 void AppEntry::onLaunchFinished()
 {
+    AppLogger::instance().log()->info(QT_TRANSLATE_NOOP("Launch", "Launch Finished!"));
     //load really finished
     m_widget->hide();
     delete m_widget;
     m_widget = NULL;
 
-    //show main widget
-    UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
-    if(ui != NULL)
-    {
-        ui->mainWidget()->show();
-    }
+    //init main module
+    m_mainModule->initialize();
 }
 
 AppEntry::AppEntry() :
     m_widget(NULL),
-    m_manger(NULL)
+    m_mainModule(NULL)
 {
 
 }
@@ -95,5 +86,5 @@ AppEntry::AppEntry() :
 AppEntry::~AppEntry()
 {
     delete m_widget;
-    delete m_manger;
+    delete m_mainModule;
 }

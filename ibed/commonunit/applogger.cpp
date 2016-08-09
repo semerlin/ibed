@@ -13,11 +13,12 @@ AppLogger &AppLogger::instance()
 
 bool AppLogger::initialize()
 {
-    QString fileName = AppSetting::instance().logConfig();
+    QString fileName = AppSetting::instance().value(AppSetting::LogConfig).toString();
     if(!QFile(fileName).exists())
         return false;
 
-    return Log4Qt::PropertyConfigurator::configure(AppSetting::instance().logConfig());
+    return Log4Qt::PropertyConfigurator::configure(AppSetting::instance().
+                                                   value(AppSetting::LogConfig).toString());
 }
 
 Log4Qt::Logger *AppLogger::log()

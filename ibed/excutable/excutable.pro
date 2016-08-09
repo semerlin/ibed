@@ -63,3 +63,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 
 INCLUDEPATH += $$PWD/../corelib/basecontrols
 DEPENDPATH += $$PWD/../corelib/basecontrols
+
+unix:!macx: LIBS += -L$$OUT_PWD/../network/ -lnetwork
+
+INCLUDEPATH += $$PWD/../network
+DEPENDPATH += $$PWD/../network

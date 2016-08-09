@@ -10,4 +10,5 @@ SUBDIRS += \
     modules \
     commonunit \
     mainmodule \
-    resource
+    resource \
+    network

@@ -57,11 +57,75 @@ MainWidget::MainWidget(QWidget *parent) :
 
     connectBtnAndWidget();
 
+    //connect signals
+    connect(m_settingWidget, SIGNAL(reconnect(QString, quint16)),
+            this, SIGNAL(reconnect(QString, quint16)));
+
 }
 
 MainWidget::~MainWidget()
 {
     delete ui;
+}
+
+void MainWidget::setNetworkStatus(const QString &text)
+{
+    m_settingWidget->setStatusText(text);
+}
+
+void MainWidget::setName(const QString &name)
+{
+    m_baseInfoWidget->setName(name);
+}
+
+void MainWidget::setSex(const QString &sex)
+{
+    m_baseInfoWidget->setSex(sex);
+}
+
+void MainWidget::setAge(const QString &age)
+{
+    m_baseInfoWidget->setAge(age + "岁");
+}
+
+void MainWidget::setBed(const QString &bed)
+{
+    m_baseInfoWidget->setBed(bed);
+}
+
+void MainWidget::setLevel(const QString &level)
+{
+    m_baseInfoWidget->setLevel(level);
+}
+
+void MainWidget::setTime(const QString &time)
+{
+    m_baseInfoWidget->setTime(time);
+}
+
+void MainWidget::setDoctor(const QString &doctor)
+{
+    m_baseInfoWidget->setDoctor(doctor);
+}
+
+void MainWidget::setEat(const QString &eat)
+{
+    m_baseInfoWidget->setEat(eat);
+}
+
+void MainWidget::setNurse(const QString &nurse)
+{
+    m_baseInfoWidget->setNurse(nurse);
+}
+
+void MainWidget::setAdvise(const QString &advise)
+{
+    m_baseInfoWidget->setAdvise(advise);
+}
+
+void MainWidget::setAllergy(const QString &allergy)
+{
+    m_baseInfoWidget->setAllergy(allergy);
 }
 
 void MainWidget::onTopWidgetButtonClick(int id)

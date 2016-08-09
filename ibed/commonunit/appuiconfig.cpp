@@ -40,7 +40,8 @@ AppUiConfig &AppUiConfig::instance()
 
 bool AppUiConfig::initialize()
 {
-    QString fileName = AppSetting::instance().uiConfig();
+    QString fileName = AppSetting::instance().
+            value(AppSetting::UiConfig).toString();
     QFile file(fileName);
     if(file.exists())
     {
@@ -48,10 +49,6 @@ bool AppUiConfig::initialize()
     }
     else
     {
-        if(!file.open(QIODevice::ReadWrite))
-            return false;
-
-        file.close();
         setDefault();
         loadValue(fileName);
     }
@@ -83,14 +80,14 @@ void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
 {
     if(s_allParams.count() > param)
     {
-        QString name = s_allParams.at(param);
-        m_params[name] = val;
+        m_params[s_allParams.at(param)] = val;
     }
 }
 
 void AppUiConfig::save()
 {
-    QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
+    QSettings setting(AppSetting::instance().
+                      value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
     setting.beginGroup("FONT");
     setting.setValue("en", m_params["Font_en"].toString());
     setting.setValue("zh", m_params["Font_zh"].toString());
@@ -123,7 +120,8 @@ AppUiConfig::AppUiConfig() :
 
 void AppUiConfig::setDefault()
 {
-    QSettings setting(AppSetting::instance().uiConfig(), QSettings::IniFormat);
+    QSettings setting(AppSetting::instance().
+                      value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
     setting.beginGroup("FONT");
     setting.setValue("en", "./resource/ui/font/arial.ttf");
     setting.setValue("zh", "./resource/ui/font/W3.otf");

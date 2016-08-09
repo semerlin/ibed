@@ -4,5 +4,6 @@ SUBDIRS += \
     basecontrols \
     utility \
     hardware \
-    framework
+    framework \
+    inputmethod
 

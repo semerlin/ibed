@@ -72,5 +72,6 @@
         <file>res/images/progress.png</file>
         <file>res/images/call.png</file>
         <file>res/images/standby.png</file>
+        <file>res/images/save.png</file>
     </qresource>
 </RCC>

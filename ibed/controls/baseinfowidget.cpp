@@ -53,3 +53,58 @@ BaseInfoWidget::~BaseInfoWidget()
 {
     delete ui;
 }
+
+void BaseInfoWidget::setName(const QString &name)
+{
+    ui->labelName->setText(name);
+}
+
+void BaseInfoWidget::setSex(const QString &sex)
+{
+    ui->labelSex->setText(sex);
+}
+
+void BaseInfoWidget::setAge(const QString &age)
+{
+    ui->labelAge->setText(age);
+}
+
+void BaseInfoWidget::setBed(const QString &bed)
+{
+    ui->widgetBedNum->setText(bed);
+}
+
+void BaseInfoWidget::setLevel(const QString &level)
+{
+    ui->labelLevel->setText(level);
+}
+
+void BaseInfoWidget::setTime(const QString &time)
+{
+    ui->widgetTime->setData(time);
+}
+
+void BaseInfoWidget::setDoctor(const QString &doctor)
+{
+    ui->widgetDoctor->setData(doctor);
+}
+
+void BaseInfoWidget::setEat(const QString &eat)
+{
+    ui->widgetEat->setData(eat);
+}
+
+void BaseInfoWidget::setNurse(const QString &nurse)
+{
+    ui->widgetNurse->setData(nurse);
+}
+
+void BaseInfoWidget::setAdvise(const QString &advise)
+{
+    ui->widgetAdvise->setData(advise);
+}
+
+void BaseInfoWidget::setAllergy(const QString &allergy)
+{
+    ui->widgetAllergy->setData(allergy);
+}

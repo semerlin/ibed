@@ -3,6 +3,8 @@
 
 #include "commonunit_global.h"
 #include <QObject>
+#include <QHash>
+#include <QVariant>
 
 class COMMONUNITSHARED_EXPORT AppSetting : public QObject
 {
@@ -12,6 +14,9 @@ public:
     {
         LogConfig,
         UiConfig,
+        ServerConfig,
+        NetConfig,
+
 
         Param_Count,
     }Parameter;
@@ -20,17 +25,11 @@ public:
     bool initialize(void);
     QVariant value(Parameter param) const;
     void setValue(Parameter param, const QVariant &val);
-    QString logConfig(void) const;
-    QString uiConfig(void) const;
-
-private:
-    QString m_logConfig;
-    QString m_uiConfig;
 
 private:
     AppSetting();
     void setDefault();
-    void loadParam(const QString &name);
+    QHash<QString, QVariant> m_params;
 };
 
 #endif // APPSETTING_H

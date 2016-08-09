@@ -3,10 +3,7 @@
 
 #include "mainmodule_global.h"
 
-class MainWidget;
-class StandbyWidget;
-class CallDialog;
-class ProgressDialog;
+class ModuleManger;
 
 class MAINMODULESHARED_EXPORT MainModule
 {
@@ -15,12 +12,10 @@ public:
 
 public:
     bool initialize(void);
+    ModuleManger *manger(void) const;
 
 private:
-    MainWidget *m_mainWidget;
-    StandbyWidget *m_standbyWidget;
-    CallDialog *m_callDialog;
-    ProgressDialog *m_progressDialog;
+    ModuleManger *m_manger;
 };
 
 #endif // MAINMODULE_H

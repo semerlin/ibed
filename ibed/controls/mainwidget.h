@@ -27,6 +27,24 @@ public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
 
+public slots:
+    void setNetworkStatus(const QString &text);
+    void setName(const QString &name);
+    void setSex(const QString &sex);
+    void setAge(const QString &age);
+    void setBed(const QString &bed);
+    void setLevel(const QString &level);
+    void setTime(const QString &time);
+    void setDoctor(const QString &doctor);
+    void setEat(const QString &eat);
+    void setNurse(const QString &nurse);
+    void setAdvise(const QString &advise);
+    void setAllergy(const QString &allergy);
+
+
+signals:
+    void reconnect(const QString &ip, quint16 port);
+
 private slots:
     void onTopWidgetButtonClick(int id);
     void onBottomWidgetButtonClick(int id);

@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += gui
+QT       += network
 
 TARGET = modules
 TEMPLATE = lib
@@ -16,13 +17,15 @@ DEFINES += MODULES_LIBRARY
 SOURCES += modules.cpp \
     hardwaremodule.cpp \
     thememodule.cpp \
-    uimodule.cpp
+    uimodule.cpp \
+    networkmodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
     hardwaremodule.h \
     thememodule.h \
-    uimodule.h
+    uimodule.h \
+    networkmodule.h
 
 unix {
     target.path = /usr/lib
@@ -66,3 +69,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 
 INCLUDEPATH += $$PWD/../corelib/basecontrols
 DEPENDPATH += $$PWD/../corelib/basecontrols
+
+unix:!macx: LIBS += -L$$OUT_PWD/../network/ -lnetwork
+
+INCLUDEPATH += $$PWD/../network
+DEPENDPATH += $$PWD/../network
