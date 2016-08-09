@@ -80,12 +80,16 @@ AdviseInfoModel::AdviseInfoModel(const QList<QStringList> &info, QObject *parent
 
 void AdviseInfoModel::clearData()
 {
+    beginRemoveRows(QModelIndex(), 0, m_adviseInfo.count() - 1);
+    endRemoveRows();
     m_adviseInfo.clear();
 }
 
 void AdviseInfoModel::appendData(const QStringList &info)
 {
+    beginInsertRows(QModelIndex(), m_adviseInfo.count(), m_adviseInfo.count());
     m_adviseInfo.append(info);
+    endInsertRows();
 }
 
 int AdviseInfoModel::rowCount(const QModelIndex &parent) const

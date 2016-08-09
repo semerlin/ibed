@@ -27,6 +27,8 @@ public:
 
 signals:
     void reconnect(const QString &ip, quint16 port);
+    void updateAdvise();
+    void uploadInOut(const QStringList &data);
 
 private slots:
     void onRegistered();
@@ -43,7 +45,7 @@ private slots:
     void onNurseChanged(const QString &nurse);
     void onAdviseChanged(const QString &advise);
     void onAllergyChanged(const QString &allergy);
-
+    void onAdviseUpdate(const QString &data);
 
 private:
     MainWidget *m_mainWidget;

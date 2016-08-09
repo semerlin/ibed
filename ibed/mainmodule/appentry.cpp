@@ -24,6 +24,8 @@ int AppEntry::run(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
+
+
     QResource::registerResource("./resource/ui/launch.rcc");
 
     //support chinese

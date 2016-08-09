@@ -40,10 +40,13 @@ public slots:
     void setNurse(const QString &nurse);
     void setAdvise(const QString &advise);
     void setAllergy(const QString &allergy);
+    void addAdvise(const QString &advise);
 
 
 signals:
     void reconnect(const QString &ip, quint16 port);
+    void updateAdvise(void);
+    void uploadInOut(const QStringList &data);
 
 private slots:
     void onTopWidgetButtonClick(int id);

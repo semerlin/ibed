@@ -24,7 +24,8 @@ public:
     void addItem(EditLabelListItem *item);
     void insertItem(int row, EditLabelListItem *item);
     void clear(void);
-    EditLabelListItem *item(int row);
+    EditLabelListItem *item(int row) const;
+    QList<EditLabelListItem *> allItems(void) const;
     void setFont(const QFont &font);
     void setSizeHint(const QSize &size);
     void setStrech(int name, int text, int extra);

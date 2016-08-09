@@ -23,6 +23,9 @@ public:
     void connectServer(const QString &ip, quint16 port);
     void addHandler(IDataHandler *handler);
     bool isRegistered(void) const;
+    void getAdvise(void);
+    void getBaseInfo(void);
+    void uploadInOut(const QStringList &data);
 
 private slots:
     void onConnectTimeout(void);
@@ -52,6 +55,7 @@ signals:
     void nurseChanged(const QString &nurse);
     void adviseChanged(const QString &advise);
     void allergyChanged(const QString &allergy);
+    void adviseUpdate(const QString &data);
 
 private:
     void clear(void);

@@ -32,7 +32,7 @@ void BedNumWidget::setText(const QString &name)
     ui->labelBed->setText(name);
 }
 
-void BedNumWidget::setBenNum(int num)
+void BedNumWidget::setBedNum(int num)
 {
     ui->labelBedNum->setText(QVariant(num).toString());
 }

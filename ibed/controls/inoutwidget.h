@@ -19,10 +19,14 @@ public:
     explicit InOutWidget(QWidget *parent = 0);
     ~InOutWidget();
 
+signals:
+    void upload(const QStringList &data);
+
 private slots:
     void onPushButtonPress();
     void onPushButtonReleased();
     void onLowlightButton(void);
+    void clearData(void);
 
 private:
     Ui::InOutWidget *ui;

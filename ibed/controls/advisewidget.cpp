@@ -44,21 +44,25 @@ AdviseWidget::AdviseWidget(QWidget *parent) :
     ui->verticalLayoutLong->addWidget(m_adviseInfo.at(1));
     m_adviseInfo.at(0)->setObjectName("tempAdvise");
     m_adviseInfo.at(1)->setObjectName("longAdvise");
-    m_adviseInfo.at(0)->appendData(QStringList() << "a" << "a");
-    m_adviseInfo.at(0)->appendData(QStringList() << "b" << "b");
-    m_adviseInfo.at(0)->appendData(QStringList() << "c" << "c");
-    m_adviseInfo.at(0)->appendData(QStringList() << "d" << "d");
-
-    m_adviseInfo.at(1)->appendData(QStringList() << "1" << "1");
-    m_adviseInfo.at(1)->appendData(QStringList() << "2" << "2");
-    m_adviseInfo.at(1)->appendData(QStringList() << "3" << "3");
-    m_adviseInfo.at(1)->appendData(QStringList() << "4" << "4");
     ui->stackedWidget->setCurrentIndex(0);
 }
 
 AdviseWidget::~AdviseWidget()
 {
     delete ui;
+}
+
+void AdviseWidget::addAdvise(const QString &data)
+{
+    QStringList list;
+    if(!data.isEmpty())
+    {
+        list = data.split('|');
+        list.removeAt(1);
+        list.insert(4, list.at(0));
+        m_adviseInfo.at(0)->appendData(list);
+        m_adviseInfo.at(1)->appendData(list);
+    }
 }
 
 
@@ -73,6 +77,9 @@ void AdviseWidget::onPushButtonReleased()
 {
     Util::changeQssWidgetProperty(ui->pushButtonRefresh, "highlight", false);
     ui->pushButtonRefresh->changeToIcon(0);
+    m_adviseInfo.at(0)->clearData();
+    m_adviseInfo.at(1)->clearData();
+    emit updateClicked();
 }
 
 

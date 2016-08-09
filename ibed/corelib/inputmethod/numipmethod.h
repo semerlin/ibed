@@ -1,11 +1,13 @@
 #ifndef NUMIPMETHOD_H
 #define NUMIPMETHOD_H
 
+#ifdef TARGET_IMX
+#include "inputmethod_global.h"
 #include <QWSInputMethod>
 
 class NumPanel;
 
-class NumIPMethod : public QWSInputMethod
+class INPUTMETHODSHARED_EXPORT NumIPMethod : public QWSInputMethod
 {
     Q_OBJECT
 public:
@@ -21,5 +23,6 @@ private:
     NumPanel *m_panel;
     QString m_content;
 };
+#endif
 
 #endif // NUMIPMETHOD_H

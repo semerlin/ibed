@@ -4,10 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += gui
 
 TARGET = inputmethod
 TEMPLATE = lib
+
+include (../../global.pri)
 
 DEFINES += INPUTMETHOD_LIBRARY
 
@@ -24,3 +26,8 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+FORMS += \
+    numpanel.ui
+
+DISTFILES +=

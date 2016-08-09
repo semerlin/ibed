@@ -33,6 +33,7 @@ bool NetworkModule::load(const QVariant &val)
     connect(m_defaultClient, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)));
     connect(m_defaultClient, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
     connect(m_defaultClient, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)));
+    connect(m_defaultClient, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)));
 
     return true;
 }
@@ -51,4 +52,14 @@ void NetworkModule::init()
 void NetworkModule::reconnect(const QString &ip, quint16 port)
 {
     m_defaultClient->connectServer(ip, port);
+}
+
+void NetworkModule::getAdvise()
+{
+    m_defaultClient->getAdvise();
+}
+
+void NetworkModule::uploadInOut(const QStringList &data)
+{
+    m_defaultClient->uploadInOut(data);
 }

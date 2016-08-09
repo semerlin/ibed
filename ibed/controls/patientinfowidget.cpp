@@ -6,6 +6,8 @@ PatientInfoWidget::PatientInfoWidget(QWidget *parent) :
     ui(new Ui::PatientInfoWidget)
 {
     ui->setupUi(this);
+
+    ui->labelData->setWordWrap(true);
 }
 
 PatientInfoWidget::~PatientInfoWidget()

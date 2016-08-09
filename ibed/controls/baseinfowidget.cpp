@@ -71,7 +71,7 @@ void BaseInfoWidget::setAge(const QString &age)
 
 void BaseInfoWidget::setBed(const QString &bed)
 {
-    ui->widgetBedNum->setText(bed);
+    ui->widgetBedNum->setBedNum(bed.toInt());
 }
 
 void BaseInfoWidget::setLevel(const QString &level)

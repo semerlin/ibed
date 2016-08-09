@@ -1,6 +1,7 @@
 #ifndef NUMPANEL_H
 #define NUMPANEL_H
 
+#ifdef TARGET_IMX
 #include <QWidget>
 
 namespace Ui {
@@ -33,5 +34,6 @@ private:
     NumIPMethod *m_method;
     QWidget *m_lastFocusWidget;
 };
+#endif
 
 #endif // NUMPANEL_H

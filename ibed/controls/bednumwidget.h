@@ -22,7 +22,7 @@ public:
 
 public slots:
     void setText(const QString &name);
-    void setBenNum(int num);
+    void setBedNum(int num);
     void setPixmap(const QPixmap &pixmap);
 
 private:

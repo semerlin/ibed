@@ -55,7 +55,12 @@ void EditLabelListView::clear()
     m_model->removeRows(0, m_model->rowCount());
 }
 
-EditLabelListItem *EditLabelListView::item(int row)
+QList<EditLabelListItem *> EditLabelListView::allItems() const
+{
+    return m_model->allItems();
+}
+
+EditLabelListItem *EditLabelListView::item(int row) const
 {
     return m_model->item(row);
 }

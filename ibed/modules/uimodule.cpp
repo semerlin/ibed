@@ -30,6 +30,8 @@ bool UiModule::load(const QVariant &val)
 
     //connect signals
     connect(m_mainWidget, SIGNAL(reconnect(QString, quint16)), this, SIGNAL(reconnect(QString, quint16)));
+    connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
+    connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
 
     return true;
 }
@@ -89,7 +91,8 @@ void UiModule::onLevelChanged(const QString &level)
 
 void UiModule::onTimeChanged(const QString &time)
 {
-    m_mainWidget->setTime(time);
+    int index = time.indexOf("/");
+    m_mainWidget->setTime(time.left(index) + "\n" + time.right(time.count() - index - 1));
 }
 
 void UiModule::onDoctorChanged(const QString &doctor)
@@ -115,4 +118,9 @@ void UiModule::onAdviseChanged(const QString &advise)
 void UiModule::onAllergyChanged(const QString &allergy)
 {
     m_mainWidget->setAllergy(allergy);
+}
+
+void UiModule::onAdviseUpdate(const QString &data)
+{
+    m_mainWidget->addAdvise(data);
 }

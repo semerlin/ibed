@@ -19,10 +19,16 @@ public:
     explicit AdviseWidget(QWidget *parent = 0);
     ~AdviseWidget();
 
+public:
+    void addAdvise(const QString &data);
+
 private slots:
     void onPushButtonPress();
     void onPushButtonReleased();
     void onButtonClicked(int id);
+
+signals:
+    void updateClicked();
 
 private:
     void lowlightButtons(int except);

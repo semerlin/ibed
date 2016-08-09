@@ -61,6 +61,10 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_settingWidget, SIGNAL(reconnect(QString, quint16)),
             this, SIGNAL(reconnect(QString, quint16)));
 
+    connect(m_adviseWidget, SIGNAL(updateClicked()), this, SIGNAL(updateAdvise()));
+
+    connect(m_inOutWidget, SIGNAL(upload(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
+
 }
 
 MainWidget::~MainWidget()
@@ -126,6 +130,11 @@ void MainWidget::setAdvise(const QString &advise)
 void MainWidget::setAllergy(const QString &allergy)
 {
     m_baseInfoWidget->setAllergy(allergy);
+}
+
+void MainWidget::addAdvise(const QString &advise)
+{
+    m_adviseWidget->addAdvise(advise);
 }
 
 void MainWidget::onTopWidgetButtonClick(int id)

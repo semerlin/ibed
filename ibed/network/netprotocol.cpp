@@ -5,7 +5,7 @@ NetProtocol::NetProtocol()
 {
     m_package.head = 0xee;
     m_package.version = 0x01;
-    m_package.device = 3;
+    m_package.device = 5;
     m_package.tail = 0xff;
 
     m_minLength = 14;

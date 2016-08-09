@@ -1,3 +1,5 @@
+#ifdef TARGET_IMX
+
 #include "numipmethod.h"
 #include "numpanel.h"
 #include "ui_numpanel.h"
@@ -63,5 +65,6 @@ void NumPanel::onFocusChanged(QWidget *old, QWidget *now)
         m_lastFocusWidget = now;
 }
 
+#endif
 
 

@@ -18,7 +18,8 @@ SOURCES += network.cpp \
     registerdatahandler.cpp \
     servermanger.cpp \
     baseinfodatahandler.cpp \
-    heartbeatdatahandler.cpp
+    heartbeatdatahandler.cpp \
+    advisedatahandler.cpp
 
 HEADERS += network.h\
         network_global.h \
@@ -28,7 +29,8 @@ HEADERS += network.h\
     netprotocol.h \
     registerdatahandler.h \
     baseinfodatahandler.h \
-    heartbeatdatahandler.h
+    heartbeatdatahandler.h \
+    advisedatahandler.h
 
 unix {
     target.path = /usr/lib

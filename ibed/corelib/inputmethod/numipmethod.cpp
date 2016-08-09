@@ -1,3 +1,4 @@
+#ifdef TARGET_IMX
 #include "numipmethod.h"
 #include <QPointer>
 #include <QKeyEvent>
@@ -34,16 +35,13 @@ void NumIPMethod::processKey(int key)
         sendCommitString(".");
         break;
     case 11:
-        processSpecial(Qt::Key_Space);
+        processSpecial(Qt::Key_Backspace);
         break;
     case 12:
         processSpecial(Qt::Key_Left);
         break;
     case 13:
         processSpecial(Qt::Key_Right);
-        break;
-    case 14:
-        processSpecial(Qt::Key_Backspace);
         break;
     default:
         break;
@@ -61,4 +59,5 @@ void NumIPMethod::processSpecial(int id)
     QKeyEvent keyPress(QEvent::KeyPress, id, Qt::NoModifier, QString());
     QApplication::sendEvent(w, &keyPress);
 }
+#endif
 

@@ -28,6 +28,10 @@ public:
 
         BaseInfo = 80,
 
+        AdviseInfo = 101,
+
+        InOutInfo = 102,
+
     }MsgId;
 
 public:

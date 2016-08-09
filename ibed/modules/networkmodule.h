@@ -23,6 +23,8 @@ public:
 
 public slots:
     void reconnect(const QString &ip, quint16 port);
+    void getAdvise(void);
+    void uploadInOut(const QStringList &data);
 
 signals:
     void registered();
@@ -39,6 +41,7 @@ signals:
     void nurseChanged(const QString &nurse);
     void adviseChanged(const QString &advise);
     void allergyChanged(const QString &allergy);
+    void adviseUpdate(const QString &data);
 
 private:
     DefaultClient *m_defaultClient;
