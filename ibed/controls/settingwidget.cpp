@@ -3,6 +3,7 @@
 #include "util.h"
 #include "servermanger.h"
 #include "netconfig.h"
+#include "appsetting.h"
 
 SettingWidget::SettingWidget(QWidget *parent) :
     QWidget(parent),
@@ -21,6 +22,7 @@ SettingWidget::SettingWidget(QWidget *parent) :
     connect(ui->widgetServerEth, SIGNAL(reconnect(QString, quint16)),
             this, SIGNAL(reconnect(QString, quint16)));
 
+    connect(ui->widgetScreenWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
 }
 
 SettingWidget::~SettingWidget()
@@ -49,6 +51,7 @@ void SettingWidget::on_pushButtonSave_clicked()
 {
     saveLocal();
     saveServer();
+    saveScreen();
 }
 
 void SettingWidget::saveLocal()
@@ -103,4 +106,31 @@ void SettingWidget::saveServer()
 
     if(needSave)
         ServerManger::instance().save();
+}
+
+void SettingWidget::saveScreen()
+{
+    bool needSave = false;
+    if(ui->widgetScreenWidget->brightness() != AppSetting::instance().value(AppSetting::Brightness).toInt())
+    {
+        needSave = true;
+        AppSetting::instance().setValue(AppSetting::Brightness, ui->widgetScreenWidget->brightness());
+    }
+
+    if(ui->widgetSound->sound() != AppSetting::instance().value(AppSetting::Sound).toInt())
+    {
+        needSave = true;
+        AppSetting::instance().setValue(AppSetting::Sound, ui->widgetSound->sound());
+    }
+
+    if(ui->widgetScreenWidget->turnOffTime() != AppSetting::instance().value(AppSetting::TurnOffTime).toInt())
+    {
+        needSave = true;
+        AppSetting::instance().setValue(AppSetting::TurnOffTime, ui->widgetScreenWidget->turnOffTime());
+        emit turnOffTimeChanged(ui->widgetScreenWidget->turnOffTime());
+    }
+
+
+    if(needSave)
+        AppSetting::instance().save();
 }

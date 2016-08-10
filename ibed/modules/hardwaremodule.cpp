@@ -3,7 +3,8 @@
 #include "backlight.h"
 #include "serialportctrl.h"
 #include "applogger.h"
-
+#include <QDebug>
+#include "appsetting.h"
 
 HardwareModule::HardwareModule(const QString &name) :
     BaseAppModule(name)
@@ -26,16 +27,21 @@ bool HardwareModule::load(const QVariant &val)
     /*****backlight****/
     //set backlight to max brightness
 //    emit message(tr("aaaaaa"));
-    Backlight::instance().setValue(Backlight::instance().maxValue());
+    Backlight::instance().setValue(AppSetting::instance().value(AppSetting::Brightness).toInt());
     //serial
 
     /****powermange****/
     //init power mangement unit
 //    emit message(tr("bbbbbb"));
-    PowerMange::instance().setIdleInterval(10);
-    PowerMange::instance().setSuspendInterval(20);
-    PowerMange::instance().addDevice(&Backlight::instance());
-    PowerMange::instance().run();
+    int time = AppSetting::instance().value(AppSetting::TurnOffTime).toInt();
+    if(time >= 5)
+    {
+        PowerMange::instance().setIdleInterval(time * 2 / 3);
+        PowerMange::instance().setSuspendInterval(time * 1 / 3);
+        PowerMange::instance().addDevice(&Backlight::instance());
+        PowerMange::instance().run();
+    }
+
 #endif
 
     m_isLoaded = true;
@@ -51,5 +57,36 @@ void HardwareModule::unload()
     PowerMange::instance().removeAllDevices();
 #endif
     m_isLoaded = false;
+}
+
+void HardwareModule::backlightOn()
+{
+#ifdef TARGET_IMX
+    PowerMange::instance().powerOn();
+#endif
+}
+
+void HardwareModule::setBrightness(int value)
+{
+#ifdef TARGET_IMX
+    Backlight::instance().setValue(value);
+#endif
+}
+
+void HardwareModule::setTurnOffTime(int value)
+{
+#ifdef TARGET_IMX
+    if(value >= 5)
+    {
+        PowerMange::instance().setIdleInterval(value * 2 / 3);
+        PowerMange::instance().setSuspendInterval(value * 1 / 3);
+        PowerMange::instance().addDevice(&Backlight::instance());
+        PowerMange::instance().run();
+    }
+    else
+    {
+        PowerMange::instance().stop();
+    }
+#endif
 }
 

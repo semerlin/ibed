@@ -120,9 +120,6 @@ void PowerMange::run()
  */
 void PowerMange::stop()
 {
-    disconnect(m_idleTimer, SIGNAL(timeout()), this, SLOT(slotPowerIdle()));
-    disconnect(m_suspendTimer, SIGNAL(timeout()), this, SLOT(slotPowerSuspend()));
-
     if(m_idleTimer->isActive())
         m_idleTimer->stop();
 
@@ -351,7 +348,7 @@ void PowerMange::slotPowerSuspend()
  * example: if tou want to enter power on state by click touchscreen,
  * you can connect mouse click event to this slot
  */
-void PowerMange::slotPowerOn()
+void PowerMange::powerOn()
 {
     if(m_curState != POWER_ON)
     {

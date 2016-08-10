@@ -2,6 +2,7 @@
 #include "standbywidget.h"
 #include "calldialog.h"
 #include "progressdialog.h"
+#include "numipmethod.h"
 #include "uimodule.h"
 #include <QResource>
 
@@ -28,10 +29,20 @@ bool UiModule::load(const QVariant &val)
     m_callDialog =new CallDialog;
     m_progressDialog =new ProgressDialog;
 
+    //register input method
+#ifdef TARGET_IMX
+    m_method = new NumIPMethod(m_mainWidget);
+    m_method->setGeometry(0, 420, 800, 60);
+    QWSServer::setCurrentInputMethod(m_method);
+#endif
+
     //connect signals
     connect(m_mainWidget, SIGNAL(reconnect(QString, quint16)), this, SIGNAL(reconnect(QString, quint16)));
     connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
     connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
+    connect(m_mainWidget, SIGNAL(clicked()), this, SIGNAL(clicked()));
+    connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
+    connect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
 
     return true;
 }

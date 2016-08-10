@@ -17,6 +17,10 @@ public:
         ServerConfig,
         NetConfig,
 
+        Brightness,
+        Sound,
+        TurnOffTime,
+
 
         Param_Count,
     }Parameter;
@@ -25,6 +29,7 @@ public:
     bool initialize(void);
     QVariant value(Parameter param) const;
     void setValue(Parameter param, const QVariant &val);
+    void save(void);
 
 private:
     AppSetting();

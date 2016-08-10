@@ -6,6 +6,7 @@
 
 class MODULESSHARED_EXPORT HardwareModule : public BaseAppModule
 {
+    Q_OBJECT
 public:
     HardwareModule(const QString &name);
     ~HardwareModule();
@@ -13,6 +14,11 @@ public:
 public:
     bool load(const QVariant &val);
     void unload();
+
+public slots:
+    void backlightOn(void);
+    void setBrightness(int value);
+    void setTurnOffTime(int value);
 
 };
 

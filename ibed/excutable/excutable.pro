@@ -68,3 +68,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../network/ -lnetwork
 
 INCLUDEPATH += $$PWD/../network
 DEPENDPATH += $$PWD/../network
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/inputmethod/ -linputmethod
+
+INCLUDEPATH += $$PWD/../corelib/inputmethod
+DEPENDPATH += $$PWD/../corelib/inputmethod

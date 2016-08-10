@@ -12,7 +12,10 @@ static const QStringList s_allParams = QStringList()
         << "LogConfig"
         << "UiConfig"
         << "ServerConfig"
-        << "NetConfig";
+        << "NetConfig"
+        << "Brightness"
+        << "Sound"
+        << "TurnOffTime";
 
 
 AppSetting &AppSetting::instance()
@@ -32,20 +35,17 @@ bool AppSetting::initialize()
 
     //read config
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
-    setting.beginGroup("LOG");
+    setting.beginGroup("Config");
     m_params["LogConfig"] = setting.value("logConfig", "./resource/setting/log.conf").toString();
-    setting.endGroup();
-
-    setting.beginGroup("UI");
     m_params["UiConfig"] = setting.value("uiConfig", "./resource/setting/appuiconfig.ini").toString();
-    setting.endGroup();
-
-    setting.beginGroup("SERVER");
     m_params["ServerConfig"] = setting.value("netConfig", "./resource/setting/serverconfig.ini").toString();
+    m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
     setting.endGroup();
 
-    setting.beginGroup("NET");
-    m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
+    setting.beginGroup("Common");
+    m_params["Brightness"] = setting.value("brightness", 100).toUInt();
+    m_params["Sound"] = setting.value("sound", 100).toUInt();
+    m_params["TurnOffTime"] = setting.value("turnofftime", 20).toUInt();
     setting.endGroup();
 
     return true;
@@ -69,6 +69,17 @@ void AppSetting::setValue(AppSetting::Parameter param, const QVariant &val)
     }
 }
 
+void AppSetting::save()
+{
+    QSettings setting(SETTING_FILE, QSettings::IniFormat);
+
+    setting.beginGroup("Common");
+    setting.setValue("brightness", m_params["Brightness"]);
+    setting.setValue("sound", m_params["Sound"]);
+    setting.setValue("turnofftime", m_params["TurnOffTime"]);
+    setting.endGroup();
+}
+
 AppSetting::AppSetting()
 {
 
@@ -77,20 +88,17 @@ AppSetting::AppSetting()
 void AppSetting::setDefault()
 {
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
-    setting.beginGroup("LOG");
+    setting.beginGroup("Config");
     setting.setValue("logConfig", "./resource/setting/log.conf");
-    setting.endGroup();
-
-    setting.beginGroup("UI");
     setting.setValue("uiConfig", "./resource/setting/appuiconfig.ini");
-    setting.endGroup();
-
-    setting.beginGroup("SERVER");
     setting.setValue("serverConfig", "./resource/setting/serverconfig.ini");
+    setting.setValue("netConfig", "./resource/setting/interfaces");
     setting.endGroup();
 
-    setting.beginGroup("NET");
-    setting.setValue("netConfig", "./resource/setting/interfaces");
+    setting.beginGroup("Common");
+    setting.setValue("brightness", 100);
+    setting.setValue("sound", 100);
+    setting.setValue("turnofftime", 20);
     setting.endGroup();
 
 }

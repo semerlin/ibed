@@ -9,6 +9,7 @@ class MainWidget;
 class StandbyWidget;
 class CallDialog;
 class ProgressDialog;
+class NumIPMethod;
 
 class MODULESSHARED_EXPORT UiModule : public BaseAppModule
 {
@@ -29,6 +30,9 @@ signals:
     void reconnect(const QString &ip, quint16 port);
     void updateAdvise();
     void uploadInOut(const QStringList &data);
+    void clicked(void);
+    void brightnessChanged(int value);
+    void turnOffTimeChanged(int value);
 
 private slots:
     void onRegistered();
@@ -52,6 +56,9 @@ private:
     StandbyWidget *m_standbyWidget;
     CallDialog *m_callDialog;
     ProgressDialog *m_progressDialog;
+#ifdef TARGET_IMX
+    NumIPMethod *m_method;
+#endif
 };
 
 #endif // UIMODULE_H

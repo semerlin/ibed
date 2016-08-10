@@ -15,6 +15,16 @@ public:
     explicit ScreenWidget(QWidget *parent = 0);
     ~ScreenWidget();
 
+public:
+    int brightness(void) const;
+    int turnOffTime(void) const;
+
+signals:
+    void brightnessChanged(int value);
+
+private slots:
+    void onBrightnessChanged(int value);
+
 private:
     Ui::ScreenWidget *ui;
 };

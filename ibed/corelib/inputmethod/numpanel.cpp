@@ -1,16 +1,16 @@
-#ifdef TARGET_IMX
-
 #include "numipmethod.h"
 #include "numpanel.h"
 #include "ui_numpanel.h"
 #include <QSignalMapper>
 #include <QDebug>
 
-NumPanel::NumPanel(QWidget *parent) :
+#ifdef TARGET_IMX
+
+NumPanel::NumPanel(NumIPMethod *method, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NumPanel),
     m_mapper(new QSignalMapper(this)),
-    m_method(new NumIPMethod),
+    m_method(method),
     m_lastFocusWidget(NULL)
 {
     ui->setupUi(this);
@@ -34,7 +34,9 @@ NumPanel::NumPanel(QWidget *parent) :
     }
 
     connect(m_mapper, SIGNAL(mapped(int)), this, SIGNAL(keyPressed(int)));
-    connect(this, SIGNAL(keyPressed(int)), m_method, SLOT(processKey(int)));
+
+    if(m_method != NULL)
+        connect(this, SIGNAL(keyPressed(int)), m_method, SLOT(processKey(int)));
 
 }
 

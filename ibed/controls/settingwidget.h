@@ -20,6 +20,8 @@ public slots:
 
 signals:
     void reconnect(const QString &ip, quint16 port);
+    void brightnessChanged(int value);
+    void turnOffTimeChanged(int value);
 
 private slots:
     void onPushButtonPress();
@@ -32,6 +34,7 @@ private:
     Ui::SettingWidget *ui;
     void saveLocal(void);
     void saveServer(void);
+    void saveScreen(void);
 };
 
 #endif // SETTINGWIDGET_H

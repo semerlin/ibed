@@ -23,6 +23,7 @@ bool MainModule::initialize()
     //modules
     UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
 
     //connect signals
     QObject::connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
@@ -49,6 +50,11 @@ bool MainModule::initialize()
     QObject::connect(network, SIGNAL(adviseUpdate(QString)), ui, SLOT(onAdviseUpdate(QString)));
 
     QObject::connect(ui, SIGNAL(uploadInOut(QStringList)), network, SLOT(uploadInOut(QStringList)));
+
+    QObject::connect(ui, SIGNAL(clicked()), hardware, SLOT(backlightOn()));
+
+    QObject::connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
+    QObject::connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
 
     //show main widget
     if(ui != NULL)

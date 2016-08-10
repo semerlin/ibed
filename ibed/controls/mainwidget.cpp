@@ -12,6 +12,7 @@
 #include "boost/foreach.hpp"
 #include <QPushButton>
 #include "util.h"
+#include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -64,6 +65,11 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_adviseWidget, SIGNAL(updateClicked()), this, SIGNAL(updateAdvise()));
 
     connect(m_inOutWidget, SIGNAL(upload(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
+
+    connect(m_settingWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
+    connect(m_settingWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
+
+    installEventFilter(this);
 
 }
 
@@ -174,6 +180,19 @@ void MainWidget::connectBtnAndWidget()
 
     m_bottomBtnWidgets[0] = m_bedWidget;
     m_bottomBtnWidgets[1] = m_infusionWidget;
+}
+
+bool MainWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    Q_UNUSED(obj)
+    Q_UNUSED(event)
+
+    if((event->type() == QEvent::MouseButtonPress) ||
+       (event->type() == QEvent::Paint) ||
+       (event->type() == QEvent::UpdateRequest))
+        emit clicked();
+
+    return false;
 }
 
 

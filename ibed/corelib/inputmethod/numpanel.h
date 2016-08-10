@@ -1,8 +1,10 @@
 #ifndef NUMPANEL_H
 #define NUMPANEL_H
 
-#ifdef TARGET_IMX
+#include "inputmethod_global.h"
 #include <QWidget>
+
+#ifdef TARGET_IMX
 
 namespace Ui {
 class NumPanel;
@@ -11,12 +13,12 @@ class NumPanel;
 class QSignalMapper;
 class NumIPMethod;
 
-class NumPanel : public QWidget
+class INPUTMETHODSHARED_EXPORT NumPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit NumPanel(QWidget *parent = 0);
+    explicit NumPanel(NumIPMethod *method, QWidget *parent = 0);
     ~NumPanel();
 
 signals:

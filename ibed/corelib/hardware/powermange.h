@@ -41,6 +41,9 @@ public slots:
     void removeDevice(const IDevice *dev);
     void removeDevice(const QString &name);
     void removeAllDevices(void);
+    //wakeup slots, bind event that user want to use to wakeup all devices
+    void powerOn(void);
+
 
 signals:
     void stateChanged(const POWER_STATE &prevState, const POWER_STATE &curState);
@@ -50,8 +53,6 @@ signals:
 private slots:
     void slotPowerIdle(void);
     void slotPowerSuspend(void);
-    //wakeup slots, bind event that user want to use to wakeup all devices
-    void slotPowerOn(void);
 
 private:
     void wakeupDevice(const IDevice *dev);

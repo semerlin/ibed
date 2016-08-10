@@ -11,9 +11,16 @@ class INPUTMETHODSHARED_EXPORT NumIPMethod : public QWSInputMethod
 {
     Q_OBJECT
 public:
-    NumIPMethod();
+    NumIPMethod(QWidget *parent = 0);
+    ~NumIPMethod();
+
+public:
+    void updateHandler(int type);
 
 public slots:
+    void move(int x, int y);
+    void resize(int width, int height);
+    void setGeometry(int x, int y, int w, int h);
     void processKey(int key);
 
 private:
@@ -21,7 +28,6 @@ private:
 
 private:
     NumPanel *m_panel;
-    QString m_content;
 };
 #endif
 

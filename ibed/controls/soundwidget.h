@@ -16,6 +16,15 @@ public:
     explicit SoundWidget(QWidget *parent = 0);
     ~SoundWidget();
 
+public:
+    int sound(void) const;
+
+signals:
+    void soundChanged(int value);
+
+private slots:
+    void onSoundChanged(int value);
+
 private:
     Ui::SoundWidget *ui;
 };
