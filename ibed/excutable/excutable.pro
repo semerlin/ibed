@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = excutable
 TEMPLATE = app
 
+include(../alsa.pri)
 
 SOURCES += main.cpp
 
@@ -73,3 +74,14 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/inputmethod/ -linputmethod
 
 INCLUDEPATH += $$PWD/../corelib/inputmethod
 DEPENDPATH += $$PWD/../corelib/inputmethod
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/media/ -lmedia
+
+INCLUDEPATH += $$PWD/../corelib/media
+DEPENDPATH += $$PWD/../corelib/media
+
+
+unix:!macx: LIBS += -L$$OUT_PWD/../sensor/ -lsensor
+
+INCLUDEPATH += $$PWD/../sensor
+DEPENDPATH += $$PWD/../sensor

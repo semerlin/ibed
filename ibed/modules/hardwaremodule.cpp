@@ -1,3 +1,4 @@
+#include <QTimer>
 #include "hardwaremodule.h"
 #include "powermange.h"
 #include "backlight.h"
@@ -5,11 +6,20 @@
 #include "applogger.h"
 #include <QDebug>
 #include "appsetting.h"
+#include "powercontrol.h"
+#include "appsetting.h"
+#include "systemcall.h"
+#include <QDir>
+#include <QDirIterator>
+#include "lightintensity.h"
 
 HardwareModule::HardwareModule(const QString &name) :
-    BaseAppModule(name)
+    BaseAppModule(name),
+    m_lightIntensity(0)
 {
-
+    m_lightTimer = new QTimer(this);
+    m_lightTimer->setInterval(1000);
+    connect(m_lightTimer, SIGNAL(timeout()), this, SLOT(updateLightIntensity()));
 }
 
 HardwareModule::~HardwareModule()
@@ -22,6 +32,8 @@ bool HardwareModule::load(const QVariant &val)
     Q_UNUSED(val)
 
 #ifdef TARGET_IMX
+    //load drivers
+    loadDrivers();
 //    AppLogger::instance().log()->debug("hardware");
 //    emit message(tr("init hardware..."));
     /*****backlight****/
@@ -42,6 +54,11 @@ bool HardwareModule::load(const QVariant &val)
         PowerMange::instance().run();
     }
 
+    //enable speaker
+    PowerControl::instance().spkEnable(true);
+
+    //start intensity timer
+    m_lightTimer->start();
 #endif
 
     m_isLoaded = true;
@@ -86,6 +103,45 @@ void HardwareModule::setTurnOffTime(int value)
     else
     {
         PowerMange::instance().stop();
+    }
+#endif
+}
+
+void HardwareModule::updateLightIntensity()
+{
+#ifdef TARGET_IMX
+    int temp = LightIntensity::instance().intensity();
+    if(temp != m_lightIntensity)
+    {
+        AppLogger::instance().log()->debug(QString("intensity changed to: %1").arg(m_lightIntensity));
+        m_lightIntensity = temp;
+        emit lightIntensityChanged(m_lightIntensity);
+    }
+#endif
+}
+
+void HardwareModule::loadDrivers()
+{
+#ifdef TARGET_IMX
+    QString driverFolder = AppSetting::instance().value(AppSetting::DriverConfig).toString();
+
+    QDir dir(driverFolder);
+    if(!dir.exists())
+        return;
+
+    QStringList filters;
+    filters << QString("*.ko");
+
+    QDirIterator dirIter(driverFolder, filters,
+                         QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot,
+                         QDirIterator::Subdirectories);
+
+    while(dirIter.hasNext())
+    {
+        dirIter.next();
+        QFileInfo info = dirIter.fileInfo();
+        SystemCall::instance().cmd("insmod " + info.absoluteFilePath());
+        AppLogger::instance().log()->info(QString("load driver: %1").arg(info.fileName()));
     }
 #endif
 }

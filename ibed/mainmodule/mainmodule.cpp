@@ -5,6 +5,7 @@
 #include <QObject>
 #include "thememodule.h"
 #include "networkmodule.h"
+#include "mediamodule.h"
 #include "mainwidget.h"
 
 MainModule::MainModule() :
@@ -15,6 +16,7 @@ MainModule::MainModule() :
     m_manger->addModule(new ThemeModule("Theme"));
     m_manger->addModule(new HardwareModule("Hardware"));
     m_manger->addModule(new NetworkModule("Network"));
+    m_manger->addModule(new MediaModule("Media"));
 
 }
 
@@ -24,6 +26,7 @@ bool MainModule::initialize()
     UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
     //connect signals
     QObject::connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
@@ -56,6 +59,14 @@ bool MainModule::initialize()
     QObject::connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
     QObject::connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
 
+    QObject::connect(ui, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
+    QObject::connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
+    QObject::connect(ui, SIGNAL(stop(QString)), media, SLOT(onStop(QString)));
+
+    QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
+
+    QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
+
     //show main widget
     if(ui != NULL)
     {
@@ -64,6 +75,9 @@ bool MainModule::initialize()
 
     //connect to server
     network->init();
+
+    //init media
+    media->init();
 
     return true;
 }

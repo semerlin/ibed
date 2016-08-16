@@ -16,6 +16,8 @@ public:
         UiConfig,
         ServerConfig,
         NetConfig,
+        EduAudioPath,
+        DriverConfig,
 
         Brightness,
         Sound,

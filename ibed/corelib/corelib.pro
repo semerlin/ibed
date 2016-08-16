@@ -5,5 +5,6 @@ SUBDIRS += \
     utility \
     hardware \
     framework \
-    inputmethod
+    inputmethod \
+    media
 

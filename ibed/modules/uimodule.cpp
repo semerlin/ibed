@@ -1,3 +1,4 @@
+#include <QTimer>
 #include "mainwidget.h"
 #include "standbywidget.h"
 #include "calldialog.h"
@@ -7,9 +8,12 @@
 #include <QResource>
 
 UiModule::UiModule(const QString &name) :
-    BaseAppModule(name)
+    BaseAppModule(name),
+    m_standByTimer(new QTimer(this)),
+    m_standByCount(0)
 {
-
+    m_standByTimer->setInterval(1000);
+    connect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
 }
 
 UiModule::~UiModule()
@@ -41,14 +45,22 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
     connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
     connect(m_mainWidget, SIGNAL(clicked()), this, SIGNAL(clicked()));
+    connect(m_mainWidget, SIGNAL(clicked()), this, SLOT(onMainWidgetClicked()));
     connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
     connect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
+    connect(m_mainWidget, SIGNAL(play(QString)), this, SIGNAL(play(QString)));
+    connect(m_mainWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
+    connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
+
+    connect(m_standbyWidget, SIGNAL(clicked()), this, SIGNAL(clicked()));
+    connect(m_standbyWidget, SIGNAL(clicked()), this, SLOT(onStandbyClicked()));
 
     return true;
 }
 
 void UiModule::unload()
 {
+    delete m_standByTimer;
     delete m_progressDialog;
     delete m_callDialog;
     delete m_standbyWidget;
@@ -58,6 +70,7 @@ void UiModule::unload()
 void UiModule::showMainWidget()
 {
     m_mainWidget->show();
+    m_standByTimer->start();
 }
 
 void UiModule::onRegistered()
@@ -78,6 +91,7 @@ void UiModule::onDisconnect()
 void UiModule::onNameChanged(const QString &name)
 {
     m_mainWidget->setName(name);
+    m_standbyWidget->setName(name);
 }
 
 void UiModule::onSexChanged(const QString &sex)
@@ -88,16 +102,19 @@ void UiModule::onSexChanged(const QString &sex)
 void UiModule::onAgeChanged(const QString &age)
 {
     m_mainWidget->setAge(age);
+    m_standbyWidget->setAge(age.toInt());
 }
 
 void UiModule::onBedChanged(const QString &bed)
 {
     m_mainWidget->setBed(bed);
+    m_standbyWidget->setBedNum(bed.toInt());
 }
 
 void UiModule::onLevelChanged(const QString &level)
 {
     m_mainWidget->setLevel(level);
+    m_standbyWidget->setNursery(level.toInt());
 }
 
 void UiModule::onTimeChanged(const QString &time)
@@ -134,4 +151,34 @@ void UiModule::onAllergyChanged(const QString &allergy)
 void UiModule::onAdviseUpdate(const QString &data)
 {
     m_mainWidget->addAdvise(data);
+}
+
+void UiModule::onStandbyTimeout()
+{
+    if(m_standByCount++ > 6)
+    {
+        if(m_standbyWidget->isHidden())
+            m_standbyWidget->show();
+    }
+}
+
+void UiModule::onMainWidgetClicked()
+{
+    m_standByCount = 0;
+}
+
+void UiModule::onStandbyClicked()
+{
+    m_standByCount = 0;
+    m_standbyWidget->hide();
+}
+
+void UiModule::onLightIntensityChanged(int intensity)
+{
+    m_standbyWidget->setLightIntensity(QString::number(intensity));
+}
+
+void UiModule::onAudioIntensityChanged(int intensity)
+{
+    m_standbyWidget->setAudioIntensity(QString::number(intensity));
 }

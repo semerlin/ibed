@@ -11,6 +11,7 @@ TARGET = modules
 TEMPLATE = lib
 
 include(../global.pri)
+include(../alsa.pri)
 
 DEFINES += MODULES_LIBRARY
 
@@ -18,14 +19,16 @@ SOURCES += modules.cpp \
     hardwaremodule.cpp \
     thememodule.cpp \
     uimodule.cpp \
-    networkmodule.cpp
+    networkmodule.cpp \
+    mediamodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
     hardwaremodule.h \
     thememodule.h \
     uimodule.h \
-    networkmodule.h
+    networkmodule.h \
+    mediamodule.h
 
 unix {
     target.path = /usr/lib
@@ -79,3 +82,13 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/inputmethod/ -linputmethod
 
 INCLUDEPATH += $$PWD/../corelib/inputmethod
 DEPENDPATH += $$PWD/../corelib/inputmethod
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/media/ -lmedia
+
+INCLUDEPATH += $$PWD/../corelib/media
+DEPENDPATH += $$PWD/../corelib/media
+
+unix:!macx: LIBS += -L$$OUT_PWD/../sensor/ -lsensor
+
+INCLUDEPATH += $$PWD/../sensor
+DEPENDPATH += $$PWD/../sensor

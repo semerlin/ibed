@@ -22,7 +22,8 @@ HEADERS += utility.h\
     qssloader.h \
     systemcall.h \
     util.h \
-    formula.h
+    formula.h \
+    coveragecircularqueue.h
 
 unix {
     target.path = /usr/lib

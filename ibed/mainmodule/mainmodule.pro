@@ -9,6 +9,8 @@ QT       += gui
 TARGET = mainmodule
 TEMPLATE = lib
 
+include(../alsa.pri)
+
 DEFINES += MAINMODULE_LIBRARY
 
 SOURCES += mainmodule.cpp \
@@ -69,3 +71,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../network/ -lnetwork
 
 INCLUDEPATH += $$PWD/../network
 DEPENDPATH += $$PWD/../network
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/media/ -lmedia
+
+INCLUDEPATH += $$PWD/../corelib/media
+DEPENDPATH += $$PWD/../corelib/media

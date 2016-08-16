@@ -10,6 +10,7 @@ class StandbyWidget;
 class CallDialog;
 class ProgressDialog;
 class NumIPMethod;
+class QTimer;
 
 class MODULESSHARED_EXPORT UiModule : public BaseAppModule
 {
@@ -33,6 +34,9 @@ signals:
     void clicked(void);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
+    void play(const QString &name);
+    void pause(const QString &name);
+    void stop(const QString &name);
 
 private slots:
     void onRegistered();
@@ -50,6 +54,11 @@ private slots:
     void onAdviseChanged(const QString &advise);
     void onAllergyChanged(const QString &allergy);
     void onAdviseUpdate(const QString &data);
+    void onStandbyTimeout();
+    void onMainWidgetClicked();
+    void onStandbyClicked();
+    void onLightIntensityChanged(int intensity);
+    void onAudioIntensityChanged(int intensity);
 
 private:
     MainWidget *m_mainWidget;
@@ -59,6 +68,8 @@ private:
 #ifdef TARGET_IMX
     NumIPMethod *m_method;
 #endif
+    QTimer *m_standByTimer;
+    int m_standByCount;
 };
 
 #endif // UIMODULE_H

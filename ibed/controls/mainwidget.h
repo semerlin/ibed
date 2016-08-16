@@ -52,6 +52,9 @@ signals:
     void clicked(void);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
+    void play(const QString &name);
+    void pause(const QString &name);
+    void stop(const QString &name);
 
 private slots:
     void onTopWidgetButtonClick(int id);

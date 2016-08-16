@@ -15,7 +15,9 @@ SOURCES += hardware.cpp \
     backlight.cpp \
     iserialport.cpp \
     posix_serialport.cpp \
-    powermange.cpp
+    powermange.cpp \
+    pcf8574.c \
+    powercontrol.cpp
 
 HEADERS += hardware.h\
         hardware_global.h \
@@ -27,7 +29,9 @@ HEADERS += hardware.h\
     win_serialport.h \
     powermange.h \
     powerdef.h \
-    idevice.h
+    idevice.h \
+    pcf8574.h \
+    powercontrol.h
 
 unix {
     target.path = /usr/lib

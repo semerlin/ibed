@@ -11,10 +11,12 @@ TEMPLATE = lib
 
 DEFINES += SENSOR_LIBRARY
 
-SOURCES += sensor.cpp
+SOURCES += sensor.cpp \
+    lightintensity.cpp
 
 HEADERS += sensor.h\
-        sensor_global.h
+        sensor_global.h \
+    lightintensity.h
 
 unix {
     target.path = /usr/lib

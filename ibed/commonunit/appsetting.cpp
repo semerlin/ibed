@@ -13,6 +13,8 @@ static const QStringList s_allParams = QStringList()
         << "UiConfig"
         << "ServerConfig"
         << "NetConfig"
+        << "EduAudioPath"
+        << "DriverConfig"
         << "Brightness"
         << "Sound"
         << "TurnOffTime";
@@ -40,6 +42,8 @@ bool AppSetting::initialize()
     m_params["UiConfig"] = setting.value("uiConfig", "./resource/setting/appuiconfig.ini").toString();
     m_params["ServerConfig"] = setting.value("netConfig", "./resource/setting/serverconfig.ini").toString();
     m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
+    m_params["DriverConfig"] = setting.value("driverConfig", "./resource/driver").toString();
+    m_params["EduAudioPath"] = setting.value("eduPath", "./resource/education").toString();
     setting.endGroup();
 
     setting.beginGroup("Common");
@@ -93,6 +97,8 @@ void AppSetting::setDefault()
     setting.setValue("uiConfig", "./resource/setting/appuiconfig.ini");
     setting.setValue("serverConfig", "./resource/setting/serverconfig.ini");
     setting.setValue("netConfig", "./resource/setting/interfaces");
+    setting.setValue("driverConfig", "./resource/driver");
+    setting.setValue("eduPath", "./resource/education");
     setting.endGroup();
 
     setting.beginGroup("Common");

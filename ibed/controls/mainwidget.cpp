@@ -69,6 +69,10 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_settingWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
     connect(m_settingWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
 
+    connect(m_educationWidget, SIGNAL(play(QString)), this, SIGNAL(play(QString)));
+    connect(m_educationWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
+    connect(m_educationWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
+
     installEventFilter(this);
 
 }
