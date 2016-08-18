@@ -25,24 +25,11 @@ StandbyWidget::StandbyWidget(QWidget *parent) :
     ui->widgetBed->setText("病床号0");
     ui->widgetNursery->setText("三级护理");
     ui->widgetAge->setText("0岁");
-
-    installEventFilter(this);
 }
 
 StandbyWidget::~StandbyWidget()
 {
     delete ui;
-}
-
-bool StandbyWidget::eventFilter(QObject *obj, QEvent *event)
-{
-    Q_UNUSED(obj)
-    Q_UNUSED(event)
-
-    if(event->type() == QEvent::MouseButtonPress)
-        emit clicked();
-
-    return false;
 }
 
 void StandbyWidget::setName(const QString &name)

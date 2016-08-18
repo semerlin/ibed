@@ -12,13 +12,7 @@
 #include "appentry.h"
 #include <QResource>
 #include "mainwidget.h"
-#include <QDebug>
-
-#include <stdio.h>
-#define ALSA_PCM_NEW_HW_PARAMS_API
-#include <alsa/asoundlib.h>
-
-
+#include "baseapplication.h"
 
 AppEntry &AppEntry::instance()
 {
@@ -28,7 +22,7 @@ AppEntry &AppEntry::instance()
 
 int AppEntry::run(int argc, char **argv)
 {
-    QApplication app(argc, argv);
+    BaseApplication app(argc, argv);
 
     QResource::registerResource("./resource/ui/launch.rcc");
 

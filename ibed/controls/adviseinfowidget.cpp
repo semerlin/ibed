@@ -2,7 +2,7 @@
 #include <QAbstractTableModel>
 #include <QModelIndex>
 #include <QHeaderView>
-
+#include <QTableWidget>
 class AdviseInfoModel : public QAbstractTableModel
 {
 public:
@@ -34,6 +34,8 @@ AdviseInfoWidget::AdviseInfoWidget(QWidget *parent) :
     setModel(m_model);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    horizontalHeader()->setStretchLastSection(true);
 }
 
 void AdviseInfoWidget::clearData()

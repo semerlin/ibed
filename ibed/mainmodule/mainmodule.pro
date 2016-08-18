@@ -15,12 +15,14 @@ DEFINES += MAINMODULE_LIBRARY
 
 SOURCES += mainmodule.cpp \
     appentry.cpp \
-    launchwidget.cpp
+    launchwidget.cpp \
+    baseapplication.cpp
 
 HEADERS += mainmodule.h\
         mainmodule_global.h \
     appentry.h \
-    launchwidget.h
+    launchwidget.h \
+    baseapplication.h
 
 unix {
     target.path = /usr/lib

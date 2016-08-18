@@ -6,6 +6,7 @@
 #include "numipmethod.h"
 #include "uimodule.h"
 #include <QResource>
+#include <QApplication>
 
 UiModule::UiModule(const QString &name) :
     BaseAppModule(name),
@@ -44,16 +45,11 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(reconnect(QString, quint16)), this, SIGNAL(reconnect(QString, quint16)));
     connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
     connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
-    connect(m_mainWidget, SIGNAL(clicked()), this, SIGNAL(clicked()));
-    connect(m_mainWidget, SIGNAL(clicked()), this, SLOT(onMainWidgetClicked()));
     connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
     connect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
     connect(m_mainWidget, SIGNAL(play(QString)), this, SIGNAL(play(QString)));
     connect(m_mainWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
     connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
-
-    connect(m_standbyWidget, SIGNAL(clicked()), this, SIGNAL(clicked()));
-    connect(m_standbyWidget, SIGNAL(clicked()), this, SLOT(onStandbyClicked()));
 
     return true;
 }
@@ -162,11 +158,6 @@ void UiModule::onStandbyTimeout()
     }
 }
 
-void UiModule::onMainWidgetClicked()
-{
-    m_standByCount = 0;
-}
-
 void UiModule::onStandbyClicked()
 {
     m_standByCount = 0;
@@ -181,4 +172,11 @@ void UiModule::onLightIntensityChanged(int intensity)
 void UiModule::onAudioIntensityChanged(int intensity)
 {
     m_standbyWidget->setAudioIntensity(QString::number(intensity));
+}
+
+void UiModule::onClicked()
+{
+    m_standByCount = 0;
+    if(!m_standbyWidget->isHidden())
+        m_standbyWidget->hide();
 }

@@ -7,6 +7,7 @@
 #include "networkmodule.h"
 #include "mediamodule.h"
 #include "mainwidget.h"
+#include "baseapplication.h"
 
 MainModule::MainModule() :
     m_manger(new ModuleManger)
@@ -54,8 +55,6 @@ bool MainModule::initialize()
 
     QObject::connect(ui, SIGNAL(uploadInOut(QStringList)), network, SLOT(uploadInOut(QStringList)));
 
-    QObject::connect(ui, SIGNAL(clicked()), hardware, SLOT(backlightOn()));
-
     QObject::connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
     QObject::connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
 
@@ -66,6 +65,19 @@ bool MainModule::initialize()
     QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
 
     QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
+
+    //connect app click signal
+    BaseApplication *app = dynamic_cast<BaseApplication *>(qApp);
+    if(app != NULL)
+    {
+        //stanbywidget control
+        QObject::connect(app, SIGNAL(keyPressed(int)), ui, SLOT(onClicked()));
+        QObject::connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), ui, SLOT(onClicked()));
+
+        //backlight control
+        QObject::connect(app, SIGNAL(keyPressed(int)), hardware, SLOT(backlightOn()));
+        QObject::connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), hardware, SLOT(backlightOn()));
+    }
 
     //show main widget
     if(ui != NULL)

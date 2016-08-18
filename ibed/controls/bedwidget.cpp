@@ -8,7 +8,6 @@ BedWidget::BedWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->labelBed->setPixmap(QString(":/res/images/bedcontrol.png"));
     ui->labelHuman->setPixmap(QString(":/res/images/leftup1.png"));
     ui->labelHuman1->setPixmap(QString(":/res/images/rightup1.png"));
     ui->labelWeightName->setText(tr("总重量"));

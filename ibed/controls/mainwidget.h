@@ -42,14 +42,10 @@ public slots:
     void setAllergy(const QString &allergy);
     void addAdvise(const QString &advise);
 
-public:
-    bool eventFilter(QObject *obj, QEvent *event);
-
 signals:
     void reconnect(const QString &ip, quint16 port);
     void updateAdvise(void);
     void uploadInOut(const QStringList &data);
-    void clicked(void);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
     void play(const QString &name);

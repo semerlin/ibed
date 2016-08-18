@@ -31,7 +31,6 @@ signals:
     void reconnect(const QString &ip, quint16 port);
     void updateAdvise();
     void uploadInOut(const QStringList &data);
-    void clicked(void);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
     void play(const QString &name);
@@ -59,6 +58,7 @@ private slots:
     void onStandbyClicked();
     void onLightIntensityChanged(int intensity);
     void onAudioIntensityChanged(int intensity);
+    void onClicked(void);
 
 private:
     MainWidget *m_mainWidget;
