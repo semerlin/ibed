@@ -3,6 +3,9 @@
 #include <QModelIndex>
 #include <QHeaderView>
 #include <QTableWidget>
+#include <QMouseEvent>
+#include <QScrollBar>
+
 class AdviseInfoModel : public QAbstractTableModel
 {
 public:
@@ -34,6 +37,9 @@ AdviseInfoWidget::AdviseInfoWidget(QWidget *parent) :
     setModel(m_model);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     horizontalHeader()->setStretchLastSection(true);
 }
@@ -46,6 +52,22 @@ void AdviseInfoWidget::clearData()
 void AdviseInfoWidget::appendData(const QStringList &data)
 {
     m_model->appendData(data);
+}
+
+void AdviseInfoWidget::mousePressEvent(QMouseEvent *event)
+{
+    m_lastPoint = event->pos();
+    LineTableView::mousePressEvent(event);
+}
+
+void AdviseInfoWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    verticalScrollBar()->setValue(verticalScrollBar()->value() +
+                                  m_lastPoint.y() - event->pos().y());
+    horizontalScrollBar()->setValue(horizontalScrollBar()->value() +
+                                  m_lastPoint.x() - event->pos().x());
+
+    m_lastPoint = event->pos();
 }
 
 

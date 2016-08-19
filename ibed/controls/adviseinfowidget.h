@@ -16,8 +16,13 @@ public slots:
     void clearData(void);
     void appendData(const QStringList &data);
 
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
 private:
     AdviseInfoModel *m_model;
+    QPoint m_lastPoint;
 };
 
 #endif // ADVISEINFOWIDGET_H
