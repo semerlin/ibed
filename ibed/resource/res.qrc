@@ -29,13 +29,25 @@
         <file>res/images/server.png</file>
         <file>res/images/sound.png</file>
         <file>res/images/bedcontrol.png</file>
+        <file>res/images/weight.png</file>
+        <file>res/images/bedweight.png</file>
+        <file>res/images/brightness.png</file>
+        <file>res/images/infusion.png</file>
+        <file>res/images/sound1.png</file>
+        <file>res/images/temper.png</file>
+        <file>res/images/answer.png</file>
+        <file>res/images/cancel.png</file>
+        <file>res/images/progress.png</file>
+        <file>res/images/call.png</file>
+        <file>res/images/standby.png</file>
+        <file>res/images/save.png</file>
         <file>res/images/left1_h.png</file>
         <file>res/images/left1_l.png</file>
         <file>res/images/left2_h.png</file>
         <file>res/images/left2_l.png</file>
         <file>res/images/leftup1.png</file>
-        <file>res/images/right1-1-01.png</file>
         <file>res/images/right1-2_h.png</file>
+        <file>res/images/right1-2_l.png</file>
         <file>res/images/right2_h.png</file>
         <file>res/images/right2_l.png</file>
         <file>res/images/right4_h.png</file>
@@ -61,17 +73,5 @@
         <file>res/images/right14_h.png</file>
         <file>res/images/right14_l.png</file>
         <file>res/images/rightup1.png</file>
-        <file>res/images/weight.png</file>
-        <file>res/images/bedweight.png</file>
-        <file>res/images/brightness.png</file>
-        <file>res/images/infusion.png</file>
-        <file>res/images/sound1.png</file>
-        <file>res/images/temper.png</file>
-        <file>res/images/answer.png</file>
-        <file>res/images/cancel.png</file>
-        <file>res/images/progress.png</file>
-        <file>res/images/call.png</file>
-        <file>res/images/standby.png</file>
-        <file>res/images/save.png</file>
     </qresource>
 </RCC>

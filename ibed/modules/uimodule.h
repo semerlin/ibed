@@ -54,7 +54,6 @@ private slots:
     void onAllergyChanged(const QString &allergy);
     void onAdviseUpdate(const QString &data);
     void onStandbyTimeout();
-    void onMainWidgetClicked();
     void onStandbyClicked();
     void onLightIntensityChanged(int intensity);
     void onAudioIntensityChanged(int intensity);

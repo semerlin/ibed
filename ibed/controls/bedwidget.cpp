@@ -26,7 +26,7 @@ void BedWidget::initButtons()
     QList<IconPushButton *> allPButtons = this->findChildren<IconPushButton *>();
     BOOST_FOREACH(IconPushButton *btn, allPButtons)
     {
-        btn->setIconSize(QSize(40, 40));
+        btn->setIconSize(QSize(52, 52));
         connect(btn, SIGNAL(pressed()), this, SLOT(onButtonPress()));
         connect(btn, SIGNAL(released()), this, SLOT(onButtonReleased()));
     }
@@ -48,7 +48,7 @@ void BedWidget::initButtons()
                              << ":/res/images/left2_h.png");
 
     ui->pushButton5->setIcons(QStringList()
-                             << ":/res/images/right1-1-01.png"
+                             << ":/res/images/right1-2_l.png"
                              << ":/res/images/right1-2_h.png");
 
     ui->pushButton6->setIcons(QStringList()
