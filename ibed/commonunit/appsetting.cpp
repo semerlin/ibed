@@ -17,7 +17,8 @@ static const QStringList s_allParams = QStringList()
         << "DriverConfig"
         << "Brightness"
         << "Sound"
-        << "TurnOffTime";
+        << "TurnOffTime"
+        << "ModbusPort";
 
 
 AppSetting &AppSetting::instance()
@@ -50,6 +51,7 @@ bool AppSetting::initialize()
     m_params["Brightness"] = setting.value("brightness", 100).toUInt();
     m_params["Sound"] = setting.value("sound", 100).toUInt();
     m_params["TurnOffTime"] = setting.value("turnofftime", 20).toUInt();
+    m_params["ModbusPort"] = setting.value("modbusport", "/dev/ttySP1").toString();
     setting.endGroup();
 
     return true;
@@ -105,6 +107,7 @@ void AppSetting::setDefault()
     setting.setValue("brightness", 100);
     setting.setValue("sound", 100);
     setting.setValue("turnofftime", 20);
+    setting.setValue("modbusport", "/dev/ttySP1");
     setting.endGroup();
 
 }

@@ -23,6 +23,8 @@ public:
         Sound,
         TurnOffTime,
 
+        ModbusPort,
+
 
         Param_Count,
     }Parameter;

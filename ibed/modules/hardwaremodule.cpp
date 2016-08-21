@@ -82,6 +82,7 @@ bool HardwareModule::load(const QVariant &val)
 #endif
 
 //    BedControl::instance().powerOn();
+    BedControl::instance().weight();
 
 
     m_isLoaded = true;
