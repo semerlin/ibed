@@ -15,7 +15,8 @@ SOURCES += utility.cpp \
     qssloader.cpp \
     systemcall.cpp \
     util.cpp \
-    formula.cpp
+    formula.cpp \
+    crc.cpp
 
 HEADERS += utility.h\
         utility_global.h \
@@ -23,7 +24,8 @@ HEADERS += utility.h\
     systemcall.h \
     util.h \
     formula.h \
-    coveragecircularqueue.h
+    coveragecircularqueue.h \
+    crc.h
 
 unix {
     target.path = /usr/lib

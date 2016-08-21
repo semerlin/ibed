@@ -62,7 +62,10 @@ bool MainModule::initialize()
     QObject::connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
     QObject::connect(ui, SIGNAL(stop(QString)), media, SLOT(onStop(QString)));
 
+#ifdef TARGET_IMX
     QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
+    QObject::connect(hardware, SIGNAL(temperatureChanged(int)), ui, SLOT(onTemperatureChanged(int)));
+#endif
 
     QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
 

@@ -63,3 +63,8 @@ void StandbyWidget::setAudioIntensity(const QString &intensity)
 {
     ui->widgetSound->setText(intensity);
 }
+
+void StandbyWidget::setTemperature(const QString &temper)
+{
+    ui->widgetTemper->setText(temper);
+}

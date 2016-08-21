@@ -10,6 +10,14 @@ public:
 
 public:
     void spkEnable(bool flag);
+    /**
+     * @brief control max485 read and write
+     * @param direct: 0 read
+     *                !0 write
+     */
+    void rs485DirectCtrl(int direct);
+
+    void externalPowerOn(bool flag);
 
 private:
     PowerControl();

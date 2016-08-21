@@ -56,6 +56,7 @@ private slots:
     void onStandbyTimeout();
     void onStandbyClicked();
     void onLightIntensityChanged(int intensity);
+    void onTemperatureChanged(int temper);
     void onAudioIntensityChanged(int intensity);
     void onClicked(void);
 

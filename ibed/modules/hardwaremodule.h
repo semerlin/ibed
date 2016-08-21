@@ -24,13 +24,19 @@ public slots:
 
 signals:
     void lightIntensityChanged(int intensity);
+    void temperatureChanged(int temper);
+    void humidityChanged(int humidity);
 
 private slots:
     void updateLightIntensity(void);
+    void updateTemper(void);
 
 private:
     QTimer *m_lightTimer;
+    QTimer *m_temperTimer;
     int m_lightIntensity;
+    int m_temper;
+    int m_humidity;
 
 private:
     void loadDrivers(void);

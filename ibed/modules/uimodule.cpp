@@ -169,6 +169,11 @@ void UiModule::onLightIntensityChanged(int intensity)
     m_standbyWidget->setLightIntensity(QString::number(intensity));
 }
 
+void UiModule::onTemperatureChanged(int temper)
+{
+    m_standbyWidget->setTemperature(QString::number(temper));
+}
+
 void UiModule::onAudioIntensityChanged(int intensity)
 {
     m_standbyWidget->setAudioIntensity(QString::number(intensity));

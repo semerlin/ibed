@@ -14,6 +14,8 @@
 #include "mainwidget.h"
 #include "baseapplication.h"
 
+
+
 AppEntry &AppEntry::instance()
 {
     static AppEntry m_appEntry;

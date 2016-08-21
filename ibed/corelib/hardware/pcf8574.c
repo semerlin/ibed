@@ -10,7 +10,6 @@
 #include <linux/i2c-dev.h>
 
 
-#define I2C_SLAVE       0x0703
 #define PCF8574_ADDR    0x40
 
 static int fd_s = -1;

@@ -23,6 +23,7 @@ public slots:
     void setAge(int age);
     void setLightIntensity(const QString &intensity);
     void setAudioIntensity(const QString &intensity);
+    void setTemperature(const QString &temper);
 
 private:
     Ui::StandbyWidget *ui;

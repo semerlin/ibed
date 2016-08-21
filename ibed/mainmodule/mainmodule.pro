@@ -78,3 +78,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/media/ -lmedia
 
 INCLUDEPATH += $$PWD/../corelib/media
 DEPENDPATH += $$PWD/../corelib/media
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/hardware/ -lhardware
+
+INCLUDEPATH += $$PWD/../corelib/hardware
+DEPENDPATH += $$PWD/../corelib/hardware

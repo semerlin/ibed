@@ -17,7 +17,8 @@ SOURCES += hardware.cpp \
     posix_serialport.cpp \
     powermange.cpp \
     pcf8574.c \
-    powercontrol.cpp
+    powercontrol.cpp \
+    ledintensity.cpp
 
 HEADERS += hardware.h\
         hardware_global.h \
@@ -31,7 +32,8 @@ HEADERS += hardware.h\
     powerdef.h \
     idevice.h \
     pcf8574.h \
-    powercontrol.h
+    powercontrol.h \
+    ledintensity.h
 
 unix {
     target.path = /usr/lib
