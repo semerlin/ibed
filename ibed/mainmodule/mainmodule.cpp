@@ -2,12 +2,12 @@
 #include "mainmodule.h"
 #include "hardwaremodule.h"
 #include "uimodule.h"
-#include <QObject>
 #include "thememodule.h"
 #include "networkmodule.h"
 #include "mediamodule.h"
 #include "mainwidget.h"
 #include "baseapplication.h"
+#include <QDebug>
 
 MainModule::MainModule() :
     m_manger(new ModuleManger)
@@ -62,6 +62,10 @@ bool MainModule::initialize()
     QObject::connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
     QObject::connect(ui, SIGNAL(stop(QString)), media, SLOT(onStop(QString)));
 
+    QObject::connect(ui, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedControlPressed(int)));
+    QObject::connect(ui, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedControlReleased(int)));
+
+
 #ifdef TARGET_IMX
     QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
     QObject::connect(hardware, SIGNAL(temperatureChanged(int)), ui, SLOT(onTemperatureChanged(int)));
@@ -100,4 +104,44 @@ bool MainModule::initialize()
 ModuleManger *MainModule::manger() const
 {
     return m_manger;
+}
+
+void MainModule::onBedControlPressed(int id)
+{
+    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+
+    switch(id)
+    {
+    case 0:
+        hardware->motorMove(0, 1);
+        break;
+    case 1:
+        hardware->motorMove(3, 2);
+        break;
+    case 2:
+        hardware->motorMove(2, 1);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainModule::onBedControlReleased(int id)
+{
+    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+
+    switch(id)
+    {
+    case 0:
+        hardware->motorMove(0, 0);
+        break;
+    case 1:
+        hardware->motorMove(3, 0);
+        break;
+    case 2:
+        hardware->motorMove(2, 0);
+        break;
+    default:
+        break;
+    }
 }

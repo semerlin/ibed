@@ -3,6 +3,8 @@
 
 #include "hardware_global.h"
 
+class PCF8574;
+
 class HARDWARESHARED_EXPORT PowerControl
 {
 public:
@@ -22,6 +24,7 @@ public:
 private:
     PowerControl();
     ~PowerControl();
+    PCF8574 *m_pcf;
 };
 
 #endif // POWERCONTROL_H

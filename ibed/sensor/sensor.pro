@@ -20,7 +20,10 @@ SOURCES += sensor.cpp \
     i2cdevice.cpp \
     modbus.cpp \
     basedatahandler.cpp \
-    weightdatahandler.cpp
+    weightdatahandler.cpp \
+    keyboard.cpp \
+    keyboardmange.cpp \
+    kbdbacklight.cpp
 
 HEADERS += sensor.h\
         sensor_global.h \
@@ -32,7 +35,10 @@ HEADERS += sensor.h\
     basedatahandler.h \
     bedcontrol.cpp.autosave \
     idatahandler.h \
-    weightdatahandler.h
+    weightdatahandler.h \
+    keyboard.h \
+    keyboardmange.h \
+    kbdbacklight.h
 
 unix {
     target.path = /usr/lib

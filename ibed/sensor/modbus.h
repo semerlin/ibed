@@ -7,6 +7,7 @@ class SerialPortCtrl;
 
 class Modbus : public QObject
 {
+    Q_OBJECT
 public:
     typedef enum
     {

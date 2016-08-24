@@ -73,6 +73,9 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_educationWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
     connect(m_educationWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
 
+    connect(m_bedWidget, SIGNAL(buttonPress(int)), this, SIGNAL(bedCtrlPressed(int)));
+    connect(m_bedWidget, SIGNAL(buttonReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
+
 }
 
 MainWidget::~MainWidget()

@@ -1,20 +1,58 @@
-#ifndef _PCF8574_H_
-  #define _PCF8574_H_
+#ifndef PCF8574_H
+#define PCF8574_H
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+#include <QByteArray>
+#include <QString>
 
-extern int pcf8574_init(void);
-extern void pcf8574_deinit(void);
-extern int pcf8574_write(char buf);
-extern int pcf8574_read(char *buf);
+class PCF8574
+{
+public:
+    /**
+     * @brief PCF8574 construct
+     * @param port: i2c port name
+     * @param address: pcf8574 address
+     */
+    explicit PCF8574(const QString &port, quint8 address);
+    ~PCF8574();
 
-#ifdef __cplusplus
-}
-#endif
+public:
+    /**
+     * @brief open pcf8574
+     * @return
+     */
+    bool open(void);
 
+    /**
+     * @brief close pcf8574
+     */
+    void close(void);
 
-#endif
+    /**
+     * @brief set pcf8574 port
+     * @param port
+     */
+    void setPort(const QString &port);
 
+    /**
+     * @brief set pcf8574 address
+     * @param address
+     */
+    void setAddress(quint8 address);
 
+    /**
+     * @brief write data
+     * @param data
+     * @return
+     */
+    quint64 write(const QByteArray &data);
+    quint64 write(const char *data, quint64 maxSize);
+    QByteArray read(quint64 maxSize);
+    qint64 read(char *data, qint64 maxSize);
+
+private:
+    int m_fd;
+    QString m_port;
+    quint8 m_address;
+};
+
+#endif // PCF8574_H

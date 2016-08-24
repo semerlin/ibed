@@ -11,4 +11,5 @@ SUBDIRS += \
     commonunit \
     mainmodule \
     resource \
-    network
+    network \
+    call

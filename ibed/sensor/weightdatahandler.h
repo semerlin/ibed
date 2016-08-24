@@ -14,6 +14,12 @@ public:
 public:
     void handle(quint8 code, quint16 address, const QByteArray &data);
 
+signals:
+    void weightChanged(double weight);
+
+private:
+    double m_weight;
+
 };
 
 #endif // HEARTRATEDATAHANDLER_H

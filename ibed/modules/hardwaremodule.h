@@ -5,6 +5,7 @@
 #include "baseappmodule.h"
 
 class QTimer;
+class SHT20;
 
 class MODULESSHARED_EXPORT HardwareModule : public BaseAppModule
 {
@@ -21,6 +22,7 @@ public slots:
     void backlightOn(void);
     void setBrightness(int value);
     void setTurnOffTime(int value);
+    void motorMove(int id, int dir);
 
 signals:
     void lightIntensityChanged(int intensity);
@@ -37,6 +39,7 @@ private:
     int m_lightIntensity;
     int m_temper;
     int m_humidity;
+    SHT20 *m_sht20;
 
 private:
     void loadDrivers(void);

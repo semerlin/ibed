@@ -1,4 +1,5 @@
 #include <QTimer>
+#include "sht20.h"
 #include "hardwaremodule.h"
 #include "powermange.h"
 #include "backlight.h"
@@ -13,8 +14,8 @@
 #include <QDirIterator>
 #include "lightintensity.h"
 #include "bedcontrol.h"
-#include "sht20.h"
 #include "ledintensity.h"
+#include "kbdbacklight.h"
 
 HardwareModule::HardwareModule(const QString &name) :
     BaseAppModule(name),
@@ -22,6 +23,10 @@ HardwareModule::HardwareModule(const QString &name) :
     m_temper(0),
     m_humidity(0)
 {
+#ifdef TARGET_IMX
+    m_sht20 = new SHT20("/dev/i2c-1", 0x40);
+#endif
+
     m_lightTimer = new QTimer(this);
     m_lightTimer->setInterval(1000);
     connect(m_lightTimer, SIGNAL(timeout()), this, SLOT(updateLightIntensity()));
@@ -79,10 +84,12 @@ bool HardwareModule::load(const QVariant &val)
     //start temper timer
     m_temperTimer->start();
 
+    //turn off keyboard backlight
+    KbdBacklight::instance().turnOffBKL();
+
 #endif
 
-//    BedControl::instance().powerOn();
-    BedControl::instance().weight();
+    BedControl::instance().powerOn();
 
 
     m_isLoaded = true;
@@ -133,6 +140,29 @@ void HardwareModule::setTurnOffTime(int value)
 #endif
 }
 
+void HardwareModule::motorMove(int id, int dir)
+{
+    BedControl::MotorDirection direction;
+    switch(dir)
+    {
+    case 0:
+        //stop
+        direction = BedControl::Stop;
+        break;
+    case 1:
+        direction = BedControl::Forword;
+        break;
+    case 2:
+        direction = BedControl::Reversal;
+        break;
+    default:
+        direction = BedControl::Stop;
+        break;
+    }
+
+    BedControl::instance().motorMove(id, direction);
+}
+
 void HardwareModule::updateLightIntensity()
 {
 #ifdef TARGET_IMX
@@ -149,7 +179,7 @@ void HardwareModule::updateLightIntensity()
 void HardwareModule::updateTemper()
 {
 #ifdef TARGET_IMX
-    int temp = SHT20::temperature();
+    int temp = m_sht20->temperature();
     if(temp != m_temper)
     {
         AppLogger::instance().log()->debug(QString("temperature changed to: %1").arg(m_temper));
@@ -157,7 +187,7 @@ void HardwareModule::updateTemper()
         emit temperatureChanged(m_temper);
     }
 
-    int hum = SHT20::humidity();
+    int hum = m_sht20->humidity();
     if(hum != m_humidity)
     {
         AppLogger::instance().log()->debug(QString("humidity changed to: %1").arg(m_humidity));
@@ -188,8 +218,12 @@ void HardwareModule::loadDrivers()
     {
         dirIter.next();
         QFileInfo info = dirIter.fileInfo();
-        SystemCall::instance().cmd("insmod " + info.absoluteFilePath());
-        AppLogger::instance().log()->info(QString("load driver: %1").arg(info.fileName()));
+        QFile file(QString("/dev/%1").arg(info.baseName()));
+        if(!file.exists())
+        {
+            SystemCall::instance().cmd("insmod " + info.absoluteFilePath());
+            AppLogger::instance().log()->info(QString("load driver: %1").arg(info.fileName()));
+        }
     }
 #endif
 }

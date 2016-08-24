@@ -1,4 +1,5 @@
 #include <QMutex>
+#include "keyboardmange.h"
 #include "idatahandler.h"
 #include "modbus.h"
 #include "bedcontrol.h"
@@ -20,27 +21,16 @@ BedControl &BedControl::instance()
     return m_bedControl;
 }
 
-quint8 BedControl::weight() const
+void BedControl::addDataHandler(IDataHandler *handler)
 {
-#ifdef TARFET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
-
-//    m_code = Modbus::READ_InputRegister;
-    m_contentLen = 2;
-    char data[3];
-    data[0] = 0x00;
-    data[1] = 0x01;
-    m_modbus->write(Modbus::READ_InputRegister, 0x79, data, 2);
-
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+    if(handler != NULL)
+        m_handlers.append(handler);
 }
+
 
 void BedControl::powerOn(void)
 {
-#ifdef TARFET_IMX
+#ifdef TARGET_IMX
     PowerControl::instance().rs485DirectCtrl(1);
 #endif
 
@@ -95,16 +85,172 @@ void BedControl::motorMove(int id, BedControl::MotorDirection direction)
         switch(direction)
         {
         case Forword:
+            AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(id));
             data[1] |= (0x01 << (id * 2));
             break;
         case Reversal:
+            AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(id));
             data[1] |= (0x02 << (id * 2));
             break;
         default:
+            AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(id));
             break;
         }
         m_modbus->write(Modbus::WRITE_SingleRegister, address, data, 2);
     }
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getMotorCurrent() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x49, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getChargeCurrent() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x50, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getDischargeCurrent() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x51, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getHighBatteryVoltage() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x53, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getLowBatteryVoltage() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x52, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getInfusionCount() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x69, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getInfusionSpeed() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x70, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getInfusionMount() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x71, data, 2);
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
+}
+
+void BedControl::getWeight() const
+{
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(1);
+#endif
+
+    m_contentLen = 2;
+    char data[3];
+    data[0] = 0x00;
+    data[1] = 0x01;
+    m_modbus->write(Modbus::READ_InputRegister, 0x79, data, 2);
 
 #ifdef TARGET_IMX
     PowerControl::instance().rs485DirectCtrl(0);
@@ -159,6 +305,23 @@ void BedControl::onDataReached(const QByteArray &data)
 
 }
 
+void BedControl::onKeyPressed(int id)
+{
+    if(((id + 1) % 2) == 0)
+    {
+        motorMove(id, Forword);
+    }
+    else
+    {
+        motorMove(id, Reversal);
+    }
+}
+
+void BedControl::onKeyReleased(int id)
+{
+    motorMove(id, Stop);
+}
+
 
 BedControl::BedControl() :
     m_modbus(new Modbus(AppSetting::instance().value(AppSetting::ModbusPort).toString())),
@@ -170,6 +333,13 @@ BedControl::BedControl() :
     connect(m_modbus, SIGNAL(dataReached(QByteArray)), this, SLOT(onDataReached(QByteArray)));
 
     addDataHandler(new WeightDataHandler(0x04, 0x79));
+
+#ifdef TARGET_IMX
+    m_kbdMange = new KeyboardMange;
+    m_kbdMange->init();
+    connect(m_kbdMange, SIGNAL(keyPressed(int)), this, SLOT(onKeyPressed(int)));
+    connect(m_kbdMange, SIGNAL(keyReleased(int)), this, SLOT(onKeyReleased(int)));
+#endif
 }
 
 BedControl::~BedControl()

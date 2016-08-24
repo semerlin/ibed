@@ -9,6 +9,7 @@
 class SerialPortCtrl;
 class QMutex;
 class IDataHandler;
+class KeyboardMange;
 
 class SENSORSHARED_EXPORT BedControl : public QObject
 {
@@ -27,13 +28,6 @@ public:
     static BedControl &instance(void);
 
 public:
-    unsigned short motorCurrent(void) const;
-    unsigned short chargeCurrent(void) const;
-    unsigned short dischargeCurrent(void) const;
-    unsigned short highBatteryVoltage(void) const;
-    unsigned short lowBatteryVoltage(void) const;
-    quint8 weight(void) const;
-
     void addDataHandler(IDataHandler *handler);
 
 public slots:
@@ -41,9 +35,20 @@ public slots:
     void powerOff(void);
     void motorMove(int id, MotorDirection direction);
 
+    void getMotorCurrent(void) const;
+    void getChargeCurrent(void) const;
+    void getDischargeCurrent(void) const;
+    void getHighBatteryVoltage(void) const;
+    void getLowBatteryVoltage(void) const;
+    void getInfusionCount(void) const;
+    void getInfusionSpeed(void) const;
+    void getInfusionMount(void) const;
+    void getWeight(void) const;
+
 private slots:
     void onDataReached(const QByteArray &data);
-
+    void onKeyPressed(int id);
+    void onKeyReleased(int id);
 
 private:
     BedControl();
@@ -54,6 +59,7 @@ private:
     QMutex *m_mutex;
     mutable quint8 m_contentLen;
     QList<IDataHandler *> m_handlers;
+    KeyboardMange *m_kbdMange;
 };
 
 #endif // BEDCONTROL_H

@@ -50,6 +50,8 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(play(QString)), this, SIGNAL(play(QString)));
     connect(m_mainWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
     connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
+    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SIGNAL(bedCtrlPressed(int)));
+    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
 
     return true;
 }

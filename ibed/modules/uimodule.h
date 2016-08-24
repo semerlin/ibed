@@ -36,6 +36,8 @@ signals:
     void play(const QString &name);
     void pause(const QString &name);
     void stop(const QString &name);
+    void bedCtrlPressed(int id);
+    void bedCtrlReleased(int id);
 
 private slots:
     void onRegistered();

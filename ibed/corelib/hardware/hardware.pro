@@ -16,7 +16,7 @@ SOURCES += hardware.cpp \
     iserialport.cpp \
     posix_serialport.cpp \
     powermange.cpp \
-    pcf8574.c \
+    pcf8574.cpp \
     powercontrol.cpp \
     ledintensity.cpp
 

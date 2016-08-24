@@ -6,11 +6,16 @@
 class SHT20
 {
 public:
-    SHT20();
+    explicit SHT20(const QString &port, const quint8 address);
+    ~SHT20();
 
 public:
-    static double temperature(void);
-    static double humidity(void);
+    double temperature(void);
+    double humidity(void);
+
+private:
+    int m_fd;
+    quint8 m_address;
 };
 
 #endif // SHT20_H
