@@ -25,6 +25,10 @@ public slots:
     void reconnect(const QString &ip, quint16 port);
     void getAdvise(void);
     void uploadInOut(const QStringList &data);
+    void sendInfuStatus(int status);
+    void sendInfuSpeed(int speed);
+    void sendInfuLeft(int left);
+    void sendWeight(double weight);
 
 signals:
     void registered();

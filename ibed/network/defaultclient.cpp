@@ -109,70 +109,141 @@ void DefaultClient::getBaseInfo()
 
 void DefaultClient::uploadInOut(const QStringList &data)
 {
-    NetProtocol::ContentList list;
-    NetProtocol::Content content;
+    if(m_isRegistered)
+    {
+        NetProtocol::ContentList list;
+        NetProtocol::Content content;
 
-    content.id = 10220;
-    content.length = data.at(0).size();
-    content.data = data.at(0).toLatin1();
-    list.append(content);
+        content.id = 10220;
+        content.length = data.at(0).size();
+        content.data = data.at(0).toLatin1();
+        list.append(content);
 
-    content.id = 10221;
-    content.length = data.at(1).size();
-    content.data = data.at(1).toLatin1();
-    list.append(content);
+        content.id = 10221;
+        content.length = data.at(1).size();
+        content.data = data.at(1).toLatin1();
+        list.append(content);
 
-    content.id = 10222;
-    content.length = data.at(2).size();
-    content.data = data.at(2).toLatin1();
-    list.append(content);
+        content.id = 10222;
+        content.length = data.at(2).size();
+        content.data = data.at(2).toLatin1();
+        list.append(content);
 
-    content.id = 10226;
-    content.length = data.at(3).size();
-    content.data = data.at(3).toLatin1();
-    list.append(content);
+        content.id = 10226;
+        content.length = data.at(3).size();
+        content.data = data.at(3).toLatin1();
+        list.append(content);
 
-    content.id = 10224;
-    content.length = data.at(4).size();
-    content.data = data.at(4).toLatin1();
-    list.append(content);
+        content.id = 10224;
+        content.length = data.at(4).size();
+        content.data = data.at(4).toLatin1();
+        list.append(content);
 
-    content.id = 10227;
-    content.length = data.at(5).size();
-    content.data = data.at(5).toLatin1();
-    list.append(content);
+        content.id = 10227;
+        content.length = data.at(5).size();
+        content.data = data.at(5).toLatin1();
+        list.append(content);
 
-    content.id = 10228;
-    content.length = data.at(6).size();
-    content.data = data.at(6).toLatin1();
-    list.append(content);
+        content.id = 10228;
+        content.length = data.at(6).size();
+        content.data = data.at(6).toLatin1();
+        list.append(content);
 
-    content.id = 10223;
-    content.length = data.at(7).size();
-    content.data = data.at(7).toLatin1();
-    list.append(content);
+        content.id = 10223;
+        content.length = data.at(7).size();
+        content.data = data.at(7).toLatin1();
+        list.append(content);
 
-    content.id = 10225;
-    content.length = data.at(8).size();
-    content.data = data.at(8).toLatin1();
-    list.append(content);
+        content.id = 10225;
+        content.length = data.at(8).size();
+        content.data = data.at(8).toLatin1();
+        list.append(content);
 
-    content.id = 10250;
-    content.length = data.at(9).size();
-    content.data = data.at(9).toLatin1();
-    list.append(content);
+        content.id = 10250;
+        content.length = data.at(9).size();
+        content.data = data.at(9).toLatin1();
+        list.append(content);
 
-    content.id = 10251;
-    content.length = data.at(10).size();
-    content.data = data.at(10).toLatin1();
-    list.append(content);
+        content.id = 10251;
+        content.length = data.at(10).size();
+        content.data = data.at(10).toLatin1();
+        list.append(content);
 
-    content.id = 10252;
-    content.length = data.at(11).size();
-    content.data = data.at(11).toLatin1();
-    list.append(content);
+        content.id = 10252;
+        content.length = data.at(11).size();
+        content.data = data.at(11).toLatin1();
+        list.append(content);
 
-    m_socket->write(m_protocol->package(NetProtocol::InOutInfo, list));
+        m_socket->write(m_protocol->package(NetProtocol::InOutInfo, list));
+    }
+}
+
+void DefaultClient::sendInfuStatus(int status)
+{
+    if(m_isRegistered)
+    {
+        NetProtocol::ContentList list;
+        NetProtocol::Content content;
+
+        content.id = 3310;
+        content.length = 1;
+        content.data.append(static_cast<char>(status));
+        list.append(content);
+
+
+        m_socket->write(m_protocol->package(NetProtocol::InfuInfo, list));
+    }
+}
+
+void DefaultClient::sendInfuSpeed(int speed)
+{
+    if(m_isRegistered)
+    {
+        NetProtocol::ContentList list;
+        NetProtocol::Content content;
+
+        content.id = 3311;
+        content.length = 1;
+        content.data.append(static_cast<char>(speed));
+        list.append(content);
+
+
+        m_socket->write(m_protocol->package(NetProtocol::InfuInfo, list));
+    }
+}
+
+void DefaultClient::sendInfuLeft(int left)
+{
+    if(m_isRegistered)
+    {
+        NetProtocol::ContentList list;
+        NetProtocol::Content content;
+
+        content.id = 3312;
+        content.length = 1;
+        content.data.append(static_cast<char>(left));
+        list.append(content);
+
+
+        m_socket->write(m_protocol->package(NetProtocol::InfuInfo, list));
+    }
+}
+
+void DefaultClient::sendWeight(int weight)
+{
+    if(m_isRegistered)
+    {
+        NetProtocol::ContentList list;
+        NetProtocol::Content content;
+
+        content.id = 3431;
+        content.length = 1;
+        content.data.append(static_cast<char>(weight));
+        list.append(content);
+
+
+        m_socket->write(m_protocol->package(NetProtocol::Spo2Info, list));
+    }
 }
 
 void DefaultClient::onConnectTimeout()

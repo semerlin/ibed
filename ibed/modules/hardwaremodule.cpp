@@ -34,12 +34,28 @@ HardwareModule::HardwareModule(const QString &name) :
     m_temperTimer = new QTimer(this);
     m_temperTimer->setInterval(1000);
     connect(m_temperTimer, SIGNAL(timeout()), this, SLOT(updateTemper()));
+
+    m_infuTimer = new QTimer(this);
+    m_infuTimer->setInterval(1000);
+    connect(m_infuTimer, SIGNAL(timeout()), this, SLOT(updateInfusion()));
+
+    m_weightTimer = new QTimer(this);
+    m_weightTimer->setInterval(1000);
+    connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
+
+    connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
+    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SIGNAL(infuCountChanged(int)));
+    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
+    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
 }
 
 HardwareModule::~HardwareModule()
 {
     delete m_lightTimer;
     delete m_temperTimer;
+    delete m_sht20;
+    delete m_infuTimer;
+    delete m_weightTimer;
 }
 
 
@@ -90,6 +106,9 @@ bool HardwareModule::load(const QVariant &val)
 #endif
 
     BedControl::instance().powerOn();
+
+    //start weight timer
+    m_weightTimer->start();
 
 
     m_isLoaded = true;
@@ -163,6 +182,18 @@ void HardwareModule::motorMove(int id, int dir)
     BedControl::instance().motorMove(id, direction);
 }
 
+void HardwareModule::startInfusion()
+{
+    AppLogger::instance().log()->info("start infusion monitor");
+    m_infuTimer->start();
+}
+
+void HardwareModule::stopInfusion()
+{
+    AppLogger::instance().log()->info("stop infusion monitor");
+    m_infuTimer->stop();
+}
+
 void HardwareModule::updateLightIntensity()
 {
 #ifdef TARGET_IMX
@@ -196,6 +227,18 @@ void HardwareModule::updateTemper()
     }
 
 #endif
+}
+
+void HardwareModule::updateInfusion()
+{
+    BedControl::instance().getInfusionCount();
+    BedControl::instance().getInfusionMount();
+    BedControl::instance().getInfusionSpeed();
+}
+
+void HardwareModule::updateWeight()
+{
+    BedControl::instance().getWeight();
 }
 
 void HardwareModule::loadDrivers()

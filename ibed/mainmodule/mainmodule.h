@@ -20,6 +20,9 @@ public:
 private slots:
     void onBedControlPressed(int id);
     void onBedControlReleased(int id);
+    void onInfuStart(void);
+    void onInfuStop(void);
+    void onInfuMountChanged(int mount);
 
 private:
     ModuleManger *m_manger;

@@ -52,6 +52,8 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
     connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SIGNAL(bedCtrlPressed(int)));
     connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
+    connect(m_mainWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
+    connect(m_mainWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
 
     return true;
 }
@@ -173,7 +175,7 @@ void UiModule::onLightIntensityChanged(int intensity)
 
 void UiModule::onTemperatureChanged(int temper)
 {
-    m_standbyWidget->setTemperature(QString::number(temper));
+    m_standbyWidget->setTemperature(QString::number(temper)+"℃");
 }
 
 void UiModule::onAudioIntensityChanged(int intensity)
@@ -186,4 +188,27 @@ void UiModule::onClicked()
     m_standByCount = 0;
     if(!m_standbyWidget->isHidden())
         m_standbyWidget->hide();
+}
+
+void UiModule::onWeightChanged(double weight)
+{
+    int temp = static_cast<int>(weight);
+    m_standbyWidget->setWeight(QString::number(temp)+"Kg");
+}
+
+void UiModule::onInfuMountChanged(int mount)
+{
+    int left = (200 - mount) / 200;
+    m_standbyWidget->setInfuLeft(QString(left)+"%");
+    m_mainWidget->setLeft(left);
+}
+
+void UiModule::onInfuCountChanged(int count)
+{
+    Q_UNUSED(count)
+}
+
+void UiModule::onInfuSpeedChanged(int speed)
+{
+    m_mainWidget->setSpeed(speed);
 }

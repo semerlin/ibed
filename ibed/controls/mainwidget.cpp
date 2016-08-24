@@ -76,6 +76,9 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_bedWidget, SIGNAL(buttonPress(int)), this, SIGNAL(bedCtrlPressed(int)));
     connect(m_bedWidget, SIGNAL(buttonReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
 
+    connect(m_infusionWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
+    connect(m_infusionWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
+
 }
 
 MainWidget::~MainWidget()
@@ -146,6 +149,16 @@ void MainWidget::setAllergy(const QString &allergy)
 void MainWidget::addAdvise(const QString &advise)
 {
     m_adviseWidget->addAdvise(advise);
+}
+
+void MainWidget::setLeft(int left)
+{
+    m_infusionWidget->setLeft(left);
+}
+
+void MainWidget::setSpeed(int speed)
+{
+    m_infusionWidget->setSpeed(speed);
 }
 
 void MainWidget::onTopWidgetButtonClick(int id)

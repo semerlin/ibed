@@ -38,6 +38,8 @@ signals:
     void stop(const QString &name);
     void bedCtrlPressed(int id);
     void bedCtrlReleased(int id);
+    void infuStart(void);
+    void infuStop(void);
 
 private slots:
     void onRegistered();
@@ -61,6 +63,10 @@ private slots:
     void onTemperatureChanged(int temper);
     void onAudioIntensityChanged(int intensity);
     void onClicked(void);
+    void onWeightChanged(double weight);
+    void onInfuMountChanged(int mount);
+    void onInfuCountChanged(int count);
+    void onInfuSpeedChanged(int speed);
 
 private:
     MainWidget *m_mainWidget;

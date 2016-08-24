@@ -63,3 +63,23 @@ void NetworkModule::uploadInOut(const QStringList &data)
 {
     m_defaultClient->uploadInOut(data);
 }
+
+void NetworkModule::sendInfuStatus(int status)
+{
+    m_defaultClient->sendInfuStatus(status);
+}
+
+void NetworkModule::sendInfuSpeed(int speed)
+{
+    m_defaultClient->sendInfuSpeed(speed);
+}
+
+void NetworkModule::sendInfuLeft(int left)
+{
+    m_defaultClient->sendInfuLeft(left);
+}
+
+void NetworkModule::sendWeight(double weight)
+{
+    m_defaultClient->sendWeight(static_cast<char>(weight));
+}

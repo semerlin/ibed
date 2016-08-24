@@ -25,6 +25,8 @@ public:
         TermiInfo = 8,
         TermiControl = 9,
         SysTime = 11,
+        InfuInfo = 33,
+        Spo2Info = 34,
 
         BaseInfo = 80,
 

@@ -10,6 +10,9 @@
 #include "appsetting.h"
 #include "boost/foreach.hpp"
 #include "weightdatahandler.h"
+#include "infucountdatahandler.h"
+#include "infumountdatahandler.h"
+#include "infuspeeddatahandler.h"
 #include "crc.h"
 
 
@@ -332,7 +335,21 @@ BedControl::BedControl() :
     m_modbus->setAddress(m_address);
     connect(m_modbus, SIGNAL(dataReached(QByteArray)), this, SLOT(onDataReached(QByteArray)));
 
-    addDataHandler(new WeightDataHandler(0x04, 0x79));
+    InfuCountDataHandler *countHandler = new InfuCountDataHandler(0x04, 0x69);
+    InfuSpeedDataHandler *speedHandler = new InfuSpeedDataHandler(0x04, 0x70);
+    InfuMountDataHandler *mountHandler = new InfuMountDataHandler(0x04, 0x71);
+    WeightDataHandler *weightHandler = new WeightDataHandler(0x04, 0x79);
+
+    addDataHandler(countHandler);
+    addDataHandler(speedHandler);
+    addDataHandler(mountHandler);
+    addDataHandler(weightHandler);
+
+    connect(countHandler, SIGNAL(countChanged(int)), this, SIGNAL(infuCountChanged(int)));
+    connect(speedHandler, SIGNAL(speedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
+    connect(mountHandler, SIGNAL(mountChanged(int)), this, SIGNAL(infuMountChanged(int)));
+    connect(weightHandler, SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
+
 
 #ifdef TARGET_IMX
     m_kbdMange = new KeyboardMange;

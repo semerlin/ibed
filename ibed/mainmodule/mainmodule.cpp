@@ -55,8 +55,10 @@ bool MainModule::initialize()
 
     QObject::connect(ui, SIGNAL(uploadInOut(QStringList)), network, SLOT(uploadInOut(QStringList)));
 
+#ifdef TARGET_IMX
     QObject::connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
     QObject::connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
+#endif
 
     QObject::connect(ui, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
     QObject::connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
@@ -65,11 +67,27 @@ bool MainModule::initialize()
     QObject::connect(ui, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedControlPressed(int)));
     QObject::connect(ui, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedControlReleased(int)));
 
+    connect(ui, SIGNAL(infuStart()), hardware, SLOT(startInfusion()));
+    connect(ui, SIGNAL(infuStop()), hardware, SLOT(stopInfusion()));
+
+    connect(ui, SIGNAL(infuStart()), this, SLOT(onInfuStart()));
+    connect(ui, SIGNAL(infuStop()), this, SLOT(onInfuStop()));
+
+
+
 
 #ifdef TARGET_IMX
     QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
     QObject::connect(hardware, SIGNAL(temperatureChanged(int)), ui, SLOT(onTemperatureChanged(int)));
 #endif
+
+    connect(hardware, SIGNAL(weightChanged(double)), ui, SLOT(onWeightChanged(double)));
+    connect(hardware, SIGNAL(infuCountChanged(int)), ui, SLOT(onInfuCountChanged(int)));
+    connect(hardware, SIGNAL(infuMountChanged(int)), ui, SLOT(onInfuMountChanged(int)));
+    connect(hardware, SIGNAL(infuSpeedChanged(int)), ui, SLOT(onInfuSpeedChanged(int)));
+
+    connect(hardware, SIGNAL(infuSpeedChanged(int)), network, SLOT(sendInfuSpeed(int)));
+    connect(hardware, SIGNAL(weightChanged(double)), network, SLOT(sendWeight(double)));
 
     QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
 
@@ -144,4 +162,23 @@ void MainModule::onBedControlReleased(int id)
     default:
         break;
     }
+}
+
+void MainModule::onInfuStart()
+{
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    network->sendInfuStatus(1);
+}
+
+void MainModule::onInfuStop()
+{
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    network->sendInfuStatus(2);
+}
+
+void MainModule::onInfuMountChanged(int mount)
+{
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    int left = (200 - mount) / 200;
+    network->sendInfuLeft(left);
 }

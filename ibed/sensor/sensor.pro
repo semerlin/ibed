@@ -23,7 +23,10 @@ SOURCES += sensor.cpp \
     weightdatahandler.cpp \
     keyboard.cpp \
     keyboardmange.cpp \
-    kbdbacklight.cpp
+    kbdbacklight.cpp \
+    infucountdatahandler.cpp \
+    infuspeeddatahandler.cpp \
+    infumountdatahandler.cpp
 
 HEADERS += sensor.h\
         sensor_global.h \
@@ -38,7 +41,10 @@ HEADERS += sensor.h\
     weightdatahandler.h \
     keyboard.h \
     keyboardmange.h \
-    kbdbacklight.h
+    kbdbacklight.h \
+    infucountdatahandler.h \
+    infuspeeddatahandler.h \
+    infumountdatahandler.h
 
 unix {
     target.path = /usr/lib

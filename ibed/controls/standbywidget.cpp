@@ -10,13 +10,13 @@ StandbyWidget::StandbyWidget(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
 
     ui->widgetInfusion->setPixmap(QString(":/res/images/infusion.png"));
-    ui->widgetInfusion->setText("100%");
+    ui->widgetInfusion->setText("0%");
     ui->widgetSound->setPixmap(QString(":/res/images/sound1.png"));
     ui->widgetSound->setText("0");
     ui->widgetBrightness->setPixmap(QString(":/res/images/brightness.png"));
     ui->widgetBrightness->setText("0");
     ui->widgetTemper->setPixmap(QString(":/res/images/temper.png"));
-    ui->widgetTemper->setText("100");
+    ui->widgetTemper->setText("0℃");
     ui->widgetWeight->setPixmap(QString(":/res/images/bedweight.png"));
     ui->widgetWeight->setText("0Kg");
 
@@ -68,3 +68,15 @@ void StandbyWidget::setTemperature(const QString &temper)
 {
     ui->widgetTemper->setText(temper);
 }
+
+void StandbyWidget::setWeight(const QString &weight)
+{
+    ui->widgetWeight->setText(weight);
+}
+
+void StandbyWidget::setInfuLeft(const QString &left)
+{
+    ui->widgetInfusion->setText(left);
+}
+
+

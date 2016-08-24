@@ -45,6 +45,12 @@ public slots:
     void getInfusionMount(void) const;
     void getWeight(void) const;
 
+signals:
+    void infuCountChanged(int count);
+    void infuSpeedChanged(int speed);
+    void infuMountChanged(int mount);
+    void weightChanged(double weight);
+
 private slots:
     void onDataReached(const QByteArray &data);
     void onKeyPressed(int id);

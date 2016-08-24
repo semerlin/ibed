@@ -26,6 +26,10 @@ public:
     void getAdvise(void);
     void getBaseInfo(void);
     void uploadInOut(const QStringList &data);
+    void sendInfuStatus(int status);
+    void sendInfuSpeed(int speed);
+    void sendInfuLeft(int left);
+    void sendWeight(int weight);
 
 private slots:
     void onConnectTimeout(void);

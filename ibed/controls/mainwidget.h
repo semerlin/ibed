@@ -41,6 +41,8 @@ public slots:
     void setAdvise(const QString &advise);
     void setAllergy(const QString &allergy);
     void addAdvise(const QString &advise);
+    void setLeft(int left);
+    void setSpeed(int speed);
 
 signals:
     void reconnect(const QString &ip, quint16 port);
@@ -53,6 +55,8 @@ signals:
     void stop(const QString &name);
     void bedCtrlPressed(int id);
     void bedCtrlReleased(int id);
+    void infuStart(void);
+    void infuStop(void);
 
 private slots:
     void onTopWidgetButtonClick(int id);
