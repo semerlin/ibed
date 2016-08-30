@@ -5,8 +5,12 @@
 
 class CallOutConnectedState : public QState
 {
+    Q_OBJECT
 public:
     CallOutConnectedState(QState *parent = 0);
+
+signals:
+    void connected();
 
 protected:
     void onEntry(QEvent *event);

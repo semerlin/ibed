@@ -5,8 +5,12 @@
 
 class CallOutConnectingState : public QState
 {
+    Q_OBJECT
 public:
     CallOutConnectingState(QState *parent = 0);
+
+signals:
+    void connecting();
 
 protected:
     void onEntry(QEvent *event);

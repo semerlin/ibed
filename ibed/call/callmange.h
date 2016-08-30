@@ -15,6 +15,12 @@ class CallMange : public QObject
 public:
     CallMange();
 
+signals:
+    void callOutConnecting(void);
+    void callOutConnected(void);
+    void callOutLocalTerminate(void);
+    void callOutRemoteTerminate(void);
+
 private slots:
     void onCallOutRequest(void);
     void onCallInRequest(void);

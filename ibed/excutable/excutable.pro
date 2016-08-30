@@ -85,3 +85,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../sensor/ -lsensor
 
 INCLUDEPATH += $$PWD/../sensor
 DEPENDPATH += $$PWD/../sensor
+
+unix:!macx: LIBS += -L$$OUT_PWD/../call/ -lcall
+
+INCLUDEPATH += $$PWD/../call
+DEPENDPATH += $$PWD/../call

@@ -34,7 +34,7 @@ QList<quint8> Keyboard::pressedKeys() const
         return keys;
     }
 
-    for(int i = 0; i < 6; ++i)
+    for(int i = 0; i < 8; ++i)
     {
         if((val & (1 << i)) == 0)
             keys.append(i);
@@ -54,9 +54,9 @@ QList<quint8> Keyboard::releasedKeys() const
         return keys;
     }
 
-    for(int i = 0; i < 6; ++i)
+    for(int i = 0; i < 8; ++i)
     {
-        if((val & (1 << i)) == 1)
+        if((val & (1 << i)) != 0)
             keys.append(i);
     }
 

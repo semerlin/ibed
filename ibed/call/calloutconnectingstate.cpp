@@ -14,6 +14,7 @@ void CallOutConnectingState::onEntry(QEvent *event)
 
     //send message to server
 
+    emit connecting();
     qDebug() << "enter call out connecting state";
 }
 

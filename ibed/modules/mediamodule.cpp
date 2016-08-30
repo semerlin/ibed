@@ -36,8 +36,10 @@ void MediaModule::init()
 
 void MediaModule::onPlay(const QString &name)
 {
-    if(!m_player->isPlaying())
-        m_player->AudioInit(name.toLatin1().constData());
+    if(m_player->isPlaying())
+        m_player->StopPlay();
+
+    m_player->AudioInit(name);
     m_player->StartPlayLocal();
 }
 

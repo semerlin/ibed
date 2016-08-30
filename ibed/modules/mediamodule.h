@@ -23,7 +23,7 @@ public:
 signals:
     void intensityChanged(int intensity);
 
-private slots:
+public slots:
     void onPlay(const QString &name);
     void onPause(const QString &name);
     void onStop(const QString &name);

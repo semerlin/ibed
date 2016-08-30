@@ -11,8 +11,15 @@ class QState;
 
 class CallOut : public QStateMachine
 {
+    Q_OBJECT
 public:
     CallOut();
+
+signals:
+    void connecting(void);
+    void connected(void);
+    void localTerminate(void);
+    void remoteTerminate(void);
 
 private:
     CallOutConnectingState *m_connecting;

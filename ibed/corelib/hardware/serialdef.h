@@ -1,6 +1,8 @@
 #ifndef SERIALDEF_H
 #define SERIALDEF_H
 
+#include <QMetaType>
+
 namespace SerialPort
 {
     enum BaudrateType
@@ -111,7 +113,18 @@ namespace SerialPort
         E_WRITE_FAILED,
         E_PERMISSION_DENIED,
     };
-
 }
+
+Q_DECLARE_METATYPE(SerialPort::BaudrateType)
+Q_DECLARE_METATYPE(SerialPort::ParityType)
+Q_DECLARE_METATYPE(SerialPort::DataBitsType)
+Q_DECLARE_METATYPE(SerialPort::StopBitsType)
+Q_DECLARE_METATYPE(SerialPort::FlowType)
+Q_DECLARE_METATYPE(SerialPort::PortSettings)
+Q_DECLARE_METATYPE(SerialPort::LineStatus)
+Q_DECLARE_METATYPE(SerialPort::SerialPort_Error)
+
+
+
 
 #endif // SERIALDEF_H

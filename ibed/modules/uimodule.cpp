@@ -194,6 +194,7 @@ void UiModule::onWeightChanged(double weight)
 {
     int temp = static_cast<int>(weight);
     m_standbyWidget->setWeight(QString::number(temp)+"Kg");
+    m_mainWidget->setWeight(weight);
 }
 
 void UiModule::onInfuMountChanged(int mount)
@@ -211,4 +212,19 @@ void UiModule::onInfuCountChanged(int count)
 void UiModule::onInfuSpeedChanged(int speed)
 {
     m_mainWidget->setSpeed(speed);
+}
+
+void UiModule::onCallOutConnecting()
+{
+    m_callDialog->show();
+}
+
+void UiModule::onCallOutConnected()
+{
+
+}
+
+void UiModule::onCallOutTerminate()
+{
+    m_callDialog->hide();
 }

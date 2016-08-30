@@ -161,6 +161,11 @@ void MainWidget::setSpeed(int speed)
     m_infusionWidget->setSpeed(speed);
 }
 
+void MainWidget::setWeight(int weight)
+{
+    m_bedWidget->setWeight(QString::number(weight) + "Kg");
+}
+
 void MainWidget::onTopWidgetButtonClick(int id)
 {
     //lowlight buttons if clicked

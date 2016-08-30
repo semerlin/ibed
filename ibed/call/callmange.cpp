@@ -9,9 +9,15 @@ CallMange::CallMange() :
 {
     connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
     connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onLocalTerminate()));
+    m_btn->init();
 
     m_callOut = new CallOut;
     m_callIn = new CallIn;
+
+    connect(m_callOut, SIGNAL(connecting()), this, SIGNAL(callOutConnecting()));
+    connect(m_callOut, SIGNAL(connected()), this, SIGNAL(callOutConnected()));
+    connect(m_callOut, SIGNAL(localTerminate()), this, SIGNAL(callOutLocalTerminate()));
+    connect(m_callOut, SIGNAL(remoteTerminate()), this, SIGNAL(callOutRemoteTerminate()));
 
     m_activeMachine = NULL;
 }

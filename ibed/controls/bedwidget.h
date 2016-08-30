@@ -15,6 +15,9 @@ public:
     explicit BedWidget(QWidget *parent = 0);
     ~BedWidget();
 
+public:
+    void setWeight(const QString &weight);
+
 signals:
     void buttonPress(int id);
     void buttonReleased(int id);

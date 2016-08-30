@@ -6,6 +6,8 @@
 
 class QTimer;
 class SHT20;
+class KeyboardMange;
+class QMutex;
 
 class MODULESSHARED_EXPORT HardwareModule : public BaseAppModule
 {
@@ -23,6 +25,7 @@ public slots:
     void setBrightness(int value);
     void setTurnOffTime(int value);
     void motorMove(int id, int dir);
+    void motorMove(const QList<int> id, int dir);
     void startInfusion(void);
     void stopInfusion(void);
 
@@ -40,6 +43,7 @@ private slots:
     void updateTemper(void);
     void updateInfusion(void);
     void updateWeight(void);
+    void onKeyStatusChanged(void);
 
 private:
     QTimer *m_lightTimer;
@@ -50,6 +54,8 @@ private:
     SHT20 *m_sht20;
     QTimer *m_infuTimer;
     QTimer *m_weightTimer;
+    KeyboardMange *m_kbdMange;
+    QMutex *m_i2cMutex;
 
 private:
     void loadDrivers(void);

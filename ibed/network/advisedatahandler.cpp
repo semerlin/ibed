@@ -21,7 +21,17 @@ void AdviseDataHandler::handle(quint8 id, const NetProtocol::ContentList &list)
         {
             foreach(const NetProtocol::Content &content, list)
             {
-                emit adviseUpdate(content.data);
+                switch(content.id)
+                {
+                case 10100:
+                    break;
+                case 10101:
+                    //data count
+                    break;
+                case 10120:
+                    emit adviseUpdate(content.data);
+                    break;
+                }
             }
         }
     }

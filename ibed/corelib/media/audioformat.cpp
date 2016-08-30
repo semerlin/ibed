@@ -78,6 +78,11 @@ void AudioFormat::setSampleRate(int rate)
     m_rate = rate;
 }
 
+void AudioFormat::setSampleBit(AudioFormat::SampleBit bits)
+{
+    m_bit = bits;
+}
+
 void AudioFormat::setSampleSize(int size)
 {
     m_size = size;

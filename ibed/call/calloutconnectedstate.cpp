@@ -15,6 +15,8 @@ void CallOutConnectedState::onEntry(QEvent *event)
     //prepare record
 
     //prepare udp
+
+    emit connected();
     qDebug() << "enter call out connected state";
 }
 

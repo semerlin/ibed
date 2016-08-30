@@ -13,5 +13,7 @@ void CallOutLocalTerminateState::onEntry(QEvent *event)
 
     //send message to server
 
+    emit terminate();
+
     qDebug() << "enter call out local terminate state";
 }

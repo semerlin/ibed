@@ -43,6 +43,7 @@ public slots:
     void addAdvise(const QString &advise);
     void setLeft(int left);
     void setSpeed(int speed);
+    void setWeight(int weight);
 
 signals:
     void reconnect(const QString &ip, quint16 port);

@@ -4,18 +4,21 @@
 #include <qglobal.h>
 #include <QIODevice>
 #include <QMutex>
+#include <QStringList>
 #include "serialdef.h"
 #include "hardware_global.h"
 
 
 class HARDWARESHARED_EXPORT ISerialPort : public QIODevice
 {
+    Q_OBJECT
 public:
     explicit ISerialPort(QObject *parent = 0);
     explicit ISerialPort(const QString &name, QObject *parent = 0);
     virtual ~ISerialPort();
 
 public:
+    virtual QStringList enumPorts(void) const;
     void setPortName(const QString &name) { m_port = name; }
     inline const QString &portName(void) const { return m_port; }
     bool isSequential() const { return true; }
@@ -25,8 +28,9 @@ public:
     virtual bool open(OpenMode mode) = 0;
     virtual void close(void) = 0;
     virtual void flush(void) = 0;
-    virtual void startRead(void) = 0;
-    virtual void stopRead(void) = 0;
+    virtual void resume(void) = 0;
+    virtual void suspend(void) = 0;
+    virtual bool waitForBytesWritten(int msecs);
 
 
     virtual qint64 bytesAvailable() const = 0;
@@ -59,14 +63,15 @@ public:
     virtual void translateError(ulong error) = 0;
     QString errorString(void) const;
 
-
+signals:
+    void dataReady(void);
 
 protected:
     QMutex *m_mutex;
     SerialPort::PortSettings m_portSettings;
     ulong m_lastErr;
-    QList<unsigned char> m_dataBuffer;
-    char m_buffer[128];
+    QList<quint8> m_dataBuffer;
+    mutable QStringList m_portNames;
 
 protected:
     virtual qint64 readLineData(char *data, qint64 maxlen);
@@ -79,7 +84,6 @@ private:
 
 private:
     void construct(void);
-
 };
 
 #endif // ISERIALPORT_H

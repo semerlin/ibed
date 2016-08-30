@@ -7,6 +7,7 @@
 #include "mediamodule.h"
 #include "mainwidget.h"
 #include "baseapplication.h"
+#include "callmodule.h"
 #include <QDebug>
 
 MainModule::MainModule() :
@@ -18,6 +19,7 @@ MainModule::MainModule() :
     m_manger->addModule(new HardwareModule("Hardware"));
     m_manger->addModule(new NetworkModule("Network"));
     m_manger->addModule(new MediaModule("Media"));
+    m_manger->addModule(new CallModule("Call"));
 
 }
 
@@ -28,6 +30,8 @@ bool MainModule::initialize()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
+
 
     //connect signals
     QObject::connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
@@ -91,6 +95,18 @@ bool MainModule::initialize()
 
     QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
 
+    connect(call, SIGNAL(callOutConnecting()), ui, SLOT(onCallOutConnecting()));
+    connect(call, SIGNAL(callOutConnected()), ui, SLOT(onCallOutConnected()));
+    connect(call, SIGNAL(callOutLocalTerminate()), ui, SLOT(onCallOutTerminate()));
+    connect(call, SIGNAL(callOutRemoteTerminate()), ui, SLOT(onCallOutTerminate()));
+
+    connect(call, SIGNAL(callOutConnecting()), this, SLOT(onCallOutConnecting()));
+    connect(call, SIGNAL(callOutConnected()), this, SLOT(onCallOutConnected()));
+    connect(call, SIGNAL(callOutLocalTerminate()), this, SLOT(onCallOutTerminate()));
+    connect(call, SIGNAL(callOutRemoteTerminate()), this, SLOT(onCallOutTerminate()));
+
+    connect(this, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
+
     //connect app click signal
     BaseApplication *app = dynamic_cast<BaseApplication *>(qApp);
     if(app != NULL)
@@ -130,14 +146,41 @@ void MainModule::onBedControlPressed(int id)
 
     switch(id)
     {
-    case 0:
-        hardware->motorMove(0, 1);
-        break;
     case 1:
-        hardware->motorMove(3, 2);
+        hardware->motorMove(4, 1);
         break;
     case 2:
+        hardware->motorMove(3, 1);
+        break;
+    case 3:
+        hardware->motorMove(4, 2);
+        break;
+    case 4:
+        hardware->motorMove(3, 2);
+        break;
+    case 5:
+        hardware->motorMove(5, 1);
+        break;
+    case 7:
+        hardware->motorMove(1, 1);
+        break;
+    case 8:
         hardware->motorMove(2, 1);
+        break;
+    case 10:
+        hardware->motorMove(6, 2);
+        break;
+    case 11:
+        hardware->motorMove(6, 1);
+        break;
+    case 12:
+        hardware->motorMove(1, 2);
+        break;
+    case 13:
+        hardware->motorMove(2, 2);
+        break;
+    case 15:
+        hardware->motorMove(5, 2);
         break;
     default:
         break;
@@ -150,14 +193,39 @@ void MainModule::onBedControlReleased(int id)
 
     switch(id)
     {
-    case 0:
-        hardware->motorMove(0, 0);
-        break;
     case 1:
-        hardware->motorMove(3, 0);
+        hardware->motorMove(4, 0);
         break;
     case 2:
+        hardware->motorMove(3, 0);
+        break;
+    case 3:
+        hardware->motorMove(4, 0);
+        break;
+    case 4:
+        hardware->motorMove(3, 0);
+        break;
+    case 5:
+        hardware->motorMove(5, 0);
+        break;
+    case 7:
+        hardware->motorMove(1, 0);
+        break;
+    case 8:
         hardware->motorMove(2, 0);
+        break;
+    case 10:
+    case 11:
+        hardware->motorMove(6, 0);
+        break;
+    case 12:
+        hardware->motorMove(1, 0);
+        break;
+    case 13:
+        hardware->motorMove(2, 0);
+        break;
+    case 15:
+        hardware->motorMove(5, 0);
         break;
     default:
         break;
@@ -181,4 +249,30 @@ void MainModule::onInfuMountChanged(int mount)
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     int left = (200 - mount) / 200;
     network->sendInfuLeft(left);
+}
+
+void MainModule::onCallOutConnecting()
+{
+    qDebug() << "play out music" ;
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+
+//    emit play("./resource/audio/callout.wav");
+//    media->onPlay("./resource/audio/callout.wav");
+}
+
+void MainModule::onCallOutConnected()
+{
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+
+    media->onStop("./resource/audio/callout.wav");
+}
+
+void MainModule::onCallOutTerminate()
+{
+    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+
+    media->onStop("./resource/audio/callout.wav");
 }

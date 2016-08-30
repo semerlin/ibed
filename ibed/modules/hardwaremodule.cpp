@@ -1,5 +1,6 @@
 #include <QTimer>
 #include "sht20.h"
+#include "keyboardmange.h"
 #include "hardwaremodule.h"
 #include "powermange.h"
 #include "backlight.h"
@@ -24,7 +25,10 @@ HardwareModule::HardwareModule(const QString &name) :
     m_humidity(0)
 {
 #ifdef TARGET_IMX
+    m_i2cMutex = new QMutex;
     m_sht20 = new SHT20("/dev/i2c-1", 0x40);
+    m_kbdMange = new KeyboardMange;
+    connect(m_kbdMange, SIGNAL(keyStatusChanged()), this, SLOT(onKeyStatusChanged()));
 #endif
 
     m_lightTimer = new QTimer(this);
@@ -43,10 +47,7 @@ HardwareModule::HardwareModule(const QString &name) :
     m_weightTimer->setInterval(1000);
     connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
 
-    connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
-    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SIGNAL(infuCountChanged(int)));
-    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
-    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
+
 }
 
 HardwareModule::~HardwareModule()
@@ -66,6 +67,11 @@ bool HardwareModule::load(const QVariant &val)
 #ifdef TARGET_IMX
     //load drivers
     loadDrivers();
+
+    connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
+    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SIGNAL(infuCountChanged(int)));
+    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
+    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
 //    AppLogger::instance().log()->debug("hardware");
 //    emit message(tr("init hardware..."));
     /*****backlight****/
@@ -100,6 +106,10 @@ bool HardwareModule::load(const QVariant &val)
     //start temper timer
     m_temperTimer->start();
 
+    //start keyboard monitor
+    m_kbdMange->init();
+    m_kbdMange->start();
+
     //turn off keyboard backlight
     KbdBacklight::instance().turnOffBKL();
 
@@ -109,7 +119,6 @@ bool HardwareModule::load(const QVariant &val)
 
     //start weight timer
     m_weightTimer->start();
-
 
     m_isLoaded = true;
 
@@ -182,6 +191,29 @@ void HardwareModule::motorMove(int id, int dir)
     BedControl::instance().motorMove(id, direction);
 }
 
+void HardwareModule::motorMove(const QList<int> id, int dir)
+{
+    BedControl::MotorDirection direction;
+    switch(dir)
+    {
+    case 0:
+        //stop
+        direction = BedControl::Stop;
+        break;
+    case 1:
+        direction = BedControl::Forword;
+        break;
+    case 2:
+        direction = BedControl::Reversal;
+        break;
+    default:
+        direction = BedControl::Stop;
+        break;
+    }
+
+    BedControl::instance().motorMove(id, direction);
+}
+
 void HardwareModule::startInfusion()
 {
     AppLogger::instance().log()->info("start infusion monitor");
@@ -210,7 +242,9 @@ void HardwareModule::updateLightIntensity()
 void HardwareModule::updateTemper()
 {
 #ifdef TARGET_IMX
+    m_i2cMutex->lock();
     int temp = m_sht20->temperature();
+    m_i2cMutex->unlock();
     if(temp != m_temper)
     {
         AppLogger::instance().log()->debug(QString("temperature changed to: %1").arg(m_temper));
@@ -218,7 +252,9 @@ void HardwareModule::updateTemper()
         emit temperatureChanged(m_temper);
     }
 
+    m_i2cMutex->lock();
     int hum = m_sht20->humidity();
+    m_i2cMutex->unlock();
     if(hum != m_humidity)
     {
         AppLogger::instance().log()->debug(QString("humidity changed to: %1").arg(m_humidity));
@@ -232,13 +268,127 @@ void HardwareModule::updateTemper()
 void HardwareModule::updateInfusion()
 {
     BedControl::instance().getInfusionCount();
-    BedControl::instance().getInfusionMount();
-    BedControl::instance().getInfusionSpeed();
+//    BedControl::instance().getInfusionMount();
+//    BedControl::instance().getInfusionSpeed();
 }
 
 void HardwareModule::updateWeight()
 {
     BedControl::instance().getWeight();
+}
+
+void HardwareModule::onKeyStatusChanged()
+{
+#ifdef TARGET_IMX
+    m_i2cMutex->lock();
+    QList<quint8> kbd0PressedKeys = m_kbdMange->pressedKeys(0);
+    QList<quint8> kbd0ReleasedKeys = m_kbdMange->releasedKeys(0);
+    QList<quint8> kbd1PressedKeys = m_kbdMange->pressedKeys(1);
+    QList<quint8> kbd1ReleasedKeys = m_kbdMange->releasedKeys(1);
+    m_i2cMutex->unlock();
+
+    //just support one press a time
+
+    //process kbd1
+    if(kbd0PressedKeys.count() > 0)
+    {
+        switch(kbd0PressedKeys.at(0))
+        {
+        case 2:
+            BedControl::instance().motorMove(3, BedControl::Reversal);
+            break;
+        case 3:
+            BedControl::instance().motorMove(4, BedControl::Reversal);
+            break;
+        case 4:
+            BedControl::instance().motorMove(4, BedControl::Forword);
+            break;
+        case 5:
+            BedControl::instance().motorMove(3, BedControl::Forword);
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+
+        foreach(const quint8 &id, kbd0ReleasedKeys)
+        {
+            switch(id)
+            {
+            case 2:
+                BedControl::instance().motorMove(3, BedControl::Stop);
+                break;
+            case 3:
+                BedControl::instance().motorMove(4, BedControl::Stop);
+                break;
+            case 4:
+                BedControl::instance().motorMove(4, BedControl::Stop);
+                break;
+            case 5:
+                BedControl::instance().motorMove(3, BedControl::Stop);
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
+
+
+    //process kbd2
+    if(kbd0PressedKeys.count() > 0)
+        return ;
+
+    if(kbd1PressedKeys.count() > 0)
+    {
+        switch(kbd1PressedKeys.at(0))
+        {
+        case 2:
+            BedControl::instance().motorMove(3, BedControl::Forword);
+            break;
+        case 3:
+            BedControl::instance().motorMove(4, BedControl::Forword);
+            break;
+        case 4:
+            BedControl::instance().motorMove(4, BedControl::Reversal);
+            break;
+        case 5:
+            BedControl::instance().motorMove(3, BedControl::Reversal);
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+
+        foreach(const quint8 &id, kbd1ReleasedKeys)
+        {
+            switch(id)
+            {
+            case 2:
+                BedControl::instance().motorMove(3, BedControl::Stop);
+                break;
+            case 3:
+                BedControl::instance().motorMove(4, BedControl::Stop);
+                break;
+            case 4:
+                BedControl::instance().motorMove(4, BedControl::Stop);
+                break;
+            case 5:
+                BedControl::instance().motorMove(3, BedControl::Stop);
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
+
+
+#endif
 }
 
 void HardwareModule::loadDrivers()
@@ -270,4 +420,10 @@ void HardwareModule::loadDrivers()
     }
 #endif
 }
+
+
+
+
+
+
 

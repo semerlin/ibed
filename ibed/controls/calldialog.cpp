@@ -7,7 +7,7 @@ CallDialog::CallDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
-//    setModal(false);
+    setModal(false);
 }
 
 CallDialog::~CallDialog()

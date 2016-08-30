@@ -67,6 +67,9 @@ private slots:
     void onInfuMountChanged(int mount);
     void onInfuCountChanged(int count);
     void onInfuSpeedChanged(int speed);
+    void onCallOutConnecting(void);
+    void onCallOutConnected(void);
+    void onCallOutTerminate(void);
 
 private:
     MainWidget *m_mainWidget;

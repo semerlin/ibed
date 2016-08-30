@@ -12,13 +12,18 @@ BedWidget::BedWidget(QWidget *parent) :
     ui->labelHuman1->setPixmap(QString(":/res/images/rightup1.png"));
     ui->labelWeightName->setText(tr("总重量"));
     ui->labelWeightPic->setPixmap(QString(":/res/images/weight.png"));
-    ui->labelWeight->setText("100Kg");
+    ui->labelWeight->setText("0Kg");
     initButtons();
 }
 
 BedWidget::~BedWidget()
 {
     delete ui;
+}
+
+void BedWidget::setWeight(const QString &weight)
+{
+    ui->labelWeight->setText(weight);
 }
 
 void BedWidget::initButtons()

@@ -13,6 +13,8 @@ void CallOutRemoteTerminateState::onEntry(QEvent *event)
 
     //send message to server
 
+    emit terminate();
+
     qDebug() << "enter call out remote terminate state";
 }
 

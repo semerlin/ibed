@@ -5,8 +5,12 @@
 
 class CallOutRemoteTerminateState : public QFinalState
 {
+    Q_OBJECT
 public:
     CallOutRemoteTerminateState(QState *parent = 0);
+
+signals:
+    void terminate();
 
 protected:
     void onEntry(QEvent *event);

@@ -8,7 +8,7 @@ m_mutex(NULL),
 m_lastErr(0)
 {
 #ifdef Q_OS_LINUX
-    setPortName("/dev/ttys0");
+    setPortName("/dev/ttyS0");
 #elif Q_OS_WIN32
     setPortName("COM1");
 #endif
@@ -42,6 +42,12 @@ ISerialPort::~ISerialPort()
     m_dataBuffer.clear();
 }
 
+bool ISerialPort::waitForBytesWritten(int msecs)
+{
+    Q_UNUSED(msecs)
+    return true;
+}
+
 
 void ISerialPort::construct(void)
 {
@@ -58,6 +64,11 @@ void ISerialPort::construct(void)
     setOpenMode(QIODevice::NotOpen);
 }
 
+
+QStringList ISerialPort::enumPorts(void) const
+{
+    return m_portNames;
+}
 
 qint64 ISerialPort::readLineData(char *data, qint64 maxlen)
 {

@@ -1,6 +1,7 @@
 #ifndef CALLIN_H
 #define CALLIN_H
 
+#include "call_global.h"
 #include <QStateMachine>
 
 class CallInConnectingState;
@@ -9,7 +10,7 @@ class CallInLocalTerminateState;
 class CallInRemoteTerminateState;
 class QState;
 
-class CallIn : public QStateMachine
+class CALLSHARED_EXPORT CallIn : public QStateMachine
 {
 public:
     CallIn();

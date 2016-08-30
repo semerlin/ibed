@@ -13,6 +13,9 @@
 #include <QResource>
 #include "mainwidget.h"
 #include "baseapplication.h"
+#include "audioformat.h"
+#include "audiooutput.h"
+#include <QFile>
 
 
 
@@ -76,6 +79,21 @@ void AppEntry::onLaunchFinished()
 
     //init main module
     m_mainModule->initialize();
+
+//    AudioFormat format;
+//    format.setByteOrder(AudioFormat::LittleEndian);
+//    format.setChannelCount(1);
+//    format.setSampleRate(44100);
+//    format.setSampleBit(AudioFormat::Bit_8);
+
+//    AudioOutput *output = new AudioOutput(format);
+//    QFile *file = new QFile;
+
+//    file->setFileName("./resource/callout.wav");
+//    bool flag = file->open( QIODevice::WriteOnly | QIODevice::Truncate );
+//    file->seek(44);
+
+//    output->start(file);
 }
 
 AppEntry::AppEntry() :

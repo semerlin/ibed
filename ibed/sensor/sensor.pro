@@ -26,7 +26,9 @@ SOURCES += sensor.cpp \
     kbdbacklight.cpp \
     infucountdatahandler.cpp \
     infuspeeddatahandler.cpp \
-    infumountdatahandler.cpp
+    infumountdatahandler.cpp \
+    beddataprocess.cpp \
+    beddatasend.cpp
 
 HEADERS += sensor.h\
         sensor_global.h \
@@ -44,7 +46,9 @@ HEADERS += sensor.h\
     kbdbacklight.h \
     infucountdatahandler.h \
     infuspeeddatahandler.h \
-    infumountdatahandler.h
+    infumountdatahandler.h \
+    beddataprocess.h \
+    beddatasend.h
 
 unix {
     target.path = /usr/lib

@@ -1,4 +1,5 @@
 #include "weightdatahandler.h"
+#include <QDebug>
 
 WeightDataHandler::WeightDataHandler(quint8 code, quint16 address) :
     BaseDataHandler(code, address),
@@ -9,6 +10,7 @@ WeightDataHandler::WeightDataHandler(quint8 code, quint16 address) :
 
 void WeightDataHandler::handle(quint8 code, quint16 address, const QByteArray &data)
 {
+    qDebug() << "get weight data";
     //check code
     if(code == fucCode())
     {

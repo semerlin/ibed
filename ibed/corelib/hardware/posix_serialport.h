@@ -1,12 +1,15 @@
 #ifndef POSIX_SERIALPORT_H
 #define POSIX_SERIALPORT_H
 
+#include "hardware_global.h"
 #include <termios.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <QSocketNotifier>
 #include "iserialport.h"
+
+
 
 
 class HARDWARESHARED_EXPORT Posix_SerialPort : public ISerialPort
@@ -26,11 +29,15 @@ public:
     Posix_SerialPort& operator=(const Posix_SerialPort &s);
 
 public:
+    QStringList enumPorts(void) const;
+
+public:
     bool open(OpenMode mode);
     void close(void);
     void flush(void);
-    void startRead(void);
-    void stopRead(void);
+    void resume(void);
+    void suspend(void);
+    bool waitForBytesWritten(int msecs);
 
     qint64 bytesAvailable() const;
 
@@ -46,6 +53,7 @@ public slots:
     ulong lineStatus();
     void translateError(ulong error);
 
+
 protected:
     struct termios m_termios;
     int m_fd;
@@ -54,10 +62,9 @@ protected:
     qint64 readData(char *data, qint64 maxlen);
     qint64 writeData(const char *data, qint64 len);
 
-signals:
-    void dataReached(void);
 
-public slots:
+
+private slots:
     void autoRead(void);
 
 private:

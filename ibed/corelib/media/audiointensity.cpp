@@ -238,7 +238,7 @@ void AudioIntensity::onCalcIntensity()
     if(temp != m_intensity)
     {
         m_intensity = temp;
-        log()->debug(QString("audio intensity is: %1 dB").arg(m_intensity));
+//        log()->debug(QString("audio intensity is: %1 dB").arg(m_intensity));
         emit intensityChanged(m_intensity);
     }
 }

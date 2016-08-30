@@ -20,11 +20,13 @@ Modbus::~Modbus()
 bool Modbus::init(void) const
 {
     m_serial->setPortName(m_port);
-    m_serial->setBaudrate(SerialPort::BAUD115200);
-    m_serial->setBaudrate(SerialPort::BAUD115200);
+    m_serial->setBaudrate(SerialPort::BAUD19200);
     m_serial->setDataBits(SerialPort::DATA_8);
     m_serial->setParity(SerialPort::PAR_NONE);
     m_serial->setStopBits(SerialPort::STOP_1);
+    m_serial->setFlowControl(SerialPort::FLOW_OFF);
+    m_serial->setDtr(false);
+    m_serial->setRts(false);
 
     //open bed control serial port
     if(m_serial->open(QIODevice::ReadWrite))
@@ -33,7 +35,7 @@ bool Modbus::init(void) const
                                                             QString("open serial port '%1' success").
                                                             arg(m_serial->portName())));
 
-        connect(m_serial, SIGNAL(dataReached()), this, SLOT(onDataReached()));
+        connect(m_serial, SIGNAL(dataReady()), this, SLOT(onDataReached()));
     }
     else
     {
@@ -70,6 +72,7 @@ void Modbus::write(Modbus::FunctionCode code, unsigned short address, const char
     sendData.append(crc >> 8);
 
     m_serial->write(sendData);
+    m_serial->waitForBytesWritten(10);
 }
 
 void Modbus::write(Modbus::FunctionCode code, unsigned short address, const QByteArray &data)

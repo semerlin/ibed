@@ -102,9 +102,10 @@
 
 using namespace SerialPort;
 
+
 Posix_SerialPort::Posix_SerialPort(QObject *parent):
 ISerialPort(parent),
-m_fd(0),
+m_fd(-1),
 m_notifier(NULL)
 {
 
@@ -112,7 +113,7 @@ m_notifier(NULL)
 
 Posix_SerialPort::Posix_SerialPort(const Posix_SerialPort& s, QObject *parent):
 ISerialPort(parent),
-m_fd(0),
+m_fd(-1),
 m_notifier(NULL)
 {
     setPortName(s.portName());
@@ -123,7 +124,7 @@ m_notifier(NULL)
 
 Posix_SerialPort::Posix_SerialPort(const QString &name, QObject *parent):
 ISerialPort(name, parent),
-m_fd(0),
+m_fd(-1),
 m_notifier(NULL)
 {
 
@@ -131,7 +132,7 @@ m_notifier(NULL)
 
 Posix_SerialPort::Posix_SerialPort(const SerialPort::PortSettings &settings, QObject *parent):
 ISerialPort(parent),
-m_fd(0),
+m_fd(-1),
 m_notifier(NULL)
 {
     m_portSettings = settings;
@@ -140,7 +141,7 @@ m_notifier(NULL)
 
 Posix_SerialPort::Posix_SerialPort(const QString &name, const SerialPort::PortSettings &settings, QObject *parent):
 ISerialPort(name, parent),
-m_fd(0),
+m_fd(-1),
 m_notifier(NULL)
 {
     m_portSettings = settings;
@@ -161,11 +162,26 @@ Posix_SerialPort::~Posix_SerialPort()
     if(m_fd)
         ::close(m_fd);
 
+
     if(m_notifier)
     {
         delete m_notifier;
         m_notifier = NULL;
     }
+}
+
+/**
+ * @brief 枚举系统中可用的串口
+ * @return 可用的串口名
+ */
+QStringList Posix_SerialPort::enumPorts(void) const
+{
+    //清除原有空间
+    m_portNames.clear();
+
+    //枚举系统中可用的串口
+    m_portNames << "ttyS1";
+    return m_portNames;
 }
 
 bool Posix_SerialPort::open(OpenMode mode)
@@ -185,6 +201,8 @@ bool Posix_SerialPort::open(OpenMode mode)
 
         if((m_fd = ::open(portName().toLatin1().data(), O_RDWR | O_NOCTTY | O_NDELAY)) != -1)
         {
+			setOpenMode(mode);
+            ::tcgetattr(m_fd, &m_termios);
             //串口可读
             m_termios.c_cflag |= (CLOCAL | CREAD);
 
@@ -201,6 +219,7 @@ bool Posix_SerialPort::open(OpenMode mode)
             m_termios.c_cc[VSTOP] = _POSIX_VDISABLE;
             m_termios.c_cc[VSUSP] = _POSIX_VDISABLE;
 
+
             setBaudrate(m_portSettings.baudrate);
             setDataBits(m_portSettings.dataBits);
             setParity(m_portSettings.parity);
@@ -214,14 +233,18 @@ bool Posix_SerialPort::open(OpenMode mode)
                 translateError(errno);
                 ::close(m_fd);
                 m_mutex->unlock();
+                setOpenMode(NotOpen);
                 return false;
             }
 
-            setOpenMode(mode);
 
-            if(!m_notifier)
-                m_notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
+            if(m_notifier)
+            {
+                disconnect(m_notifier, SIGNAL(activated(int)), this, SLOT(autoRead()));
+                delete m_notifier;
+            }
 
+            m_notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
             connect(m_notifier, SIGNAL(activated(int)), this, SLOT(autoRead()));
 
             m_mutex->unlock();
@@ -244,20 +267,25 @@ void Posix_SerialPort::close()
     m_mutex->lock();
 
     if(m_notifier)
+    {
         disconnect(m_notifier, SIGNAL(activated(int)), this, SLOT(autoRead()));
+        delete m_notifier;
+        m_notifier = NULL;
+    }
 
     if(isOpen())
     {
         flush();
         ::close(m_fd);
         setOpenMode(QIODevice::NotOpen);
+        m_fd = -1;
     }
 
     m_mutex->unlock();
 }
 
 
-void Posix_SerialPort::startRead(void)
+void Posix_SerialPort::resume(void)
 {
     m_mutex->lock();
 
@@ -267,13 +295,20 @@ void Posix_SerialPort::startRead(void)
     m_mutex->unlock();
 }
 
-void Posix_SerialPort::stopRead(void)
+void Posix_SerialPort::suspend(void)
 {
     m_mutex->lock();
 
     if(isOpen())
         disconnect(m_notifier, SIGNAL(activated(int)), this, SLOT(autoRead()));
 
+    m_mutex->unlock();
+}
+
+bool Posix_SerialPort::waitForBytesWritten(int msecs)
+{
+    m_mutex->lock();
+    ::tcdrain(m_fd);
     m_mutex->unlock();
 }
 
@@ -333,7 +368,7 @@ qint64 Posix_SerialPort::bytesAvailable() const
 {
     m_mutex->lock();
 
-    int tempBytes;
+    int tempBytes = 0;
 
     if (::ioctl(m_fd, FIONREAD, &tempBytes) == -1)
     {
@@ -381,10 +416,9 @@ void Posix_SerialPort::setBaudrate(SerialPort::BaudrateType rate)
 
     m_portSettings.baudrate = rate;
 
+
     if(isOpen())
     {
-        m_mutex->lock();
-
         //设置波特率
         switch(m_portSettings.baudrate)
         {
@@ -518,12 +552,12 @@ void Posix_SerialPort::setParity(SerialPort::ParityType parity)
             m_termios.c_cflag &= ~PARENB;
             m_termios.c_iflag &= ~INPCK;
             break;
-        case PAR_ODD:
+        case PAR_EVEN:
+            m_termios.c_cflag &= (~PARODD);
             m_termios.c_cflag |= PARENB;
-            m_termios.c_cflag &= ~PARODD;
             m_termios.c_iflag |= INPCK;
             break;
-        case PAR_EVEN:
+        case PAR_ODD:
             m_termios.c_cflag |= (PARENB | PARODD);
             m_termios.c_iflag |= INPCK;
             break;
@@ -581,16 +615,16 @@ void Posix_SerialPort::setFlowControl(SerialPort::FlowType flow)
         switch(m_portSettings.flowControl)
         {
         case FLOW_OFF:
-            m_termios.c_cflag &= ~CRTSCTS;
-            m_termios.c_cflag &= ~(IXON | IXOFF | IXANY);
+            m_termios.c_cflag &= (~CRTSCTS);
+            m_termios.c_iflag &= (~(IXON | IXOFF | IXANY));
             break;
         case FLOW_HARDWARE:
             m_termios.c_cflag |= CRTSCTS;
-            m_termios.c_cflag &= ~(IXON | IXOFF | IXANY);
+            m_termios.c_iflag &= (~(IXON | IXOFF | IXANY));
             break;
         case FLOW_XONXOFF:
-            m_termios.c_cflag &= ~CRTSCTS;
-            m_termios.c_cflag |= IXON | IXOFF | IXANY;
+            m_termios.c_cflag &= (~CRTSCTS);
+            m_termios.c_iflag |= (IXON | IXOFF | IXANY);
             break;
         default:
             break;
@@ -694,6 +728,9 @@ void Posix_SerialPort::translateError(ulong error)
     case ENOENT:
         m_lastErr = E_INVALID_DEVICE;
         break;
+    case EIO:
+        m_lastErr = E_IO_ERROR;
+        break;
     case EBADF:
     case ENOTTY:
         m_lastErr = E_INVALID_FD;
@@ -740,6 +777,6 @@ void Posix_SerialPort::autoRead(void)
 
 void Posix_SerialPort::autoRead(void)
 {
-    emit dataReached();
+    emit dataReady();
 }
 

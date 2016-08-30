@@ -17,12 +17,17 @@ public:
     bool initialize(void);
     ModuleManger *manger(void) const;
 
+signals:
+    void play(const QString &name);
 private slots:
     void onBedControlPressed(int id);
     void onBedControlReleased(int id);
     void onInfuStart(void);
     void onInfuStop(void);
     void onInfuMountChanged(int mount);
+    void onCallOutConnecting(void);
+    void onCallOutConnected(void);
+    void onCallOutTerminate(void);
 
 private:
     ModuleManger *m_manger;

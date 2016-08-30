@@ -3,13 +3,14 @@
 
 #include "sensor_global.h"
 #include <QObject>
-#include "modbus.h"
-#include <QSet>
+#include <QList>
+#include <QQueue>
 
-class SerialPortCtrl;
-class QMutex;
-class IDataHandler;
-class KeyboardMange;
+
+class Modbus;
+class BedDataProcess;
+class QThread;
+class BedDataSend;
 
 class SENSORSHARED_EXPORT BedControl : public QObject
 {
@@ -27,13 +28,11 @@ public:
 public:
     static BedControl &instance(void);
 
-public:
-    void addDataHandler(IDataHandler *handler);
-
 public slots:
     void powerOn(void);
     void powerOff(void);
     void motorMove(int id, MotorDirection direction);
+    void motorMove(QList<int> id, MotorDirection direction);
 
     void getMotorCurrent(void) const;
     void getChargeCurrent(void) const;
@@ -51,21 +50,16 @@ signals:
     void infuMountChanged(int mount);
     void weightChanged(double weight);
 
-private slots:
-    void onDataReached(const QByteArray &data);
-    void onKeyPressed(int id);
-    void onKeyReleased(int id);
-
 private:
     BedControl();
     ~BedControl();
     Modbus *m_modbus;
-    static const unsigned char m_address = 0x0a;
-    QByteArray m_data;
-    QMutex *m_mutex;
-    mutable quint8 m_contentLen;
-    QList<IDataHandler *> m_handlers;
-    KeyboardMange *m_kbdMange;
+    BedDataProcess *m_process;
+    QThread *m_dataProcessThread;
+
+private:
+    friend class BedDataSend;
+    BedDataSend *m_send;
 };
 
 #endif // BEDCONTROL_H

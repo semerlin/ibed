@@ -5,8 +5,12 @@
 
 class CallOutLocalTerminateState : public QFinalState
 {
+    Q_OBJECT
 public:
     CallOutLocalTerminateState(QState *parent = 0);
+
+signals:
+    void terminate();
 
 protected:
     void onEntry(QEvent *event);

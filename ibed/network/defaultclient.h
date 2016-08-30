@@ -7,9 +7,9 @@
 #include "netprotocol.h"
 
 class QTcpSocket;
-class IDataHandler;
-class QMutex;
 class QTimer;
+class DefaultDataProcess;
+class QThread;
 
 class NETWORKSHARED_EXPORT DefaultClient : public QObject
 {
@@ -21,7 +21,6 @@ public:
 
 public:
     void connectServer(const QString &ip, quint16 port);
-    void addHandler(IDataHandler *handler);
     bool isRegistered(void) const;
     void getAdvise(void);
     void getBaseInfo(void);
@@ -47,7 +46,6 @@ signals:
     void connectTimeout(void);
     void registerTimeout(void);
     void registered(void);
-    void dataReached(quint8 id, const NetProtocol::ContentList &data);
     void nameChanged(const QString &name);
     void sexChanged(const QString &sex);
     void ageChanged(const QString &age);
@@ -61,18 +59,19 @@ signals:
     void allergyChanged(const QString &allergy);
     void adviseUpdate(const QString &data);
 
+signals:
+    void dataReached(const QByteArray &data);
+
 private:
     void clear(void);
 
 private:
     QTcpSocket *m_socket;
-    QByteArray m_data;
-    QMutex *m_mutex;
-    NetProtocol *m_protocol;
-    QMap<quint8, IDataHandler *> m_handlers;
     bool m_isRegistered;
     QTimer *m_heartTimer;
     int m_heartCnt;
+    DefaultDataProcess *m_dataProcess;
+    QThread *m_dataThread;
 };
 
 #endif // MAINCLIENT_H

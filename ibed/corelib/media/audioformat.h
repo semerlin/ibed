@@ -32,14 +32,15 @@ public:
     int sampleRate(void) const;
     AudioFormat::SampleBit sampleBit(void) const;
     int sampleSize(void) const;
-    void	 setByteOrder (AudioFormat::Endian byteOrder);
-    void	 setChannelCount (int channels);
-    void	 setCodec(const QString &codec);
-    void	 setSampleRate(int rate);
-    void	 setSampleSize(int size);
-    bool	 operator != (const AudioFormat &format) const;
+    void setByteOrder(AudioFormat::Endian byteOrder);
+    void setChannelCount(int channels);
+    void setCodec(const QString &codec);
+    void setSampleRate(int rate);
+    void setSampleBit(AudioFormat::SampleBit bits);
+    void setSampleSize(int size);
+    bool operator != (const AudioFormat &format) const;
     AudioFormat &operator = (const AudioFormat &format);
-    bool	 operator == (const AudioFormat &format) const;
+    bool operator == (const AudioFormat &format) const;
 
 private:
     QString m_codec;

@@ -36,5 +36,10 @@ CallOut::CallOut()
     addState(m_remoteTerminate);
 
     setInitialState(m_running);
+
+    connect(m_connecting, SIGNAL(connecting()), this, SIGNAL(connecting()));
+    connect(m_connected, SIGNAL(connected()), this, SIGNAL(connected()));
+    connect(m_localTerminate, SIGNAL(terminate()), this, SIGNAL(localTerminate()));
+    connect(m_remoteTerminate, SIGNAL(terminate()), this, SIGNAL(remoteTerminate()));
 }
 

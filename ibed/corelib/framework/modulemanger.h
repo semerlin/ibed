@@ -3,7 +3,7 @@
 
 #include "framework_global.h"
 #include "iappmodule.h"
-#include <QSet>
+#include <QList>
 #include <QHash>
 #include <QStringList>
 
@@ -45,13 +45,13 @@ public:
      * @brief add modules
      * @param modules
      */
-    void addModules(const QSet<IAppModule *> &modules);
+    void addModules(const QList<IAppModule *> &modules);
 
     /**
      * @brief set modules
      * @param modules
      */
-    void setModules(const QSet<IAppModule *> &modules);
+    void setModules(const QList<IAppModule *> &modules);
 
     /**
      * @brief remove a module
@@ -69,7 +69,7 @@ public:
      * @brief return all modules
      * @return
      */
-    QSet<IAppModule *> modules(void) const;
+    QList<IAppModule *> modules(void) const;
 
     /**
      * @brief return module with given name
@@ -90,7 +90,7 @@ public:
      * @brief loaded modules
      * @return
      */
-    QSet<IAppModule *> loadedModules(void) const;
+    QList<IAppModule *> loadedModules(void) const;
 
     /**
      * @brief loaded module names
@@ -102,7 +102,7 @@ public:
      * @brief unloaded modules
      * @return
      */
-    QSet<IAppModule *> unloadedModules(void) const;
+    QList<IAppModule *> unloadedModules(void) const;
 
     /**
      * @brief unloaded module names
@@ -188,7 +188,7 @@ private slots:
     void onModuleDestroyed(QObject *module);
 
 private:
-    QSet<IAppModule *> m_modules;
+    QList<IAppModule *> m_modules;
     QHash<QString, IAppModule *> m_moduleWithNames;
     QString m_error;
     bool m_isOutMainThread;

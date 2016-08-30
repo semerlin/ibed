@@ -1,10 +1,11 @@
 #ifndef CALLEVENT_H
 #define CALLEVENT_H
 
+#include "call_global.h"
 #include <QEvent>
 #include "calldef.h"
 
-class CallEvent : public QEvent
+class CALLSHARED_EXPORT CallEvent : public QEvent
 {
 public:
     CallEvent(Call::CallStep step) :

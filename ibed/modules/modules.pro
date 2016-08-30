@@ -20,7 +20,8 @@ SOURCES += modules.cpp \
     thememodule.cpp \
     uimodule.cpp \
     networkmodule.cpp \
-    mediamodule.cpp
+    mediamodule.cpp \
+    callmodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \
@@ -28,7 +29,8 @@ HEADERS += modules.h\
     thememodule.h \
     uimodule.h \
     networkmodule.h \
-    mediamodule.h
+    mediamodule.h \
+    callmodule.h
 
 unix {
     target.path = /usr/lib
@@ -92,3 +94,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../sensor/ -lsensor
 
 INCLUDEPATH += $$PWD/../sensor
 DEPENDPATH += $$PWD/../sensor
+
+unix:!macx: LIBS += -L$$OUT_PWD/../call/ -lcall
+
+INCLUDEPATH += $$PWD/../call
+DEPENDPATH += $$PWD/../call

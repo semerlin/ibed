@@ -1,10 +1,11 @@
 #ifndef CALLTRANSTRACTION_H
 #define CALLTRANSTRACTION_H
 
+#include "call_global.h"
 #include <QAbstractTransition>
 #include "callevent.h"
 
-class CallTranstraction : public QAbstractTransition
+class CALLSHARED_EXPORT CallTranstraction : public QAbstractTransition
 {
 public:
     CallTranstraction(Call::CallStep step);
