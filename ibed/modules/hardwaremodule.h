@@ -33,9 +33,8 @@ signals:
     void lightIntensityChanged(int intensity);
     void temperatureChanged(int temper);
     void humidityChanged(int humidity);
-    void infuCountChanged(int count);
     void infuSpeedChanged(int speed);
-    void infuMountChanged(int mount);
+    void infuInputChanged(int input);
     void weightChanged(double weight);
 
 private slots:
@@ -44,6 +43,7 @@ private slots:
     void updateInfusion(void);
     void updateWeight(void);
     void onKeyStatusChanged(void);
+    void onInfuCountChanged(int count);
 
 private:
     QTimer *m_lightTimer;
@@ -56,6 +56,10 @@ private:
     QTimer *m_weightTimer;
     KeyboardMange *m_kbdMange;
     QMutex *m_i2cMutex;
+    int m_infuMount;
+    bool m_firstInfu;
+    int m_prevCount;
+    int m_infuCount;
 
 private:
     void loadDrivers(void);

@@ -26,6 +26,7 @@ public:
 
 public:
     void showMainWidget();
+    int infuMount(void) const;
 
 signals:
     void reconnect(const QString &ip, quint16 port);
@@ -61,11 +62,11 @@ private slots:
     void onStandbyClicked();
     void onLightIntensityChanged(int intensity);
     void onTemperatureChanged(int temper);
+    void onHumidityChanged(int humidity);
     void onAudioIntensityChanged(int intensity);
     void onClicked(void);
     void onWeightChanged(double weight);
-    void onInfuMountChanged(int mount);
-    void onInfuCountChanged(int count);
+    void onInfuInputChanged(int mount);
     void onInfuSpeedChanged(int speed);
     void onCallOutConnecting(void);
     void onCallOutConnected(void);

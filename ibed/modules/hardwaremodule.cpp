@@ -18,11 +18,18 @@
 #include "ledintensity.h"
 #include "kbdbacklight.h"
 
+#define OUT_BOUND_VAL (65536)
+
 HardwareModule::HardwareModule(const QString &name) :
     BaseAppModule(name),
     m_lightIntensity(0),
     m_temper(0),
-    m_humidity(0)
+    m_humidity(0),
+    m_infuMount(250),
+    m_firstInfu(false),
+    m_prevCount(0),
+    m_infuCount(0)
+
 {
 #ifdef TARGET_IMX
     m_i2cMutex = new QMutex;
@@ -69,9 +76,9 @@ bool HardwareModule::load(const QVariant &val)
     loadDrivers();
 
     connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
-    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SIGNAL(infuCountChanged(int)));
-    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
-    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
+    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SLOT(onInfuCountChanged(int)));
+//    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
+//    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
 //    AppLogger::instance().log()->debug("hardware");
 //    emit message(tr("init hardware..."));
     /*****backlight****/
@@ -216,15 +223,22 @@ void HardwareModule::motorMove(const QList<int> id, int dir)
 
 void HardwareModule::startInfusion()
 {
+    m_firstInfu = true;
+    m_prevCount = 0;
+    m_infuCount = 0;
     AppLogger::instance().log()->info("start infusion monitor");
     m_infuTimer->start();
 }
 
 void HardwareModule::stopInfusion()
 {
+    m_firstInfu = false;
+    m_prevCount = 0;
+    m_infuCount  = 0;
     AppLogger::instance().log()->info("stop infusion monitor");
     m_infuTimer->stop();
 }
+
 
 void HardwareModule::updateLightIntensity()
 {
@@ -389,6 +403,42 @@ void HardwareModule::onKeyStatusChanged()
 
 
 #endif
+}
+
+void HardwareModule::onInfuCountChanged(int count)
+{
+    int curCount = 0;
+    if(m_firstInfu)
+    {
+        m_firstInfu = false;
+        m_prevCount = count;
+        m_infuCount = 0;
+    }
+
+    //out of bounds check
+    if(count < m_prevCount)
+    {
+        //TODO add out of boubd value
+        m_infuMount += count;
+        curCount = count;
+//        m_infuMount += OUT_BOUND_VAL - m_prevCount + count;
+//        curCount = OUT_BOUND_VAL - m_prevCount + count;
+    }
+    else
+    {
+        m_infuCount += (count - m_prevCount);
+        curCount = (count - m_prevCount);
+    }
+
+    m_prevCount = count;
+
+    //calculate speed
+//    emit infuSpeedChanged(curCount * 60);
+    emit infuSpeedChanged(curCount);
+
+    //calculate input, 20drops = 1ML
+    emit infuInputChanged(m_infuCount / 20);
+
 }
 
 void HardwareModule::loadDrivers()

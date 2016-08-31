@@ -4,7 +4,8 @@
 
 InfusionWidget::InfusionWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::InfusionWidget)
+    ui(new Ui::InfusionWidget),
+    m_infuMount(200)
 {
     ui->setupUi(this);
 
@@ -25,11 +26,21 @@ InfusionWidget::InfusionWidget(QWidget *parent) :
     ui->pushButtonReset->setEnabled(false);
     ui->pushButtonReset->hide();
 
+    ui->comboBoxMount->insertItem(0, "50", 50);
+    ui->comboBoxMount->insertItem(1, "100", 100);
+    ui->comboBoxMount->insertItem(2, "250", 250);
+    ui->comboBoxMount->insertItem(3, "500", 500);
+
 }
 
 InfusionWidget::~InfusionWidget()
 {
     delete ui;
+}
+
+int InfusionWidget::infuMount() const
+{
+    return m_infuMount;
 }
 
 void InfusionWidget::setLeft(int left)
@@ -56,6 +67,8 @@ void InfusionWidget::on_pushButtonStart_clicked()
     ui->progressBarSpeed->setValue(0);
     ui->pushButtonStop->setEnabled(true);
     ui->pushButtonStart->setEnabled(false);
+    m_infuMount = ui->comboBoxMount->itemData(ui->comboBoxMount->currentIndex()).toInt();
+    ui->comboBoxMount->setEnabled(false);
     emit infuStart();
 }
 
@@ -69,6 +82,7 @@ void InfusionWidget::on_pushButtonStop_clicked()
     ui->progressBarSpeed->setValue(0);
     ui->pushButtonStop->setEnabled(false);
     ui->pushButtonStart->setEnabled(true);
+    ui->comboBoxMount->setEnabled(true);
     emit infuStop();
 }
 

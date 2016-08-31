@@ -20,7 +20,8 @@ SOURCES += media.cpp \
     audioformat.cpp \
     audiodeviceinfo.cpp \
     audiointensity.cpp \
-    audiooutput.cpp
+    audiooutput.cpp \
+    audiointensitycalc.cpp
 
 HEADERS += media.h\
         media_global.h \
@@ -30,7 +31,8 @@ HEADERS += media.h\
     audiodeviceinfo.h \
     audio.h \
     audiointensity.h \
-    audiooutput.h
+    audiooutput.h \
+    audiointensitycalc.h
 
 unix {
     target.path = /usr/lib

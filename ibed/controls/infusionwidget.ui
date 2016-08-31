@@ -154,6 +154,9 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
+      <widget class="QComboBox" name="comboBoxMount"/>
+     </item>
+     <item>
       <widget class="QPushButton" name="pushButtonStop">
        <property name="text">
         <string/>

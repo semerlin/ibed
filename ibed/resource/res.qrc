@@ -73,5 +73,6 @@
         <file>res/images/right14_h.png</file>
         <file>res/images/right14_l.png</file>
         <file>res/images/rightup1.png</file>
+        <file>res/images/humidity.png</file>
     </qresource>
 </RCC>

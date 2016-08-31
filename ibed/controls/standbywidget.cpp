@@ -9,8 +9,8 @@ StandbyWidget::StandbyWidget(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
 
-    ui->widgetInfusion->setPixmap(QString(":/res/images/infusion.png"));
-    ui->widgetInfusion->setText("0%");
+    ui->widgetHumidity->setPixmap(QString(":/res/images/humidity.png"));
+    ui->widgetHumidity->setText("0%");
     ui->widgetSound->setPixmap(QString(":/res/images/sound1.png"));
     ui->widgetSound->setText("0");
     ui->widgetBrightness->setPixmap(QString(":/res/images/brightness.png"));
@@ -74,9 +74,10 @@ void StandbyWidget::setWeight(const QString &weight)
     ui->widgetWeight->setText(weight);
 }
 
-void StandbyWidget::setInfuLeft(const QString &left)
+void StandbyWidget::setHumidity(const QString &humidity)
 {
-    ui->widgetInfusion->setText(left);
+    ui->widgetHumidity->setText(humidity);
 }
+
 
 

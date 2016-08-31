@@ -34,42 +34,42 @@ bool MainModule::initialize()
 
 
     //connect signals
-    QObject::connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
-    QObject::connect(network, SIGNAL(registerTimeout()), ui, SLOT(onRegisterTimeout()));
-    QObject::connect(network, SIGNAL(disconnected()), ui, SLOT(onDisconnect()));
-    QObject::connect(ui, SIGNAL(reconnect(QString, quint16)),
+    connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
+    connect(network, SIGNAL(registerTimeout()), ui, SLOT(onRegisterTimeout()));
+    connect(network, SIGNAL(disconnected()), ui, SLOT(onDisconnect()));
+    connect(ui, SIGNAL(reconnect(QString, quint16)),
                      network, SLOT(reconnect(QString, quint16)));
 
 
-    QObject::connect(network, SIGNAL(nameChanged(QString)), ui, SLOT(onNameChanged(QString)));
-    QObject::connect(network, SIGNAL(sexChanged(QString)), ui, SLOT(onSexChanged(QString)));
-    QObject::connect(network, SIGNAL(ageChanged(QString)), ui, SLOT(onAgeChanged(QString)));
-    QObject::connect(network, SIGNAL(bedChanged(QString)), ui, SLOT(onBedChanged(QString)));
-    QObject::connect(network, SIGNAL(levelChanged(QString)), ui, SLOT(onLevelChanged(QString)));
-    QObject::connect(network, SIGNAL(timeChanged(QString)), ui, SLOT(onTimeChanged(QString)));
-    QObject::connect(network, SIGNAL(doctorChanged(QString)), ui, SLOT(onDoctorChanged(QString)));
-    QObject::connect(network, SIGNAL(eatChanged(QString)), ui, SLOT(onEatChanged(QString)));
-    QObject::connect(network, SIGNAL(nurseChanged(QString)), ui, SLOT(onNurseChanged(QString)));
-    QObject::connect(network, SIGNAL(adviseChanged(QString)), ui, SLOT(onAdviseChanged(QString)));
-    QObject::connect(network, SIGNAL(allergyChanged(QString)), ui, SLOT(onAllergyChanged(QString)));
+    connect(network, SIGNAL(nameChanged(QString)), ui, SLOT(onNameChanged(QString)));
+    connect(network, SIGNAL(sexChanged(QString)), ui, SLOT(onSexChanged(QString)));
+    connect(network, SIGNAL(ageChanged(QString)), ui, SLOT(onAgeChanged(QString)));
+    connect(network, SIGNAL(bedChanged(QString)), ui, SLOT(onBedChanged(QString)));
+    connect(network, SIGNAL(levelChanged(QString)), ui, SLOT(onLevelChanged(QString)));
+    connect(network, SIGNAL(timeChanged(QString)), ui, SLOT(onTimeChanged(QString)));
+    connect(network, SIGNAL(doctorChanged(QString)), ui, SLOT(onDoctorChanged(QString)));
+    connect(network, SIGNAL(eatChanged(QString)), ui, SLOT(onEatChanged(QString)));
+    connect(network, SIGNAL(nurseChanged(QString)), ui, SLOT(onNurseChanged(QString)));
+    connect(network, SIGNAL(adviseChanged(QString)), ui, SLOT(onAdviseChanged(QString)));
+    connect(network, SIGNAL(allergyChanged(QString)), ui, SLOT(onAllergyChanged(QString)));
 
-    QObject::connect(ui, SIGNAL(updateAdvise()), network, SLOT(getAdvise()));
+    connect(ui, SIGNAL(updateAdvise()), network, SLOT(getAdvise()));
 
-    QObject::connect(network, SIGNAL(adviseUpdate(QString)), ui, SLOT(onAdviseUpdate(QString)));
+    connect(network, SIGNAL(adviseUpdate(QString)), ui, SLOT(onAdviseUpdate(QString)));
 
-    QObject::connect(ui, SIGNAL(uploadInOut(QStringList)), network, SLOT(uploadInOut(QStringList)));
+    connect(ui, SIGNAL(uploadInOut(QStringList)), network, SLOT(uploadInOut(QStringList)));
 
 #ifdef TARGET_IMX
-    QObject::connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
-    QObject::connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
+    connect(ui, SIGNAL(brightnessChanged(int)), hardware, SLOT(setBrightness(int)));
+    connect(ui, SIGNAL(turnOffTimeChanged(int)), hardware, SLOT(setTurnOffTime(int)));
 #endif
 
-    QObject::connect(ui, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
-    QObject::connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
-    QObject::connect(ui, SIGNAL(stop(QString)), media, SLOT(onStop(QString)));
+    connect(ui, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
+    connect(ui, SIGNAL(pause(QString)), media, SLOT(onPause(QString)));
+    connect(ui, SIGNAL(stop(QString)), media, SLOT(onStop(QString)));
 
-    QObject::connect(ui, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedControlPressed(int)));
-    QObject::connect(ui, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedControlReleased(int)));
+    connect(ui, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedControlPressed(int)));
+    connect(ui, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedControlReleased(int)));
 
     connect(ui, SIGNAL(infuStart()), hardware, SLOT(startInfusion()));
     connect(ui, SIGNAL(infuStop()), hardware, SLOT(stopInfusion()));
@@ -78,22 +78,20 @@ bool MainModule::initialize()
     connect(ui, SIGNAL(infuStop()), this, SLOT(onInfuStop()));
 
 
-
-
 #ifdef TARGET_IMX
-    QObject::connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
-    QObject::connect(hardware, SIGNAL(temperatureChanged(int)), ui, SLOT(onTemperatureChanged(int)));
+    connect(hardware, SIGNAL(lightIntensityChanged(int)), ui, SLOT(onLightIntensityChanged(int)));
+    connect(hardware, SIGNAL(temperatureChanged(int)), ui, SLOT(onTemperatureChanged(int)));
+    connect(hardware, SIGNAL(humidityChanged(int)), ui, SLOT(onHumidityChanged(int)));
 #endif
 
     connect(hardware, SIGNAL(weightChanged(double)), ui, SLOT(onWeightChanged(double)));
-    connect(hardware, SIGNAL(infuCountChanged(int)), ui, SLOT(onInfuCountChanged(int)));
-    connect(hardware, SIGNAL(infuMountChanged(int)), ui, SLOT(onInfuMountChanged(int)));
+    connect(hardware, SIGNAL(infuInputChanged(int)), ui, SLOT(onInfuInputChanged(int)));
     connect(hardware, SIGNAL(infuSpeedChanged(int)), ui, SLOT(onInfuSpeedChanged(int)));
-
+    connect(hardware, SIGNAL(infuInputChanged(int)), this, SLOT(onInfuInputChanged(int)));
     connect(hardware, SIGNAL(infuSpeedChanged(int)), network, SLOT(sendInfuSpeed(int)));
     connect(hardware, SIGNAL(weightChanged(double)), network, SLOT(sendWeight(double)));
 
-    QObject::connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
+    connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
 
     connect(call, SIGNAL(callOutConnecting()), ui, SLOT(onCallOutConnecting()));
     connect(call, SIGNAL(callOutConnected()), ui, SLOT(onCallOutConnected()));
@@ -112,12 +110,12 @@ bool MainModule::initialize()
     if(app != NULL)
     {
         //stanbywidget control
-        QObject::connect(app, SIGNAL(keyPressed(int)), ui, SLOT(onClicked()));
-        QObject::connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), ui, SLOT(onClicked()));
+        connect(app, SIGNAL(keyPressed(int)), ui, SLOT(onClicked()));
+        connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), ui, SLOT(onClicked()));
 
         //backlight control
-        QObject::connect(app, SIGNAL(keyPressed(int)), hardware, SLOT(backlightOn()));
-        QObject::connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), hardware, SLOT(backlightOn()));
+        connect(app, SIGNAL(keyPressed(int)), hardware, SLOT(backlightOn()));
+        connect(app, SIGNAL(mousePressed(const Qt::MouseButtons&)), hardware, SLOT(backlightOn()));
     }
 
     //show main widget
@@ -244,11 +242,16 @@ void MainModule::onInfuStop()
     network->sendInfuStatus(2);
 }
 
-void MainModule::onInfuMountChanged(int mount)
+void MainModule::onInfuInputChanged(int input)
 {
+    UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
-    int left = (200 - mount) / 200;
-    network->sendInfuLeft(left);
+
+    if(ui->infuMount() > 0)
+    {
+        int left = (ui->infuMount() - input) / ui->infuMount();
+        network->sendInfuLeft(left);
+    }
 }
 
 void MainModule::onCallOutConnecting()

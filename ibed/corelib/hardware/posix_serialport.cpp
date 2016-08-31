@@ -307,9 +307,11 @@ void Posix_SerialPort::suspend(void)
 
 bool Posix_SerialPort::waitForBytesWritten(int msecs)
 {
+    Q_UNUSED(msecs)
     m_mutex->lock();
     ::tcdrain(m_fd);
     m_mutex->unlock();
+    return true;
 }
 
 void Posix_SerialPort::flush()

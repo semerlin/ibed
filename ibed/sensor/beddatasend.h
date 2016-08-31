@@ -34,16 +34,17 @@ public:
     ~BedDataSend();
 
 public:
-    void appendSendData(const ModbusData &data);
+    void appendSendData(ModbusData *data);
 
 protected:
     void run();
 
 private:
-    QQueue<ModbusData> m_dataQueue;
+    QQueue<ModbusData *> m_dataQueue;
 
     BedControl *m_control;
     QMutex *m_waitMutex;
+    QMutex *m_mutex;
     QWaitCondition *m_waitCondition;
 
 };

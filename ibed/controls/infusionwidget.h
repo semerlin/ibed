@@ -15,6 +15,9 @@ public:
     explicit InfusionWidget(QWidget *parent = 0);
     ~InfusionWidget();
 
+public:
+    int infuMount(void) const;
+
 public slots:
     void setLeft(int left);
     void setSpeed(int speed);
@@ -32,6 +35,7 @@ signals:
 
 private:
     Ui::InfusionWidget *ui;
+    int m_infuMount;
 };
 
 #endif // INFUSIONWIDGET_H

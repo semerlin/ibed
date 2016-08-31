@@ -19,12 +19,13 @@ public:
 
 signals:
     void play(const QString &name);
+
 private slots:
     void onBedControlPressed(int id);
     void onBedControlReleased(int id);
     void onInfuStart(void);
     void onInfuStop(void);
-    void onInfuMountChanged(int mount);
+    void onInfuInputChanged(int input);
     void onCallOutConnecting(void);
     void onCallOutConnected(void);
     void onCallOutTerminate(void);

@@ -25,7 +25,7 @@ public slots:
     void setAudioIntensity(const QString &intensity);
     void setTemperature(const QString &temper);
     void setWeight(const QString &weight);
-    void setInfuLeft(const QString &left);
+    void setHumidity(const QString &humidity);
 
 private:
     Ui::StandbyWidget *ui;

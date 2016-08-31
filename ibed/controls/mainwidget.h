@@ -27,6 +27,9 @@ public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
 
+public:
+    int infuMount(void) const;
+
 public slots:
     void setNetworkStatus(const QString &text);
     void setName(const QString &name);

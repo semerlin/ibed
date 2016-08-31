@@ -86,6 +86,11 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
+int MainWidget::infuMount() const
+{
+    return m_infusionWidget->infuMount();
+}
+
 void MainWidget::setNetworkStatus(const QString &text)
 {
     m_settingWidget->setStatusText(text);

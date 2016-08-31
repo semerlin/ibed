@@ -73,6 +73,11 @@ void UiModule::showMainWidget()
     m_standByTimer->start();
 }
 
+int UiModule::infuMount() const
+{
+    return m_mainWidget->infuMount();
+}
+
 void UiModule::onRegistered()
 {
     m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接成功!"));
@@ -178,6 +183,11 @@ void UiModule::onTemperatureChanged(int temper)
     m_standbyWidget->setTemperature(QString::number(temper)+"℃");
 }
 
+void UiModule::onHumidityChanged(int humidity)
+{
+    m_standbyWidget->setHumidity(QString::number(humidity) + "%");
+}
+
 void UiModule::onAudioIntensityChanged(int intensity)
 {
     m_standbyWidget->setAudioIntensity(QString::number(intensity));
@@ -197,17 +207,15 @@ void UiModule::onWeightChanged(double weight)
     m_mainWidget->setWeight(weight);
 }
 
-void UiModule::onInfuMountChanged(int mount)
+void UiModule::onInfuInputChanged(int mount)
 {
-    int left = (200 - mount) / 200;
-    m_standbyWidget->setInfuLeft(QString(left)+"%");
-    m_mainWidget->setLeft(left);
+    if(m_mainWidget->infuMount() > 0)
+    {
+        int left = (m_mainWidget->infuMount() - mount) / m_mainWidget->infuMount();
+        m_mainWidget->setLeft(left);
+    }
 }
 
-void UiModule::onInfuCountChanged(int count)
-{
-    Q_UNUSED(count)
-}
 
 void UiModule::onInfuSpeedChanged(int speed)
 {
