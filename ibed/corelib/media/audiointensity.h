@@ -9,6 +9,7 @@
 
 class QTimer;
 class QMutex;
+class AudioIntensityCalc;
 
 class MEDIASHARED_EXPORT AudioIntensity : public QThread
 {
@@ -29,12 +30,11 @@ protected:
 
 signals:
     void intensityChanged(int intensity);
+    void startCalc(const QByteArray &data);
 
 private slots:
     void onCalcIntensity(void);
-
-private:
-    int calcIntensity(void) const;
+    void onIntensityChanged(int intensity);
 
 private:
     int m_intensity;
@@ -42,10 +42,12 @@ private:
     snd_pcm_t* m_handle; //PCI设备句柄
     snd_pcm_hw_params_t* m_params;//硬件信息和PCM流配置
     snd_pcm_uframes_t m_frames;
-    QByteArray m_recData;
     QTimer *m_calcTimer;
     char *m_tmpData;
     CoverageCircularQueue<char> *m_queue;
+    QMutex *m_mutex;
+    AudioIntensityCalc *m_intensityCalc;
+    QThread *m_calcThread;
 };
 
 #endif // AUDIOINTENSITY_H

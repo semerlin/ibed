@@ -1,95 +1,12 @@
 #include <QTimer>
 #include <QMutex>
 #include <QVector>
+#include "audiointensitycalc.h"
 #include "coveragecircularqueue.h"
 #include "audiointensity.h"
-#include "qmath.h"
-#include "math.h"
 #include "log4qt/logger.h"
 
 LOG4QT_DECLARE_STATIC_LOGGER(log, Audio)
-
-static int BitReverse(int j, int nu)
-{
-    int j2;
-    int j1 = j;
-    int k = 0;
-    for (int i = 1; i <= nu; i++)
-    {
-        j2 = j1 / 2;
-        k = 2 * k + j1 - 2 * j2;
-        j1 = j2;
-    }
-
-    return k;
-}
-
-static QVector<double> FFTDb(const QVector<double> &source)
-{
-    int sourceLen = source.size();
-    int nu = (int)(qLn(sourceLen) / qLn(2));
-    int halfSourceLen = sourceLen / 2;
-    int nu1 = nu - 1;
-    QVector<double> xre;
-    QVector<double> xim;
-    QVector<double> decibel;
-    xre.resize(sourceLen);
-    xim.resize(sourceLen);
-    decibel.resize(halfSourceLen);
-    double tr, ti, p, arg, c, s;
-    for (int i = 0; i < sourceLen; i++)
-    {
-        xre[i] = source[i];
-        xim[i] = 0.0f;
-    }
-    int k = 0;
-    for (int l = 1; l <= nu; l++)
-    {
-        while (k < sourceLen)
-        {
-            for (int i = 1; i <= halfSourceLen; i++)
-            {
-                p = BitReverse(k >> nu1, nu);
-                arg = 2 * (double)M_PI * p / sourceLen;
-                c = (double)qCos(arg);
-                s = (double)qSin(arg);
-                tr = xre[k + halfSourceLen] * c + xim[k + halfSourceLen] * s;
-                ti = xim[k + halfSourceLen] * c - xre[k + halfSourceLen] * s;
-                xre[k + halfSourceLen] = xre[k] - tr;
-                xim[k + halfSourceLen] = xim[k] - ti;
-                xre[k] += tr;
-                xim[k] += ti;
-                k++;
-            }
-            k += halfSourceLen;
-        }
-        k = 0;
-        nu1--;
-        halfSourceLen = halfSourceLen / 2;
-    }
-    k = 0;
-    int r;
-    while (k < sourceLen)
-    {
-        r = BitReverse(k, nu);
-        if (r > k)
-        {
-            tr = xre[k];
-            ti = xim[k];
-            xre[k] = xre[r];
-            xim[k] = xim[r];
-            xre[r] = tr;
-            xim[r] = ti;
-        }
-        k++;
-    }
-    for (int i = 0; i < sourceLen / 2; i++)
-    {
-        decibel[i] = 10.0 * log10((float)(qSqrt((xre[i] * xre[i]) + (xim[i] * xim[i]))));
-    }
-
-    return decibel;
-}
 
 
 AudioIntensity::AudioIntensity() :
@@ -98,19 +15,30 @@ AudioIntensity::AudioIntensity() :
     m_handle(NULL),
     m_params(NULL),
     m_calcTimer(new QTimer(this)),
-    m_queue(new CoverageCircularQueue<char>(4096))
+    m_queue(new CoverageCircularQueue<char>(4096)),
+    m_mutex(new QMutex),
+    m_intensityCalc(new AudioIntensityCalc),
+    m_calcThread(new QThread)
 {
     m_frames = 128;
     /* 2 bytes/sample, 2 channels */
     m_tmpData = (char *)malloc(m_frames * 4);
     m_calcTimer->setInterval(500);
     connect(m_calcTimer, SIGNAL(timeout()), this, SLOT(onCalcIntensity()));
+
+    m_intensityCalc->moveToThread(m_calcThread);
+    m_calcThread->start();
+    connect(this, SIGNAL(startCalc(QByteArray)), m_intensityCalc, SLOT(getIntensity(QByteArray)));
+    connect(m_intensityCalc, SIGNAL(intensityChanged(int)), this, SLOT(onIntensityChanged(int)));
 }
 
 AudioIntensity::~AudioIntensity()
 {
     stopMonitor();
     free(m_tmpData);
+
+    delete m_intensityCalc;
+    delete m_calcThread;
 }
 
 
@@ -210,7 +138,7 @@ bool AudioIntensity::isMonitoring() const
 
 int AudioIntensity::intensity() const
 {
-    return calcIntensity();
+    return m_intensity;
 }
 
 void AudioIntensity::run()
@@ -224,49 +152,31 @@ void AudioIntensity::run()
             snd_pcm_prepare(m_handle);
         }
 
+        m_mutex->lock();
         for(int i = 0; i < rc; ++i)
             m_queue->enqueue(m_tmpData[i]);
+        m_mutex->unlock();
     }
 }
 
 void AudioIntensity::onCalcIntensity()
 {
+    QByteArray data;
+    m_mutex->lock();
     for(int i = 0; i < m_queue->size(); ++i)
-        m_recData[i] = m_queue->dequeue();
+        data.append(m_queue->dequeue());
+    m_mutex->unlock();
 
-    int temp = calcIntensity();
-    if(temp != m_intensity)
+    emit startCalc(data);
+}
+
+void AudioIntensity::onIntensityChanged(int intensity)
+{
+    if(intensity != m_intensity)
     {
-        m_intensity = temp;
+        m_intensity = intensity;
 //        log()->debug(QString("audio intensity is: %1 dB").arg(m_intensity));
         emit intensityChanged(m_intensity);
     }
-}
-
-int AudioIntensity::calcIntensity() const
-{
-    QVector<double> wave;
-    wave.resize(m_recData.size() / 2);
-    int h = 0;
-    qint16 tempVal = 0;
-    for (int i = 0; i < wave.size(); i += 2)
-    {
-        tempVal = (m_recData.at(i + 1) & 0xff);
-        tempVal <<= 8;
-        tempVal += (m_recData[i] & 0xff);
-        wave[h] = (double)(tempVal); //采样位数为16bit
-        ++h;
-    }
-
-    double sum = 0.0;
-    QVector<double> sound = FFTDb(wave);
-    foreach(const double &data, sound)
-    {
-        sum += data;
-    }
-
-    int val = sum / sound.size();
-
-    return val;
 }
 
