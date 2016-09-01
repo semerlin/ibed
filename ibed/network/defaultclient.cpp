@@ -88,12 +88,13 @@ bool DefaultClient::isRegistered() const
 
 void DefaultClient::getAdvise()
 {
-    m_socket->write(m_dataProcess->package(NetProtocol::AdviseInfo));
+    socketWrite(m_dataProcess->package(NetProtocol::AdviseInfo));
 }
 
 void DefaultClient::getBaseInfo()
 {
-    m_socket->write(m_dataProcess->package(NetProtocol::BaseInfo));
+    socketWrite(m_dataProcess->package(NetProtocol::BaseInfo));
+    socketWrite(m_dataProcess->package(NetProtocol::DocAdvise));
 }
 
 void DefaultClient::uploadInOut(const QStringList &data)
@@ -163,7 +164,7 @@ void DefaultClient::uploadInOut(const QStringList &data)
         content.data = data.at(11).toLatin1();
         list.append(content);
 
-        m_socket->write(m_dataProcess->package(NetProtocol::InOutInfo, list));
+        socketWrite(m_dataProcess->package(NetProtocol::InOutInfo, list));
     }
 }
 
@@ -180,7 +181,7 @@ void DefaultClient::sendInfuStatus(int status)
         list.append(content);
 
 
-        m_socket->write(m_dataProcess->package(NetProtocol::InfuInfo, list));
+        socketWrite(m_dataProcess->package(NetProtocol::InfuInfo, list));
     }
 }
 
@@ -197,7 +198,7 @@ void DefaultClient::sendInfuSpeed(int speed)
         list.append(content);
 
 
-        m_socket->write(m_dataProcess->package(NetProtocol::InfuInfo, list));
+        socketWrite(m_dataProcess->package(NetProtocol::InfuInfo, list));
     }
 }
 
@@ -214,7 +215,7 @@ void DefaultClient::sendInfuLeft(int left)
         list.append(content);
 
 
-        m_socket->write(m_dataProcess->package(NetProtocol::InfuInfo, list));
+        socketWrite(m_dataProcess->package(NetProtocol::InfuInfo, list));
     }
 }
 
@@ -231,7 +232,7 @@ void DefaultClient::sendWeight(int weight)
         list.append(content);
 
 
-        m_socket->write(m_dataProcess->package(NetProtocol::Spo2Info, list));
+        socketWrite(m_dataProcess->package(NetProtocol::Spo2Info, list));
     }
 }
 
@@ -247,7 +248,7 @@ void DefaultClient::onConnectTimeout()
 void DefaultClient::onConnected()
 {
     //start register
-    m_socket->write(m_dataProcess->package(NetProtocol::Register));
+    socketWrite(m_dataProcess->package(NetProtocol::Register));
     QTimer::singleShot(3000, this, SLOT(onRegisterTimeout()));
 }
 
@@ -272,7 +273,8 @@ void DefaultClient::onRegisterTimeout()
 void DefaultClient::onRegistered()
 {
     m_isRegistered = true;
-    m_socket->write(m_dataProcess->package(NetProtocol::BaseInfo));
+    socketWrite(m_dataProcess->package(NetProtocol::BaseInfo));
+    socketWrite(m_dataProcess->package(NetProtocol::DocAdvise));
     emit registered();
 }
 
@@ -281,7 +283,7 @@ void DefaultClient::onHeartbeat()
     if(m_isRegistered)
     {
         //heartbeat
-        m_socket->write(m_dataProcess->package(NetProtocol::HeartBeat));
+        socketWrite(m_dataProcess->package(NetProtocol::HeartBeat));
 
         if(++m_heartCnt > HEARTCNT_MAX)
             clear();
@@ -300,4 +302,11 @@ void DefaultClient::clear()
     m_dataProcess->reset();
     m_heartCnt = 0;
 }
+
+bool DefaultClient::socketWrite(const QByteArray &data)
+{
+    m_socket->write(data);
+    return m_socket->waitForBytesWritten(10);
+}
+
 

@@ -64,6 +64,7 @@ signals:
 
 private:
     void clear(void);
+    bool socketWrite(const QByteArray &data);
 
 private:
     QTcpSocket *m_socket;

@@ -121,6 +121,11 @@ void MainWidget::setLevel(const QString &level)
     m_baseInfoWidget->setLevel(level);
 }
 
+void MainWidget::setLevelColor(const QColor &text, const QColor &bk)
+{
+    m_baseInfoWidget->setLevelColor(text, bk);
+}
+
 void MainWidget::setTime(const QString &time)
 {
     m_baseInfoWidget->setTime(time);

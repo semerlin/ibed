@@ -18,6 +18,7 @@ public:
 public:
     QString ip(void) const;
     quint16 port(void) const;
+    quint8 deviceNum(void) const;
 
 public slots:
     void setStatusText(const QString &text);

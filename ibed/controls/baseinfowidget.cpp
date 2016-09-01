@@ -108,3 +108,14 @@ void BaseInfoWidget::setAllergy(const QString &allergy)
 {
     ui->widgetAllergy->setData(allergy);
 }
+
+void BaseInfoWidget::setLevelColor(const QColor &text, const QColor &bk)
+{
+     ui->labelLevel->setStyleSheet(QString("color: rgb(%1, %2, %3);background-color: rgb(%4, %5, %6)")
+                                  .arg(text.red())
+                                  .arg(text.green())
+                                  .arg(text.blue())
+                                  .arg(bk.red())
+                                  .arg(bk.green())
+                                  .arg(bk.blue()));
+}

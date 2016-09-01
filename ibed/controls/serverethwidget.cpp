@@ -1,6 +1,7 @@
 #include "serverethwidget.h"
 #include "ui_serverethwidget.h"
 #include "servermanger.h"
+#include "appsetting.h"
 
 ServerEthWidget::ServerEthWidget(QWidget *parent) :
     BaseWidget(parent),
@@ -12,6 +13,8 @@ ServerEthWidget::ServerEthWidget(QWidget *parent) :
     ui->widgetIp->setName(QT_TRANSLATE_NOOP("Server", "IP地址"));
     ui->widgetPort->setLayoutStrech(2, 4, 1);
     ui->widgetPort->setName(QT_TRANSLATE_NOOP("Server", "端口"));
+    ui->widgetDevice->setLayoutStrech(2, 4, 1);
+    ui->widgetDevice->setName(QT_TRANSLATE_NOOP("Server", "设备号"));
 
     ui->labelPic->setPixmap(QPixmap(":/res/images/server.png"));
     ui->labelName->setText(QT_TRANSLATE_NOOP("Server", "服务器网络设置"));
@@ -25,6 +28,8 @@ ServerEthWidget::ServerEthWidget(QWidget *parent) :
 
     ui->widgetPort->setText(QString::number(ServerManger::instance().
                                             port(ServerManger::Default)));
+
+    ui->widgetDevice->setText(QString::number(AppSetting::instance().value(AppSetting::DeviceNum).toInt()));
 }
 
 ServerEthWidget::~ServerEthWidget()
@@ -40,6 +45,11 @@ QString ServerEthWidget::ip() const
 quint16 ServerEthWidget::port() const
 {
     return ui->widgetPort->text().toUInt();
+}
+
+quint8 ServerEthWidget::deviceNum() const
+{
+    return static_cast<quint8>(ui->widgetDevice->text().toUInt());
 }
 
 void ServerEthWidget::setStatusText(const QString &text)

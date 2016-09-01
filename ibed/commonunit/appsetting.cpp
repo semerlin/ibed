@@ -9,6 +9,7 @@
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
+        << "DeviceNum"
         << "LogConfig"
         << "UiConfig"
         << "ServerConfig"
@@ -48,6 +49,7 @@ bool AppSetting::initialize()
     setting.endGroup();
 
     setting.beginGroup("Common");
+    m_params["DeviceNum"] = setting.value("device", 0).toUInt();
     m_params["Brightness"] = setting.value("brightness", 100).toUInt();
     m_params["Sound"] = setting.value("sound", 100).toUInt();
     m_params["TurnOffTime"] = setting.value("turnofftime", 20).toUInt();
@@ -80,6 +82,7 @@ void AppSetting::save()
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
 
     setting.beginGroup("Common");
+    setting.setValue("device", m_params["DeviceNum"]);
     setting.setValue("brightness", m_params["Brightness"]);
     setting.setValue("sound", m_params["Sound"]);
     setting.setValue("turnofftime", m_params["TurnOffTime"]);
@@ -104,6 +107,7 @@ void AppSetting::setDefault()
     setting.endGroup();
 
     setting.beginGroup("Common");
+    setting.setValue("device", 0);
     setting.setValue("brightness", 100);
     setting.setValue("sound", 100);
     setting.setValue("turnofftime", 20);

@@ -118,7 +118,32 @@ void UiModule::onBedChanged(const QString &bed)
 
 void UiModule::onLevelChanged(const QString &level)
 {
-    m_mainWidget->setLevel(level);
+    QString display;
+    switch(level.toInt())
+    {
+    case 0:
+        display = "特级护理";
+        m_mainWidget->setLevelColor(Qt::white, Qt::red);
+        break;
+    case 1:
+        display = "一级护理";
+        m_mainWidget->setLevelColor(Qt::white, QColor(255, 0, 255));
+        break;
+    case 2:
+        display = "二级护理";
+        m_mainWidget->setLevelColor(Qt::white, Qt::blue);
+        break;
+    case 3:
+        display = "三级护理";
+        m_mainWidget->setLevelColor(Qt::gray, Qt::white);
+        break;
+    default:
+        display = "三级护理";
+        m_mainWidget->setLevelColor(Qt::gray, Qt::white);
+        break;
+    }
+
+    m_mainWidget->setLevel(display);
     m_standbyWidget->setNursery(level.toInt());
 }
 

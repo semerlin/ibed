@@ -37,6 +37,7 @@ public slots:
     void setAge(const QString &age);
     void setBed(const QString &bed);
     void setLevel(const QString &level);
+    void setLevelColor(const QColor &text, const QColor &bk);
     void setTime(const QString &time);
     void setDoctor(const QString &doctor);
     void setEat(const QString &eat);

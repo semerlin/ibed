@@ -24,7 +24,6 @@ signals:
     void doctorChanged(const QString &doctor);
     void eatChanged(const QString &eat);
     void nurseChanged(const QString &nurse);
-    void adviseChanged(const QString &advise);
     void allergyChanged(const QString &allergy);
 };
 

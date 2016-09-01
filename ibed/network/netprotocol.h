@@ -29,6 +29,7 @@ public:
         Spo2Info = 34,
 
         BaseInfo = 80,
+        DocAdvise = 81,
 
         AdviseInfo = 101,
 

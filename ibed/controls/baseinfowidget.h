@@ -28,6 +28,7 @@ public slots:
     void setNurse(const QString &nurse);
     void setAdvise(const QString &advise);
     void setAllergy(const QString &allergy);
+    void setLevelColor(const QColor &text, const QColor &bk);
 
 private:
     Ui::BaseInfoWidget *ui;

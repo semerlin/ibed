@@ -16,6 +16,7 @@
 #include "audioformat.h"
 #include "audiooutput.h"
 #include <QFile>
+#include <QTimer>
 
 
 
@@ -72,10 +73,6 @@ int AppEntry::run(int argc, char **argv)
 void AppEntry::onLaunchFinished()
 {
     AppLogger::instance().log()->info(QT_TRANSLATE_NOOP("Launch", "Launch Finished!"));
-    //load really finished
-    m_widget->hide();
-    delete m_widget;
-    m_widget = NULL;
 
     //init main module
     m_mainModule->initialize();
@@ -94,6 +91,16 @@ void AppEntry::onLaunchFinished()
 //    file->seek(44);
 
 //    output->start(file);
+//	destroy launch widget
+    QTimer::singleShot(2000, this, SLOT(onMainWidgetShown()));
+}
+
+void AppEntry::onMainWidgetShown()
+{
+    m_widget->hide();
+    delete m_widget;
+    m_widget = NULL;
+
 }
 
 AppEntry::AppEntry() :

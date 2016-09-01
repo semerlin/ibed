@@ -1,11 +1,12 @@
 #include "netprotocol.h"
 #include <QMetaType>
+#include "appsetting.h"
 
 NetProtocol::NetProtocol()
 {
     m_package.head = 0xee;
     m_package.version = 0x01;
-    m_package.device = 5;
+    m_package.device = AppSetting::instance().value(AppSetting::DeviceNum).toUInt();
     m_package.tail = 0xff;
 
     m_minLength = 14;

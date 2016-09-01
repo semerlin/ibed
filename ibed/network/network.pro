@@ -20,7 +20,8 @@ SOURCES += network.cpp \
     baseinfodatahandler.cpp \
     heartbeatdatahandler.cpp \
     advisedatahandler.cpp \
-    defaultdataprocess.cpp
+    defaultdataprocess.cpp \
+    docadvisedatahandler.cpp
 
 HEADERS += network.h\
         network_global.h \
@@ -32,7 +33,8 @@ HEADERS += network.h\
     baseinfodatahandler.h \
     heartbeatdatahandler.h \
     advisedatahandler.h \
-    defaultdataprocess.h
+    defaultdataprocess.h \
+    docadvisedatahandler.h
 
 unix {
     target.path = /usr/lib

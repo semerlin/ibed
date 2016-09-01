@@ -19,6 +19,7 @@ public:
 
 private slots:
     void onLaunchFinished(void);
+    void onMainWidgetShown(void);
 
 private:
     LaunchWidget *m_widget;

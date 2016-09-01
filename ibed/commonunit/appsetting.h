@@ -12,6 +12,8 @@ class COMMONUNITSHARED_EXPORT AppSetting : public QObject
 public:
     typedef enum
     {
+        DeviceNum,
+
         LogConfig,
         UiConfig,
         ServerConfig,

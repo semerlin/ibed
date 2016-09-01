@@ -44,8 +44,29 @@ void StandbyWidget::setBedNum(int num)
 
 void StandbyWidget::setNursery(int level)
 {
-    ui->widgetNursery->setText("一级护理");
-    ui->widgetNursery->setDotColor(QColor(255, 0, 0));
+    switch(level)
+    {
+    case 0:
+        ui->widgetNursery->setText("特级护理");
+        ui->widgetNursery->setDotColor(QColor(255, 0, 0));
+        break;
+    case 1:
+        ui->widgetNursery->setText("一级护理");
+        ui->widgetNursery->setDotColor(QColor(255, 0, 255));
+        break;
+    case 2:
+        ui->widgetNursery->setText("二级护理");
+        ui->widgetNursery->setDotColor(QColor(0, 0, 255));
+        break;
+    case 3:
+        ui->widgetNursery->setText("三级护理");
+        ui->widgetNursery->setDotColor(QColor(255, 255, 255));
+        break;
+    default:
+        ui->widgetNursery->setText("三级护理");
+        ui->widgetNursery->setDotColor(QColor(255, 255, 255));
+        break;
+    }
 }
 
 void StandbyWidget::setAge(int age)

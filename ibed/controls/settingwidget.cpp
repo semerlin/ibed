@@ -130,7 +130,14 @@ void SettingWidget::saveScreen()
         emit turnOffTimeChanged(ui->widgetScreenWidget->turnOffTime());
     }
 
+    if(ui->widgetServerEth->deviceNum() != AppSetting::instance().value(AppSetting::DeviceNum).toInt())
+    {
+        needSave = true;
+        AppSetting::instance().setValue(AppSetting::DeviceNum, ui->widgetServerEth->deviceNum());
+    }
+
 
     if(needSave)
         AppSetting::instance().save();
 }
+

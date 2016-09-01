@@ -6,6 +6,7 @@
 #include "heartbeatdatahandler.h"
 #include "baseinfodatahandler.h"
 #include "advisedatahandler.h"
+#include "docadvisedatahandler.h"
 
 DefaultDataProcess::DefaultDataProcess() :
     m_mutex(new QMutex),
@@ -31,9 +32,13 @@ DefaultDataProcess::DefaultDataProcess() :
     connect(baseHandle, SIGNAL(doctorChanged(QString)), this, SIGNAL(doctorChanged(QString)));
     connect(baseHandle, SIGNAL(eatChanged(QString)), this, SIGNAL(eatChanged(QString)));
     connect(baseHandle, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)));
-    connect(baseHandle, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
     connect(baseHandle, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)));
     addHandler(baseHandle);
+
+    //doctor advise handler
+    DocAdviseDataHandler *docAdviseHandler = new DocAdviseDataHandler(81);
+    connect(docAdviseHandler, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
+    addHandler(docAdviseHandler);
 
     //adviseinfo handler
     AdviseDataHandler *adviseHandler = new AdviseDataHandler(101);
