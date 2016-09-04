@@ -17,7 +17,6 @@ SOURCES += sensor.cpp \
     lightintensity.cpp \
     bedcontrol.cpp \
     sht20.cpp \
-    i2cdevice.cpp \
     modbus.cpp \
     basedatahandler.cpp \
     weightdatahandler.cpp \
@@ -35,7 +34,6 @@ HEADERS += sensor.h\
     lightintensity.h \
     bedcontrol.h \
     sht20.h \
-    i2cdevice.h \
     modbus.h \
     basedatahandler.h \
     bedcontrol.cpp.autosave \

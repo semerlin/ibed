@@ -198,7 +198,7 @@ SystemCall &SystemCall::instance()
 int SystemCall::cmd(const QString &cmd, QString &outinfo)
 {
 #ifdef Q_OS_LINUX
-    char buf[18];
+    char buf[24];
     memset(buf, '\0', sizeof(buf));
     FILE *stream;
     stream = POPEN(cmd.toLatin1().constData(), "r");

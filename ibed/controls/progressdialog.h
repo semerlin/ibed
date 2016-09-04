@@ -19,6 +19,9 @@ public:
 public slots:
     void setProgress(int progress);
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::ProgressDialog *ui;
 };

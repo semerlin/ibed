@@ -4,7 +4,8 @@
 #include "media_global.h"
 #include <QString>
 
-class AudioFormat
+
+class MEDIASHARED_EXPORT AudioFormat
 {
 public:
     typedef enum

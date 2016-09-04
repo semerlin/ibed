@@ -15,5 +15,7 @@ Q_DECLARE_METATYPE(Audio::Error)
 Q_DECLARE_METATYPE(Audio::State)
 Q_DECLARE_METATYPE(Audio::Mode)
 
+
+
 #endif // AUDIO
 

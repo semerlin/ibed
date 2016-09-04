@@ -30,7 +30,7 @@ AudioDeviceInfo::AudioDeviceInfo()
 
 AudioDeviceInfo::AudioDeviceInfo(const AudioDeviceInfo &other)
 {
-
+    Q_UNUSED(other);
 }
 
 AudioDeviceInfo::~AudioDeviceInfo()
@@ -40,46 +40,49 @@ AudioDeviceInfo::~AudioDeviceInfo()
 
 QString AudioDeviceInfo::deviceName() const
 {
-
+    return QString();
 }
 
 bool AudioDeviceInfo::isFormatSupported(const AudioFormat &settings) const
 {
-
+    Q_UNUSED(settings)
+    return true;
 }
 
 bool AudioDeviceInfo::isNull() const
 {
-
+    return false;
 }
 
 QList<AudioFormat::Endian> AudioDeviceInfo::supportedByteOrders() const
 {
-
+    return QList<AudioFormat::Endian>();
 }
 
 QList<int> AudioDeviceInfo::supportedChannelCounts() const
 {
-
+    return QList<int>();
 }
 
 QList<int> AudioDeviceInfo::supportedSampleRates() const
 {
-
+    return QList<int>();
 }
 
 QList<AudioFormat::SampleBit> AudioDeviceInfo::supportedSampleBits() const
 {
-
+    return QList<AudioFormat::SampleBit>();
 }
 
 AudioDeviceInfo &AudioDeviceInfo::operator=(const AudioDeviceInfo &other)
 {
-
+    Q_UNUSED(other)
+    return *this;
 }
 
 QList<AudioDeviceInfo> AudioDeviceInfo::availableDevices(Audio::Mode mode)
 {
+    Q_UNUSED(mode)
 //    snd_ctl_t *handle;
 //    int card, err, dev, idx;
 //    snd_ctl_card_info_t *info;
@@ -146,25 +149,27 @@ QList<AudioDeviceInfo> AudioDeviceInfo::availableDevices(Audio::Mode mode)
 //            break;
 //        }
 //    }
+
+    return QList<AudioDeviceInfo>();
 }
 
 AudioDeviceInfo AudioDeviceInfo::defaultInputDevice()
 {
-
+    return AudioDeviceInfo();
 }
 
 AudioDeviceInfo AudioDeviceInfo::defaultOutputDevice()
 {
-
+    return AudioDeviceInfo();
 }
 
 QList<AudioDeviceInfo> AudioDeviceInfo::availableOutputDevices()
 {
-
+    return QList<AudioDeviceInfo>();
 }
 
 QList<AudioDeviceInfo> AudioDeviceInfo::availableInputDevices()
 {
-
+    return QList<AudioDeviceInfo>();
 }
 

@@ -4,7 +4,7 @@
 #include "modules_global.h"
 #include "baseappmodule.h"
 
-class CAudioPlay;
+class FileAudioOut;
 class AudioIntensity;
 
 class MODULESSHARED_EXPORT MediaModule : public BaseAppModule
@@ -29,8 +29,9 @@ public slots:
     void onStop(const QString &name);
 
 private:
-    CAudioPlay *m_player;
+    FileAudioOut *m_player;
     AudioIntensity *m_intensity;
+    QString m_curPlay;
 };
 
 #endif // MEDIAMODULE_H

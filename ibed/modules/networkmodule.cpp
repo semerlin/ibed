@@ -4,8 +4,7 @@
 #include "servermanger.h"
 
 NetworkModule::NetworkModule(const QString &name) :
-    BaseAppModule(name),
-    m_defaultClient(new DefaultClient)
+    BaseAppModule(name)
 {
 
 }
@@ -18,6 +17,8 @@ NetworkModule::~NetworkModule()
 bool NetworkModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+
+    m_defaultClient = new DefaultClient;
 
     connect(m_defaultClient, SIGNAL(registered()), this, SIGNAL(registered()));
     connect(m_defaultClient, SIGNAL(registerTimeout()), this, SIGNAL(registerTimeout()));

@@ -16,6 +16,11 @@ public:
     explicit CallDialog(QWidget *parent = 0);
     ~CallDialog();
 
+private slots:
+    void on_pushButtonCancel_clicked();
+
+    void on_pushButtonAnswer_clicked();
+
 private:
     Ui::CallDialog *ui;
 };

@@ -17,6 +17,7 @@ public:
 
 public slots:
     void setContentLen(quint8 len);
+    void setRegAddress(quint16 address);
     void onProcessData(const QByteArray &data);
 
 public:
@@ -34,6 +35,7 @@ private:
     QByteArray m_data;
     quint8 m_contentLen;
     quint8 m_address;
+    quint16 m_regAddress;
     QList<IDataHandler *> m_handlers;
 };
 

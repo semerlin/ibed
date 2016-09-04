@@ -9,12 +9,9 @@
 #include <QApplication>
 
 UiModule::UiModule(const QString &name) :
-    BaseAppModule(name),
-    m_standByTimer(new QTimer(this)),
-    m_standByCount(0)
+    BaseAppModule(name)
 {
-    m_standByTimer->setInterval(1000);
-    connect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
+
 }
 
 UiModule::~UiModule()
@@ -25,6 +22,12 @@ UiModule::~UiModule()
 bool UiModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+
+    m_standByTimer = new QTimer(this);
+    m_standByCount = 0;
+    m_standByTimer->setInterval(1000);
+    connect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
+
     //register resource
     QResource::registerResource("./resource/ui/res.rcc");
 
@@ -55,6 +58,7 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
     connect(m_mainWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
 
+
     return true;
 }
 
@@ -71,6 +75,9 @@ void UiModule::showMainWidget()
 {
     m_mainWidget->show();
     m_standByTimer->start();
+
+//  m_callDialog->show();
+//    m_progressDialog->show();
 }
 
 int UiModule::infuMount() const
@@ -236,7 +243,7 @@ void UiModule::onInfuInputChanged(int mount)
 {
     if(m_mainWidget->infuMount() > 0)
     {
-        int left = (m_mainWidget->infuMount() - mount) / m_mainWidget->infuMount();
+        int left = (m_mainWidget->infuMount() - mount) * 100 / m_mainWidget->infuMount();
         m_mainWidget->setLeft(left);
     }
 }

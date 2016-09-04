@@ -1,47 +1,14 @@
 #include "audiooutput.h"
 #include <alsa/asoundlib.h>
 #include <QThread>
+#define ALSA_PCM_NEW_HW_PARAMS_API
 
-/* wav文件头结构体 */
-struct WAV_HEADER
-{
-    char riff[4]; //"RIFF"标志
-    int dataSize; //从下个地址到文件尾的总字节数
-    char wave[4]; //"WAVE"
-    char fmt[4]; //"fmt"
-    int transition; //过渡字节
-    short type; //编码格式(10H: 线性pcm)
-    short channels; //声道数
-    int sampleRate ; //采样频率
-    int bytesPerSec; //每秒采样的字节数
-    short adjustment; //数据快调整数(按字节算),通道数＊每样本数据位/8
-    short bitsPerSample; //每次采样位数
-    char data[4]; //”data“
-    int audioSize; //音频数据的大小
-};
 
 using namespace Audio;
 
 #define MIN_NOTIFY_INTERVAL (100)
 
 
-AudioOutput::AudioOutput(QObject *parent) :
-    QObject(parent),
-    m_format(AudioFormat()),
-    m_error(NoError),
-    m_state(IdleState),
-    m_notifyInterval(MIN_NOTIFY_INTERVAL),
-    m_pcm(NULL),
-    m_pcmParams(NULL),
-    m_frames(32),
-    m_device(NULL),
-    m_thread(new QThread),
-    m_canPause(false),
-    m_private(new AudioOutputPrivate(this))
-{
-    m_private->moveToThread(m_thread);
-    connect(this, SIGNAL(started()), m_private, SLOT(start()));
-}
 
 AudioOutput::AudioOutput(const AudioFormat &format, QObject *parent) :
     QObject(parent),
@@ -59,11 +26,20 @@ AudioOutput::AudioOutput(const AudioFormat &format, QObject *parent) :
 {
     m_private->moveToThread(m_thread);
     connect(this, SIGNAL(started()), m_private, SLOT(start()));
+    connect(m_private, SIGNAL(finished(Audio::Error)),
+            this, SLOT(onFinished(Audio::Error)), Qt::QueuedConnection);
+
+
+    qRegisterMetaType<Audio::State>("Audio::State");
+    qRegisterMetaType<Audio::Error>("Audio::Error");
+    qRegisterMetaType<Audio::Mode>("Audio::Mode");
 }
 
 AudioOutput::~AudioOutput()
 {
-
+    stop();
+    delete m_thread;
+    delete m_private;
 }
 
 Audio::Error AudioOutput::error() const
@@ -79,6 +55,11 @@ AudioFormat AudioOutput::format() const
 int AudioOutput::notifyInterval() const
 {
     return m_notifyInterval;
+}
+
+qint64 AudioOutput::processedUSecs() const
+{
+    return 0;
 }
 
 Audio::State AudioOutput::state() const
@@ -121,7 +102,8 @@ void AudioOutput::start(QIODevice *device)
         return ;
     }
 
-    //采样位数
+
+    //閲囨牱浣嶆暟
     switch(m_format.sampleBit())
     {
     case AudioFormat::Bit_8:
@@ -132,17 +114,56 @@ void AudioOutput::start(QIODevice *device)
         }
         break;
     case AudioFormat::Bit_16:
-        if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S16_LE) < 0)
+        switch(m_format.byteOrder())
         {
-            m_error = OpenError;
-            return ;
+        case AudioFormat::LittleEndian:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S16_LE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
+        case AudioFormat::BigEndian:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S16_BE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
+        default:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S16_LE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
         }
+
         break;
     case AudioFormat::Bit_24:
-        if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S24_LE) < 0)
+        switch(m_format.byteOrder())
         {
-            m_error = OpenError;
-            return ;
+        case AudioFormat::LittleEndian:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S24_LE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
+        case AudioFormat::BigEndian:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S24_BE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
+        default:
+            if(snd_pcm_hw_params_set_format(m_pcm, m_pcmParams, SND_PCM_FORMAT_S24_LE) < 0)
+            {
+                m_error = OpenError;
+                return ;
+            }
+            break;
         }
         break;
     default:
@@ -171,16 +192,7 @@ void AudioOutput::start(QIODevice *device)
 
     /* Set period size to 32 frames. */
     m_frames = 32;
-    snd_pcm_uframes_t periodsize = m_frames * m_format.channelCount();
-    if(snd_pcm_hw_params_set_buffer_size_near(m_pcm, m_pcmParams, &periodsize) < 0)
-    {
-        m_error = OpenError;
-        return ;
-    }
-
-    periodsize /= 2;
-
-    if(snd_pcm_hw_params_set_period_size_near(m_pcm, m_pcmParams, &periodsize, 0) < 0)
+    if(snd_pcm_hw_params_set_period_size_near(m_pcm, m_pcmParams, &m_frames, 0) < 0)
     {
         m_error = OpenError;
         return ;
@@ -199,48 +211,95 @@ void AudioOutput::start(QIODevice *device)
 
     m_thread->start();
 
+    m_state = ActiveState;
+
+    emit stateChanged(IdleState, ActiveState);
     emit started();
 }
 
 void AudioOutput::setNotifyInterval(int ms)
 {
-
+    Q_UNUSED(ms)
 }
 
 void AudioOutput::resume()
 {
-//    if(snd_pcm_state(m_pcm) == SND_PCM_STATE_SUSPENDED)
-//    {
-//        while(snd_pcm_resume(m_pcm) == -EAGAIN)
-//            sleep(1);
-//    }
-
-    if(m_canPause)
+    if(m_pcm != NULL)
     {
-        snd_pcm_pause(m_pcm, 0);
-    }
-    else
-    {
-        snd_pcm_prepare(m_pcm);
+        if(m_state == SuspendedState)
+        {
+            if(m_canPause)
+            {
+                snd_pcm_pause(m_pcm, 0);
+            }
+            else
+            {
+                snd_pcm_prepare(m_pcm);
+            }
+            m_state = ActiveState;
+            emit stateChanged(SuspendedState, ActiveState);
+        }
     }
 }
 
 void AudioOutput::stop()
 {
-    snd_pcm_drop(m_pcm);
+    if(m_pcm != NULL)
+    {
+        snd_pcm_drop(m_pcm);
+        snd_pcm_close(m_pcm);
+        m_pcm = NULL;
+
+        if(m_device->isOpen())
+            m_device->close();
+
+        State prevState = m_state;
+        m_state = IdleState;
+        emit stateChanged(prevState, m_state);
+    }
 }
 
 void AudioOutput::suspend()
 {
-    if(m_canPause)
+    if(m_pcm != NULL)
     {
-        snd_pcm_pause(m_pcm, 1);
-    }
-    else
-    {
-        snd_pcm_drop(m_pcm);
+        if(m_state == ActiveState)
+        {
+            if(m_canPause)
+            {
+                snd_pcm_pause(m_pcm, 1);
+            }
+            else
+            {
+                snd_pcm_drop(m_pcm);
+            }
+            m_state = SuspendedState;
+            emit stateChanged(ActiveState, SuspendedState);
+        }
     }
 }
+
+void AudioOutput::onFinished(Audio::Error error)
+{
+    Q_UNUSED(error)
+
+    m_error = error;
+
+    if(m_pcm != NULL)
+    {
+        snd_pcm_drain(m_pcm);
+        snd_pcm_close(m_pcm);
+        m_pcm = NULL;
+    }
+
+    if(m_device->isOpen())
+        m_device->close();
+
+    State prevState = m_state;
+    m_state = IdleState;
+    emit stateChanged(prevState, m_state);
+}
+
 
 
 //#include "audiooutput.moc"
@@ -251,35 +310,46 @@ void AudioOutput::suspend()
 
 void AudioOutputPrivate::start()
 {
+    int ret = 0;
+    //calculate period size
+    int periodsize = m_audio->m_frames * m_audio->m_format.channelCount() * m_audio->m_format.sampleBit() / 8;
+
+    //check id device is opened
+    if(!m_audio->m_device->isOpen())
+    {
+        //open device first
+        if(!m_audio->m_device->open(QIODevice::ReadOnly))
+        {
+            emit finished(Audio::OpenError);
+            return ;
+        }
+    }
 
     while(1)
     {
-        QByteArray data = m_audio->m_device->read(512);
-        snd_pcm_writei(m_audio->m_pcm, data.data(), 512);
-    }
-//    while(m_audio->m_device->read(512))
-//    while((fread(buffer, 1, size, fp) != 0) && (m_bLocal == true))
-//    {
-//        if(snd_pcm_state(handle) != SND_PCM_STATE_DISCONNECTED)
-//        {
-//            int ret;
+        QByteArray data = m_audio->m_device->read(periodsize);
+        if(data.count() <= 0)
+        {
+            //error happend or reach file end
+            //TODO catch error
+//            error = m_audio->m_device->errorString();
 
-//            while((ret = snd_pcm_writei(handle, buffer, size)) < 0)
-//            {
-//                if(ret == -EPIPE)
-//                {
-//                    /* EPIPE means underrun */
-//                    //fprintf(stderr, "underrun occurred\n");
-//                    //完成硬件参数设置，使设备准备好
-//                    snd_pcm_prepare(handle);
-//                }
-//                else
-//                {
-//                    fprintf(stderr, "error from writei: %s\n", snd_strerror(ret));
-//                }
-//            }
-//        }
-//        msleep(1);
-//    }
-//    fclose(fp);
+            emit finished(Audio::NoError);
+            break;
+        }
+        ret = snd_pcm_writei(m_audio->m_pcm, data.data(), m_audio->m_frames);
+        if(ret < 0)
+        {
+            if(ret == -EPIPE)
+                ::snd_pcm_prepare(m_audio->m_pcm);
+            else if(ret == -EBADFD)
+            {
+                //user stopped
+                emit finished(Audio::IOError);
+                break;
+            }
+        }
+    }
+
+
 }

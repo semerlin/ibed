@@ -308,7 +308,7 @@ QColor CircleProgressBar::stopColor() const
 
 void CircleProgressBar::paintEvent(QPaintEvent *event)
 {
-    QWidget::paintEvent(event);
+    BaseWidget::paintEvent(event);
     switch(m_style)
     {
     case CircleProgressBar::Solid:

@@ -9,16 +9,17 @@
 #include "infumountdatahandler.h"
 #include "weightdatahandler.h"
 #include "applogger.h"
+#include "modbus.h"
 
 BedDataProcess::BedDataProcess(quint8 address) :
     m_mutex(new QMutex),
     m_contentLen(0),
     m_address(address)
 {
-    InfuCountDataHandler *countHandler = new InfuCountDataHandler(0x04, 0x69);
-    InfuSpeedDataHandler *speedHandler = new InfuSpeedDataHandler(0x04, 0x70);
-    InfuMountDataHandler *mountHandler = new InfuMountDataHandler(0x04, 0x71);
-    WeightDataHandler *weightHandler = new WeightDataHandler(0x04, 0x79);
+    InfuCountDataHandler *countHandler = new InfuCountDataHandler(0x04, 69);
+    InfuSpeedDataHandler *speedHandler = new InfuSpeedDataHandler(0x04, 70);
+    InfuMountDataHandler *mountHandler = new InfuMountDataHandler(0x04, 71);
+    WeightDataHandler *weightHandler = new WeightDataHandler(0x04, 80);
 
     addDataHandler(countHandler);
     addDataHandler(speedHandler);
@@ -38,57 +39,79 @@ void BedDataProcess::setContentLen(quint8 len)
     m_mutex->unlock();
 }
 
+void BedDataProcess::setRegAddress(quint16 address)
+{
+    m_mutex->lock();
+    m_regAddress = address;
+    m_mutex->unlock();
+}
+
 void BedDataProcess::onProcessData(const QByteArray &data)
 {
     //print modbus data
-    QString printData;
-    for(int i = 0; i < data.count(); ++i)
-    {
-        printData += QString::number(data.at(i), 16);
-        printData += " ";
-    }
-    AppLogger::instance().log()->debug("Modbus: " + printData);
+//    QString printData;
+//    for(int i = 0; i < data.count(); ++i)
+//    {
+//        printData += QString::number((quint8)data.at(i), 16);
+//        printData += " ";
+//    }
+//    AppLogger::instance().log()->debug("Modbus: " + printData);
 
     //start processing
     m_mutex->lock();
     m_data.append(data);
 
-    if(m_data.count() >= (m_contentLen + 6))
+    if(m_data.count() >= (m_contentLen + 4))
     {
         //seek to head
         int index = m_data.indexOf(m_address);
         m_data.remove(0, index);
 
         //check length again
-        if(m_data.count() >= (m_contentLen + 6))
+        if(m_data.count() >= (m_contentLen + 4))
         {
             //get valid data
             QByteArray validData;
-            for(int i = 0; i < m_contentLen + 6; ++i)
+            for(int i = 0; i < m_contentLen + 4; ++i)
                 validData.append(m_data.at(i));
-            m_data.remove(0, m_contentLen + 6);
-            m_mutex->unlock();
+            m_data.remove(0, m_contentLen + 4);
+//            m_mutex->unlock();
 
             //check CRC
-            quint16 crc = CRC::mbCRC16((quint8 *)validData.data(), m_contentLen + 4);
-            quint16 rCrc = validData.at(m_contentLen + 5);
+            quint16 crc = CRC::mbCRC16((quint8 *)validData.data(), m_contentLen + 2);
+            quint16 rCrc = (validData.at(m_contentLen + 3) & 0xff);
             rCrc <<= 8;
-            rCrc += validData.at(m_contentLen + 4) ;
+            rCrc += (validData.at(m_contentLen + 2) & 0xff);
             if(crc == rCrc)
             {
                 //find handler
-                quint8 fucCode = validData.at(1);
-                quint16 regAddress = validData.at(2);
-                regAddress <<= 8;
-                regAddress += validData.at(3);
+                quint8 fucCode = (validData.at(1) & 0xff);
+                quint16 regAddress = 0;
+                switch(static_cast<Modbus::FunctionCode>(fucCode))
+                {
+                case Modbus::WRITE_SingleRegister:
+                    regAddress = validData.at(2);
+                    regAddress <<= 8;
+                    regAddress += validData.at(3);
+                    break;
+                case Modbus::READ_InputRegister:
+                    regAddress = m_regAddress;
+                    break;
+                default:
+                    break;
+                }
+
                 BOOST_FOREACH(IDataHandler *handler, m_handlers)
                 {
                     if((handler->fucCode() == fucCode) && (handler->regAddress() == regAddress))
                     {
                         handler->handle(fucCode, regAddress, validData);
+                        break;
                     }
                 }
             }
+            m_mutex->unlock();
+
         }
         else
             m_mutex->unlock();

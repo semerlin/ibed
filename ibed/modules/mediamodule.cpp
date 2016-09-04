@@ -1,15 +1,13 @@
-#include "AudioPlay.h"
+#include "fileaudioout.h"
 #include "audiointensity.h"
 #include "mediamodule.h"
 #include <QFileInfo>
 
 MediaModule::MediaModule(const QString &name) :
-    BaseAppModule(name),
-    m_intensity(new AudioIntensity)
-{
-    m_player = new CAudioPlay;
+    BaseAppModule(name)
 
-    connect(m_intensity, SIGNAL(intensityChanged(int)), this, SIGNAL(intensityChanged(int)));
+{
+
 }
 
 MediaModule::~MediaModule()
@@ -21,6 +19,12 @@ MediaModule::~MediaModule()
 bool MediaModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+    m_player = new FileAudioOut;
+    m_intensity = new AudioIntensity;
+    m_curPlay = "";
+
+    connect(m_intensity, SIGNAL(intensityChanged(int)), this, SIGNAL(intensityChanged(int)));
+
     return true;
 }
 
@@ -36,21 +40,31 @@ void MediaModule::init()
 
 void MediaModule::onPlay(const QString &name)
 {
-    if(m_player->isPlaying())
-        m_player->StopPlay();
+    if(m_curPlay == name)
+    {
+        if(m_player->state() == Audio::SuspendedState)
+            m_player->resume();
+    }
+    else
+    {
+        if(m_player->state() != Audio::IdleState)
+            m_player->stop();
 
-    m_player->AudioInit(name);
-    m_player->StartPlayLocal();
+        m_player->setName(name);
+        m_player->play();
+        m_curPlay = name;
+    }
 }
 
 void MediaModule::onPause(const QString &name)
 {
     Q_UNUSED(name)
-    m_player->PausePlay();
+
+    m_player->suspend();
 }
 
 void MediaModule::onStop(const QString &name)
 {
     Q_UNUSED(name)
-    m_player->StopPlay();
+    m_player->stop();
 }

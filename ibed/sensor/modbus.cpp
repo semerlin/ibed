@@ -20,7 +20,7 @@ Modbus::~Modbus()
 bool Modbus::init(void) const
 {
     m_serial->setPortName(m_port);
-    m_serial->setBaudrate(SerialPort::BAUD19200);
+    m_serial->setBaudrate(SerialPort::BAUD9600);
     m_serial->setDataBits(SerialPort::DATA_8);
     m_serial->setParity(SerialPort::PAR_NONE);
     m_serial->setStopBits(SerialPort::STOP_1);

@@ -1,9 +1,10 @@
 #ifndef AUDIOINTENSITYCALC_H
 #define AUDIOINTENSITYCALC_H
 
+#include "media_global.h"
 #include <QObject>
 
-class AudioIntensityCalc : public QObject
+class MEDIASHARED_EXPORT AudioIntensityCalc : public QObject
 {
     Q_OBJECT
 

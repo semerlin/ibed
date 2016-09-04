@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
-    <height>248</height>
+    <width>158</width>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,13 +84,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="leftMargin">
-      <number>115</number>
+      <number>20</number>
      </property>
      <property name="rightMargin">
-      <number>115</number>
+      <number>20</number>
      </property>
      <item>
-      <widget class="QPushButton" name="pushButtonCancel">
+      <widget class="QPushButton" name="pushButtonAnswer">
        <property name="styleSheet">
         <string notr="true"/>
        </property>
@@ -100,7 +100,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonAnswer">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCancel">
        <property name="text">
         <string/>
        </property>
@@ -112,6 +125,9 @@
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

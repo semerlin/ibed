@@ -23,3 +23,8 @@ void ProgressDialog::setProgress(int progress)
     ui->widgetProgress->setText(QString::number(progress));
     ui->widgetProgress->setValue(progress);
 }
+
+void ProgressDialog::on_pushButton_clicked()
+{
+    reject();
+}

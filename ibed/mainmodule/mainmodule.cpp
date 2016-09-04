@@ -256,12 +256,10 @@ void MainModule::onInfuInputChanged(int input)
 
 void MainModule::onCallOutConnecting()
 {
-    qDebug() << "play out music" ;
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-//    emit play("./resource/audio/callout.wav");
-//    media->onPlay("./resource/audio/callout.wav");
+    media->onPlay("./resource/audio/callout.wav");
 }
 
 void MainModule::onCallOutConnected()

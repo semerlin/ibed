@@ -49,7 +49,7 @@ void EducationWidget::onCurrentItemChanged(MusicPlayListItem *current, MusicPlay
     if(previous != NULL)
     {
         previous->setSelected(false);
-//        previous->setFont(m_font);
+        previous->setFont(m_font);
         previous->setSizeHint(QSize(-1, m_height));
         previous->setPlayIcon(":/res/images/play.png");
         previous->setPauseIcon(":/res/images/pause.png");
@@ -59,7 +59,7 @@ void EducationWidget::onCurrentItemChanged(MusicPlayListItem *current, MusicPlay
     if(current != NULL)
     {
         current->setSelected(true);
-//        current->setFont(m_largeFont);
+        current->setFont(m_largeFont);
         current->setSizeHint(QSize(-1, m_height * 1.5));
         current->setPlayIcon(":/res/images/play_select.png");
         current->setPauseIcon(":/res/images/pause_select.png");
@@ -113,7 +113,7 @@ void EducationWidget::updateEducation()
         if(QString::compare(suffix, QString("wav"), Qt::CaseInsensitive) == 0)
         {
 
-            ui->listView->addItem(new MusicPlayListItem("            " + fileInfo.baseName(),
+            ui->listView->addItem(new MusicPlayListItem(" " + fileInfo.baseName(),
                                                 ":/res/images/play.png",
                                                 ":/res/images/pause.png",
                                                 ":/res/images/stop.png"));

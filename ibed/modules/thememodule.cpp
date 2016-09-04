@@ -11,7 +11,7 @@ ThemeModule::ThemeModule(const QString &name) :
     BaseAppModule(name),
     m_loader(NULL)
 {
-    m_themes.clear();
+
 }
 
 ThemeModule::~ThemeModule()
@@ -22,6 +22,8 @@ ThemeModule::~ThemeModule()
 bool ThemeModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+
+    m_themes.clear();
 
     bool ret = false;
 

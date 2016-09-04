@@ -15,24 +15,24 @@ include(../../alsa.pri)
 DEFINES += MEDIA_LIBRARY
 
 SOURCES += media.cpp \
-    AudioPlay.cpp \
-    AudioRecord.cpp \
     audioformat.cpp \
     audiodeviceinfo.cpp \
     audiointensity.cpp \
     audiooutput.cpp \
-    audiointensitycalc.cpp
+    audiointensitycalc.cpp \
+    audioutil.cpp \
+    fileaudioout.cpp
 
 HEADERS += media.h\
         media_global.h \
-    AudioPlay.h \
-    AudioRecord.h \
     audioformat.h \
     audiodeviceinfo.h \
     audio.h \
     audiointensity.h \
     audiooutput.h \
-    audiointensitycalc.h
+    audiointensitycalc.h \
+    audioutil.h \
+    fileaudioout.h
 
 unix {
     target.path = /usr/lib

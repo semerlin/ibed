@@ -25,43 +25,43 @@ BedControl &BedControl::instance()
 
 void BedControl::powerOn(void)
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(4);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::powerOff(void)
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(4);
     QByteArray data;
     data.append((char)0x00);
     data.append((char)0x00);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::motorMove(int id, BedControl::MotorDirection direction)
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
     if((id >= 1) && (id <= 8))
     {
@@ -92,23 +92,23 @@ void BedControl::motorMove(int id, BedControl::MotorDirection direction)
             break;
         }
 
-        m_process->setContentLen(2);
+        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
         m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
     }
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
     QSet<int> group1;
     QSet<int> group2;
@@ -149,7 +149,7 @@ void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
             }
         }
 
-        m_process->setContentLen(2);
+        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
@@ -180,7 +180,7 @@ void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
             }
         }
 
-        m_process->setContentLen(2);
+        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
@@ -188,162 +188,166 @@ void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
     }
 
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getMotorCurrent() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 49, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getChargeCurrent() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 50, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getDischargeCurrent() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 51, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getHighBatteryVoltage() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 53, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getLowBatteryVoltage() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 52, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getInfusionCount() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
+    m_process->setRegAddress(69);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 69, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getInfusionSpeed() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
+    m_process->setRegAddress(70);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 70, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getInfusionMount() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
+    m_process->setRegAddress(71);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
     m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 71, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 void BedControl::getWeight() const
 {
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(1);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(1);
+//#endif
 
-    m_process->setContentLen(2);
+    m_process->setContentLen(3);
+    m_process->setRegAddress(80);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 79, data));
+    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 80, data));
 
-#ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
-#endif
+//#ifdef TARGET_IMX
+//    PowerControl::instance().rs485DirectCtrl(0);
+//#endif
 }
 
 

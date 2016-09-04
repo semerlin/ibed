@@ -1,44 +1,48 @@
 #ifndef AUDIOOUTPUT_H
 #define AUDIOOUTPUT_H
 
+
+#include "media_global.h"
 #include <QObject>
 #include <alsa/asoundlib.h>
 #include "audioformat.h"
 #include "audio.h"
 
+
 class QThread;
 
 class AudioOutputPrivate;
 
-
-
-class AudioOutput : public QObject
+class MEDIASHARED_EXPORT AudioOutput : public QObject
 {
     Q_OBJECT
 public:
-    AudioOutput(QObject *parent = 0);
     AudioOutput(const AudioFormat &format = AudioFormat(), QObject *parent = 0);
     ~AudioOutput();
 
 public:
-    Audio::Error	error() const;
+    Audio::Error error() const;
     AudioFormat format() const;
     int	notifyInterval() const;
     qint64 processedUSecs() const;
-    Audio::State	state() const;
+    Audio::State state() const;
     void setAudioFormat(const AudioFormat &format);
 
 public slots:
-    void	 setNotifyInterval(int ms);
-    void	 start(QIODevice * device);
-    void	 resume();
-    void	 stop();
-    void	 suspend();
+    void setNotifyInterval(int ms);
+    void start(QIODevice * device);
+    void resume();
+    void stop();
+    void suspend();
 
 signals:
     void notify();
-    void stateChanged(Audio::State state);
-    void started(void);
+    void stateChanged(Audio::State prev, Audio::State cur);
+    void started();
+
+private slots:
+    void onFinished(Audio::Error error);
+
 
 private:
     AudioFormat m_format;
@@ -70,6 +74,9 @@ public:
 
 public slots:
     void start();
+
+signals:
+    void finished(Audio::Error error);
 
 private:
     AudioOutput *m_audio;

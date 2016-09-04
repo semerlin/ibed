@@ -395,6 +395,7 @@ void ModuleManger::onLoadModules(const QVariant &val)
         if(!module->isLoaded())
         {
             emit moduleChanged(module, MODULE_LOADING);
+            log()->info(tr("loading module '%1'").arg(module->name()));
             ret = module->load(val);
             if(!ret)
             {
@@ -405,7 +406,7 @@ void ModuleManger::onLoadModules(const QVariant &val)
             }
             else
             {
-                log()->info(tr("load module '%1'").arg(module->name()));
+//                log()->info(tr("load module '%1'").arg(module->name()));
                 emit moduleChanged(module, MODULE_LOADED);
             }
         }

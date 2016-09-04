@@ -31,28 +31,7 @@ HardwareModule::HardwareModule(const QString &name) :
     m_infuCount(0)
 
 {
-#ifdef TARGET_IMX
-    m_i2cMutex = new QMutex;
-    m_sht20 = new SHT20("/dev/i2c-1", 0x40);
-    m_kbdMange = new KeyboardMange;
-    connect(m_kbdMange, SIGNAL(keyStatusChanged()), this, SLOT(onKeyStatusChanged()));
-#endif
 
-    m_lightTimer = new QTimer(this);
-    m_lightTimer->setInterval(1000);
-    connect(m_lightTimer, SIGNAL(timeout()), this, SLOT(updateLightIntensity()));
-
-    m_temperTimer = new QTimer(this);
-    m_temperTimer->setInterval(1000);
-    connect(m_temperTimer, SIGNAL(timeout()), this, SLOT(updateTemper()));
-
-    m_infuTimer = new QTimer(this);
-    m_infuTimer->setInterval(1000);
-    connect(m_infuTimer, SIGNAL(timeout()), this, SLOT(updateInfusion()));
-
-    m_weightTimer = new QTimer(this);
-    m_weightTimer->setInterval(1000);
-    connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
 
 
 }
@@ -72,25 +51,31 @@ bool HardwareModule::load(const QVariant &val)
     Q_UNUSED(val)
 
 #ifdef TARGET_IMX
+
     //load drivers
     loadDrivers();
 
-    connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
-    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SLOT(onInfuCountChanged(int)));
-//    connect(&BedControl::instance(), SIGNAL(infuMountChanged(int)), this, SIGNAL(infuMountChanged(int)));
-//    connect(&BedControl::instance(), SIGNAL(infuSpeedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
-//    AppLogger::instance().log()->debug("hardware");
-//    emit message(tr("init hardware..."));
+    m_i2cMutex = new QMutex;
+    m_sht20 = new SHT20("/dev/i2c-1", 0x40);
+
+
+    m_lightTimer = new QTimer(this);
+    m_lightTimer->setInterval(1000);
+    connect(m_lightTimer, SIGNAL(timeout()), this, SLOT(updateLightIntensity()));
+
+    m_temperTimer = new QTimer(this);
+    m_temperTimer->setInterval(1000);
+    connect(m_temperTimer, SIGNAL(timeout()), this, SLOT(updateTemper()));
+
+
     /*****backlight****/
     //set backlight to max brightness
-//    emit message(tr("aaaaaa"));
     Backlight::instance().setValue(AppSetting::instance().value(AppSetting::Brightness).toInt());
     LedIntensity::instance().setValue(AppSetting::instance().value(AppSetting::Brightness).toInt() * 2);
     //serial
 
     /****powermange****/
     //init power mangement unit
-//    emit message(tr("bbbbbb"));
     int time = AppSetting::instance().value(AppSetting::TurnOffTime).toInt();
     if(time >= 5)
     {
@@ -114,6 +99,9 @@ bool HardwareModule::load(const QVariant &val)
     m_temperTimer->start();
 
     //start keyboard monitor
+    m_kbdMange = new KeyboardMange;
+    connect(m_kbdMange, SIGNAL(keyStatusChanged()), this, SLOT(onKeyStatusChanged()));
+
     m_kbdMange->init();
     m_kbdMange->start();
 
@@ -123,13 +111,22 @@ bool HardwareModule::load(const QVariant &val)
 #endif
 
     BedControl::instance().powerOn();
+    connect(&BedControl::instance(), SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
+    connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SLOT(onInfuCountChanged(int)));
+
+    m_infuTimer = new QTimer(this);
+    m_infuTimer->setInterval(2000);
+    connect(m_infuTimer, SIGNAL(timeout()), this, SLOT(updateInfusion()));
+
+    m_weightTimer = new QTimer(this);
+    m_weightTimer->setInterval(5000);
+    connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
 
     //start weight timer
     m_weightTimer->start();
 
     m_isLoaded = true;
 
-//    sleep(2);
     return true;
 }
 
@@ -282,8 +279,6 @@ void HardwareModule::updateTemper()
 void HardwareModule::updateInfusion()
 {
     BedControl::instance().getInfusionCount();
-//    BedControl::instance().getInfusionMount();
-//    BedControl::instance().getInfusionSpeed();
 }
 
 void HardwareModule::updateWeight()
@@ -418,11 +413,8 @@ void HardwareModule::onInfuCountChanged(int count)
     //out of bounds check
     if(count < m_prevCount)
     {
-        //TODO add out of boubd value
-        m_infuMount += count;
-        curCount = count;
-//        m_infuMount += OUT_BOUND_VAL - m_prevCount + count;
-//        curCount = OUT_BOUND_VAL - m_prevCount + count;
+        m_infuMount += OUT_BOUND_VAL - m_prevCount + count;
+        curCount = OUT_BOUND_VAL - m_prevCount + count;
     }
     else
     {
@@ -434,7 +426,7 @@ void HardwareModule::onInfuCountChanged(int count)
 
     //calculate speed
 //    emit infuSpeedChanged(curCount * 60);
-    emit infuSpeedChanged(curCount);
+    emit infuSpeedChanged(curCount / 2);
 
     //calculate input, 20drops = 1ML
     emit infuInputChanged(m_infuCount / 20);

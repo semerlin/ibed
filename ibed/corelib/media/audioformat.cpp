@@ -1,7 +1,7 @@
 #include "audioformat.h"
 
 AudioFormat::AudioFormat() :
-    m_codec("pcm"),
+    m_codec("unknown"),
     m_byteOrder(AudioFormat::LittleEndian),
     m_channels(2),
     m_rate(8000),

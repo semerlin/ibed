@@ -4,6 +4,7 @@
 #include "beddatasend.h"
 #include "modbus.h"
 #include "unistd.h"
+#include "powercontrol.h"
 
 BedDataSend::BedDataSend(BedControl *parent) :
     m_control(parent),
@@ -43,7 +44,15 @@ void BedDataSend::run()
             m_mutex->lock();
             ModbusData *data = m_dataQueue.dequeue();
             m_mutex->unlock();
+
+#ifdef TARGET_IMX
+            PowerControl::instance().rs485DirectCtrl(1);
+#endif
             m_control->m_modbus->write(data->m_code, data->m_address, data->m_data.data(), data->m_data.count());
+
+#ifdef TARGET_IMX
+    PowerControl::instance().rs485DirectCtrl(0);
+#endif
             delete data;
             //sleep 100ms
             ::usleep(100000);
