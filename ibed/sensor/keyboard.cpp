@@ -1,6 +1,7 @@
 #include "pcf8574.h"
 #include "keyboard.h"
-#include <QDebug>
+#include "applogger.h"
+#include "log4qt/logger.h"
 
 Keyboard::Keyboard(const QString &port, quint8 address) :
     m_pcf(new PCF8574(port, address)),
@@ -30,7 +31,7 @@ QList<quint8> Keyboard::pressedKeys() const
     m_pcf->setAddress(m_address);
     if(m_pcf->read((char *)&val, 1) < 0)
     {
-        qDebug() << "read keyboard failed, address: " << m_address;
+        AppLogger::instance().log()->error(QString("read keyboard(%1) failed!").arg(m_address));
         return keys;
     }
 
@@ -50,7 +51,7 @@ QList<quint8> Keyboard::releasedKeys() const
     m_pcf->setAddress(m_address);
     if(m_pcf->read((char *)&val, 1) < 0)
     {
-        qDebug() << "read keyboard failed, address: " << m_address;
+        AppLogger::instance().log()->error(QString("read keyboard(%1) failed!").arg(m_address));
         return keys;
     }
 

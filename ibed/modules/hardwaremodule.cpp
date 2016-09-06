@@ -17,6 +17,7 @@
 #include "bedcontrol.h"
 #include "ledintensity.h"
 #include "kbdbacklight.h"
+#include "unistd.h"
 
 #define OUT_BOUND_VAL (65536)
 
@@ -291,13 +292,18 @@ void HardwareModule::onKeyStatusChanged()
 #ifdef TARGET_IMX
     m_i2cMutex->lock();
     QList<quint8> kbd0PressedKeys = m_kbdMange->pressedKeys(0);
-    QList<quint8> kbd0ReleasedKeys = m_kbdMange->releasedKeys(0);
+    ::usleep(10000);
     QList<quint8> kbd1PressedKeys = m_kbdMange->pressedKeys(1);
-    QList<quint8> kbd1ReleasedKeys = m_kbdMange->releasedKeys(1);
     m_i2cMutex->unlock();
 
-    //just support one press a time
 
+    //first, stop all motors
+    BedControl::instance().motorMove(3, BedControl::Stop);
+    BedControl::instance().motorMove(4, BedControl::Stop);
+    BedControl::instance().motorMove(4, BedControl::Stop);
+    BedControl::instance().motorMove(3, BedControl::Stop);
+
+    //just support one press a time
     //process kbd1
     if(kbd0PressedKeys.count() > 0)
     {
@@ -319,32 +325,6 @@ void HardwareModule::onKeyStatusChanged()
             break;
         }
     }
-    else
-    {
-
-        foreach(const quint8 &id, kbd0ReleasedKeys)
-        {
-            switch(id)
-            {
-            case 2:
-                BedControl::instance().motorMove(3, BedControl::Stop);
-                break;
-            case 3:
-                BedControl::instance().motorMove(4, BedControl::Stop);
-                break;
-            case 4:
-                BedControl::instance().motorMove(4, BedControl::Stop);
-                break;
-            case 5:
-                BedControl::instance().motorMove(3, BedControl::Stop);
-                break;
-            default:
-                break;
-            }
-        }
-
-    }
-
 
     //process kbd2
     if(kbd0PressedKeys.count() > 0)
@@ -370,32 +350,6 @@ void HardwareModule::onKeyStatusChanged()
             break;
         }
     }
-    else
-    {
-
-        foreach(const quint8 &id, kbd1ReleasedKeys)
-        {
-            switch(id)
-            {
-            case 2:
-                BedControl::instance().motorMove(3, BedControl::Stop);
-                break;
-            case 3:
-                BedControl::instance().motorMove(4, BedControl::Stop);
-                break;
-            case 4:
-                BedControl::instance().motorMove(4, BedControl::Stop);
-                break;
-            case 5:
-                BedControl::instance().motorMove(3, BedControl::Stop);
-                break;
-            default:
-                break;
-            }
-        }
-
-    }
-
 
 #endif
 }

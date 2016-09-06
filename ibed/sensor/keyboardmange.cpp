@@ -19,7 +19,7 @@ KeyboardMange::KeyboardMange() :
     m_fd(-1),
     m_monitor(new QTimer(this))
 {
-    m_monitor->setInterval(100);
+    m_monitor->setInterval(200);
     connect(m_monitor, SIGNAL(timeout()), this, SLOT(onMonitorKeys()));
 }
 
@@ -85,7 +85,7 @@ void KeyboardMange::addKeyboard(Keyboard *keyboard)
         m_keyboards.append(keyboard);
 }
 
-/* 应为和SHT20 公用 I2C1， 所以不能在这里面处理，会产生总线竞争*/
+/* 应为和SHT20 公用 I2C1， 所以不能在这里面处理，会产生总线竞争 */
 //void KeyboardMange::onMonitorKeys()
 //{
 //    if(m_fd >= 0)
