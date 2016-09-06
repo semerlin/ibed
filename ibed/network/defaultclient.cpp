@@ -32,24 +32,24 @@ DefaultClient::DefaultClient() :
     m_dataThread->start();
 
     //register and heartbeat
-    connect(m_dataProcess, SIGNAL(registered()), this, SLOT(onRegistered()));
-    connect(m_dataProcess, SIGNAL(heartbeat()), this, SLOT(onHeartOk()));
+    connect(m_dataProcess, SIGNAL(registered()), this, SLOT(onRegistered()), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(heartbeat()), this, SLOT(onHeartOk()), Qt::QueuedConnection);
 
     //base info
-    connect(m_dataProcess, SIGNAL(nameChanged(QString)), this, SIGNAL(nameChanged(QString)));
-    connect(m_dataProcess, SIGNAL(sexChanged(QString)), this, SIGNAL(sexChanged(QString)));
-    connect(m_dataProcess, SIGNAL(ageChanged(QString)), this, SIGNAL(ageChanged(QString)));
-    connect(m_dataProcess, SIGNAL(bedChanged(QString)), this, SIGNAL(bedChanged(QString)));
-    connect(m_dataProcess, SIGNAL(levelChanged(QString)), this, SIGNAL(levelChanged(QString)));
-    connect(m_dataProcess, SIGNAL(timeChanged(QString)), this, SIGNAL(timeChanged(QString)));
-    connect(m_dataProcess, SIGNAL(doctorChanged(QString)), this, SIGNAL(doctorChanged(QString)));
-    connect(m_dataProcess, SIGNAL(eatChanged(QString)), this, SIGNAL(eatChanged(QString)));
-    connect(m_dataProcess, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)));
-    connect(m_dataProcess, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
-    connect(m_dataProcess, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)));
+    connect(m_dataProcess, SIGNAL(nameChanged(QString)), this, SIGNAL(nameChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(sexChanged(QString)), this, SIGNAL(sexChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(ageChanged(QString)), this, SIGNAL(ageChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(bedChanged(QString)), this, SIGNAL(bedChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(levelChanged(QString)), this, SIGNAL(levelChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(timeChanged(QString)), this, SIGNAL(timeChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(doctorChanged(QString)), this, SIGNAL(doctorChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(eatChanged(QString)), this, SIGNAL(eatChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)), Qt::QueuedConnection);
+    connect(m_dataProcess, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)), Qt::QueuedConnection);
 
     //advise info
-    connect(m_dataProcess, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)));
+    connect(m_dataProcess, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)), Qt::QueuedConnection);
 
     //heartbeat timer
     m_heartTimer->setInterval(1000);
