@@ -46,6 +46,8 @@ void FileAudioOut::play()
     if(audioFmt.codec() == "pcm")
     {
         setAudioFormat(audioFmt);
+        if(m_file->isOpen())
+            m_file->close();
         m_file->open(QIODevice::ReadOnly);
         m_file->seek(44);
         start(m_file);

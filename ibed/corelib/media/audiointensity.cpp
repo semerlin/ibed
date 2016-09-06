@@ -28,8 +28,8 @@ AudioIntensity::AudioIntensity() :
 
     m_intensityCalc->moveToThread(m_calcThread);
     m_calcThread->start();
-    connect(this, SIGNAL(startCalc(QByteArray)), m_intensityCalc, SLOT(getIntensity(QByteArray)));
-    connect(m_intensityCalc, SIGNAL(intensityChanged(int)), this, SLOT(onIntensityChanged(int)));
+    connect(this, SIGNAL(startCalc(QByteArray)), m_intensityCalc, SLOT(getIntensity(QByteArray)), Qt::QueuedConnection);
+    connect(m_intensityCalc, SIGNAL(intensityChanged(int)), this, SLOT(onIntensityChanged(int)), Qt::QueuedConnection);
 }
 
 AudioIntensity::~AudioIntensity()

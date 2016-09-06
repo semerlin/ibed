@@ -10,7 +10,7 @@
 
 
 class QThread;
-
+class QMutex;
 class AudioOutputPrivate;
 
 class MEDIASHARED_EXPORT AudioOutput : public QObject
@@ -43,6 +43,8 @@ signals:
 private slots:
     void onFinished(Audio::Error error);
 
+private:
+    void init(void);
 
 private:
     AudioFormat m_format;
@@ -55,6 +57,7 @@ private:
     QIODevice *m_device;
     QThread *m_thread;
     int m_canPause;
+    QMutex *m_mutex;
 
 private:
     friend class AudioOutputPrivate;

@@ -1,6 +1,8 @@
 #include "audiooutput.h"
 #include <alsa/asoundlib.h>
 #include <QThread>
+#include <QMutex>
+#include <QMutexLocker>
 #define ALSA_PCM_NEW_HW_PARAMS_API
 
 
@@ -22,17 +24,18 @@ AudioOutput::AudioOutput(const AudioFormat &format, QObject *parent) :
     m_device(NULL),
     m_thread(new QThread),
     m_canPause(false),
+    m_mutex(new QMutex),
     m_private(new AudioOutputPrivate(this))
 {
+    qRegisterMetaType<Audio::Error>("Audio::Error");
+    qRegisterMetaType<Audio::State>("Audio::State");
+    qRegisterMetaType<Audio::Mode>("Audio::Mode");
+
     m_private->moveToThread(m_thread);
-    connect(this, SIGNAL(started()), m_private, SLOT(start()));
+    connect(this, SIGNAL(started()), m_private, SLOT(start()), Qt::QueuedConnection);
     connect(m_private, SIGNAL(finished(Audio::Error)),
             this, SLOT(onFinished(Audio::Error)), Qt::QueuedConnection);
 
-
-    qRegisterMetaType<Audio::State>("Audio::State");
-    qRegisterMetaType<Audio::Error>("Audio::Error");
-    qRegisterMetaType<Audio::Mode>("Audio::Mode");
 }
 
 AudioOutput::~AudioOutput()
@@ -72,11 +75,9 @@ void AudioOutput::setAudioFormat(const AudioFormat &format)
     m_format = format;
 }
 
-
-void AudioOutput::start(QIODevice *device)
+void AudioOutput::init()
 {
-    if(m_state != IdleState)
-        return ;
+    QMutexLocker locker(m_mutex);
 
     if(snd_pcm_open(&m_pcm, "default", SND_PCM_STREAM_PLAYBACK, 0) < 0)
     {
@@ -206,6 +207,14 @@ void AudioOutput::start(QIODevice *device)
     }
 
     m_canPause = snd_pcm_hw_params_can_pause(m_pcmParams);
+}
+
+void AudioOutput::start(QIODevice *device)
+{
+    if(m_state != IdleState)
+        return ;
+
+    init();
 
     m_device = device;
 
@@ -224,6 +233,7 @@ void AudioOutput::setNotifyInterval(int ms)
 
 void AudioOutput::resume()
 {
+    m_mutex->lock();
     if(m_pcm != NULL)
     {
         if(m_state == SuspendedState)
@@ -236,31 +246,41 @@ void AudioOutput::resume()
             {
                 snd_pcm_prepare(m_pcm);
             }
+            m_mutex->unlock();
             m_state = ActiveState;
             emit stateChanged(SuspendedState, ActiveState);
         }
+        else
+            m_mutex->unlock();
     }
+    else
+        m_mutex->unlock();
 }
 
 void AudioOutput::stop()
 {
+    m_mutex->lock();
     if(m_pcm != NULL)
     {
         snd_pcm_drop(m_pcm);
         snd_pcm_close(m_pcm);
         m_pcm = NULL;
 
-        if(m_device->isOpen())
-            m_device->close();
+//        if(m_device->isOpen())
+//            m_device->close();
 
+        m_mutex->unlock();
         State prevState = m_state;
         m_state = IdleState;
         emit stateChanged(prevState, m_state);
     }
+    else
+        m_mutex->unlock();
 }
 
 void AudioOutput::suspend()
 {
+    m_mutex->lock();
     if(m_pcm != NULL)
     {
         if(m_state == ActiveState)
@@ -273,10 +293,15 @@ void AudioOutput::suspend()
             {
                 snd_pcm_drop(m_pcm);
             }
+            m_mutex->unlock();
             m_state = SuspendedState;
             emit stateChanged(ActiveState, SuspendedState);
         }
+        else
+            m_mutex->unlock();
     }
+    else
+        m_mutex->unlock();
 }
 
 void AudioOutput::onFinished(Audio::Error error)
@@ -285,20 +310,23 @@ void AudioOutput::onFinished(Audio::Error error)
 
     m_error = error;
 
+    m_mutex->lock();
     if(m_pcm != NULL)
     {
-        snd_pcm_drain(m_pcm);
+        snd_pcm_drop(m_pcm);
         snd_pcm_close(m_pcm);
         m_pcm = NULL;
     }
+    m_mutex->unlock();
 
-    if(m_device->isOpen())
-        m_device->close();
+//    if(m_device->isOpen())
+//        m_device->close();
 
     State prevState = m_state;
     m_state = IdleState;
     emit stateChanged(prevState, m_state);
 }
+
 
 
 
@@ -337,18 +365,25 @@ void AudioOutputPrivate::start()
             emit finished(Audio::NoError);
             break;
         }
-        ret = snd_pcm_writei(m_audio->m_pcm, data.data(), m_audio->m_frames);
-        if(ret < 0)
+        m_audio->m_mutex->lock();
+        if(m_audio->m_pcm != NULL)
         {
-            if(ret == -EPIPE)
-                ::snd_pcm_prepare(m_audio->m_pcm);
-            else if(ret == -EBADFD)
+            ret = snd_pcm_writei(m_audio->m_pcm, data.data(), m_audio->m_frames);
+            if(ret < 0)
             {
-                //user stopped
-                emit finished(Audio::IOError);
-                break;
+                if(ret == -EPIPE)
+                    ::snd_pcm_prepare(m_audio->m_pcm);
+    //            else if(ret == -EBADFD)
+    //            {
+    //                //user stopped
+    //                emit finished(Audio::IOError);
+    //                break;
+    //            }
+                else
+                    break;
             }
         }
+        m_audio->m_mutex->unlock();
     }
 
 
