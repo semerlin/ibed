@@ -6,6 +6,7 @@
 
 class FileAudioOut;
 class AudioIntensity;
+class QMutex;
 
 class MODULESSHARED_EXPORT MediaModule : public BaseAppModule
 {

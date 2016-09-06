@@ -44,6 +44,8 @@ void MediaModule::onPlay(const QString &name)
     {
         if(m_player->state() == Audio::SuspendedState)
             m_player->resume();
+        else if(m_player->state() == Audio::IdleState)
+            m_player->play();
     }
     else
     {
