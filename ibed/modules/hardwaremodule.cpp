@@ -196,27 +196,36 @@ void HardwareModule::motorMove(int id, int dir)
     BedControl::instance().motorMove(id, direction);
 }
 
-void HardwareModule::motorMove(const QList<int> id, int dir)
+void HardwareModule::motorMove(const QMap<quint8, quint8> &moves)
 {
-    BedControl::MotorDirection direction;
-    switch(dir)
+    QList<BedControl::MotorMove> motorMoves;
+    for(QMap<quint8, quint8>::const_iterator iter = moves.constBegin();
+        iter != moves.constEnd(); ++iter)
     {
-    case 0:
-        //stop
-        direction = BedControl::Stop;
-        break;
-    case 1:
-        direction = BedControl::Forword;
-        break;
-    case 2:
-        direction = BedControl::Reversal;
-        break;
-    default:
-        direction = BedControl::Stop;
-        break;
+        BedControl::MotorMove tempMove;
+        tempMove.id = iter.key();
+        switch(iter.value())
+        {
+        case 0:
+            //stop
+            tempMove.dir = BedControl::Stop;
+            break;
+        case 1:
+            tempMove.dir = BedControl::Forword;
+            break;
+        case 2:
+            tempMove.dir = BedControl::Reversal;
+            break;
+        default:
+            tempMove.dir = BedControl::Stop;
+            break;
+        }
+
+        motorMoves.append(tempMove);
     }
 
-    BedControl::instance().motorMove(id, direction);
+
+    BedControl::instance().motorMove(motorMoves);
 }
 
 void HardwareModule::startInfusion()
@@ -299,9 +308,7 @@ void HardwareModule::onKeyStatusChanged()
 
     //first, stop all motors
     BedControl::instance().motorMove(3, BedControl::Stop);
-    BedControl::instance().motorMove(4, BedControl::Stop);
-    BedControl::instance().motorMove(4, BedControl::Stop);
-    BedControl::instance().motorMove(3, BedControl::Stop);
+//    BedControl::instance().motorMove(4, BedControl::Stop);
 
     //just support one press a time
     //process kbd1

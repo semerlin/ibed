@@ -37,8 +37,8 @@ bool MainModule::initialize()
     connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
     connect(network, SIGNAL(registerTimeout()), ui, SLOT(onRegisterTimeout()));
     connect(network, SIGNAL(disconnected()), ui, SLOT(onDisconnect()));
-    connect(ui, SIGNAL(reconnect(QString, quint16)),
-                     network, SLOT(reconnect(QString, quint16)));
+    connect(ui, SIGNAL(reconnect(QString, quint16, quint16)),
+                     network, SLOT(reconnect(QString, quint16, quint16)));
 
 
     connect(network, SIGNAL(nameChanged(QString)), ui, SLOT(onNameChanged(QString)));
@@ -52,6 +52,8 @@ bool MainModule::initialize()
     connect(network, SIGNAL(nurseChanged(QString)), ui, SLOT(onNurseChanged(QString)));
     connect(network, SIGNAL(adviseChanged(QString)), ui, SLOT(onAdviseChanged(QString)));
     connect(network, SIGNAL(allergyChanged(QString)), ui, SLOT(onAllergyChanged(QString)));
+    connect(network, SIGNAL(motorMove(QMap<quint8,quint8>)),
+            this, SLOT(onMotorMove(QMap<quint8,quint8>)));
 
     connect(ui, SIGNAL(updateAdvise()), network, SLOT(getAdvise()));
 
@@ -159,6 +161,14 @@ void MainModule::onBedControlPressed(int id)
     case 5:
         hardware->motorMove(5, 1);
         break;
+    case 6:
+    {
+        QMap<quint8, quint8> moves;
+        moves[3] = 2;
+        moves[4] = 1;
+        hardware->motorMove(moves);
+        break;
+    }
     case 7:
         hardware->motorMove(1, 1);
         break;
@@ -189,45 +199,57 @@ void MainModule::onBedControlReleased(int id)
 {
     HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
 
-    switch(id)
-    {
-    case 1:
-        hardware->motorMove(4, 0);
-        break;
-    case 2:
-        hardware->motorMove(3, 0);
-        break;
-    case 3:
-        hardware->motorMove(4, 0);
-        break;
-    case 4:
-        hardware->motorMove(3, 0);
-        break;
-    case 5:
-        hardware->motorMove(5, 0);
-        break;
-    case 7:
-        hardware->motorMove(1, 0);
-        break;
-    case 8:
-        hardware->motorMove(2, 0);
-        break;
-    case 10:
-    case 11:
-        hardware->motorMove(6, 0);
-        break;
-    case 12:
-        hardware->motorMove(1, 0);
-        break;
-    case 13:
-        hardware->motorMove(2, 0);
-        break;
-    case 15:
-        hardware->motorMove(5, 0);
-        break;
-    default:
-        break;
-    }
+    //just stop all motors
+    Q_UNUSED(id)
+    hardware->motorMove(1, 0);
+    hardware->motorMove(5, 0);
+//    switch(id)
+//    {
+//    case 1:
+//        hardware->motorMove(4, 0);
+//        break;
+//    case 2:
+//        hardware->motorMove(3, 0);
+//        break;
+//    case 3:
+//        hardware->motorMove(4, 0);
+//        break;
+//    case 4:
+//        hardware->motorMove(3, 0);
+//        break;
+//    case 5:
+//        hardware->motorMove(5, 0);
+//        break;
+//    case 6:
+//    {
+//        QMap<quint8, quint8> moves;
+//        moves[3] = 0;
+//        moves[4] = 0;
+//        hardware->motorMove(moves);
+//        break;
+//    }
+//    case 7:
+//        hardware->motorMove(1, 0);
+//        break;
+//    case 8:
+//        hardware->motorMove(2, 0);
+//        break;
+//    case 10:
+//    case 11:
+//        hardware->motorMove(6, 0);
+//        break;
+//    case 12:
+//        hardware->motorMove(1, 0);
+//        break;
+//    case 13:
+//        hardware->motorMove(2, 0);
+//        break;
+//    case 15:
+//        hardware->motorMove(5, 0);
+//        break;
+//    default:
+//        break;
+//    }
 }
 
 void MainModule::onInfuStart()
@@ -259,7 +281,7 @@ void MainModule::onCallOutConnecting()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onPlay("./resource/audio/callout.wav");
+    media->onPlay("/ibed/resource/audio/callout.wav");
 }
 
 void MainModule::onCallOutConnected()
@@ -267,7 +289,7 @@ void MainModule::onCallOutConnected()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onStop("./resource/audio/callout.wav");
+    media->onStop("/ibed/resource/audio/callout.wav");
 }
 
 void MainModule::onCallOutTerminate()
@@ -275,5 +297,22 @@ void MainModule::onCallOutTerminate()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onStop("./resource/audio/callout.wav");
+    media->onStop("/ibed/resource/audio/callout.wav");
 }
+
+void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
+{
+    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+    QMap<quint8, quint8> motorMoves;
+    quint8 id, dir;
+    for(QMap<quint8, quint8>::const_iterator iter = moves.constBegin();
+        iter != moves.constEnd(); ++iter)
+    {
+        id = iter.key();
+        dir = iter.value();
+        motorMoves.insert(id, dir);
+    }
+
+    hardware->motorMove(moves);
+}
+

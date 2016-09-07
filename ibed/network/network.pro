@@ -21,7 +21,8 @@ SOURCES += network.cpp \
     heartbeatdatahandler.cpp \
     advisedatahandler.cpp \
     defaultdataprocess.cpp \
-    docadvisedatahandler.cpp
+    docadvisedatahandler.cpp \
+    bedcontroldatahandler.cpp
 
 HEADERS += network.h\
         network_global.h \
@@ -34,7 +35,8 @@ HEADERS += network.h\
     heartbeatdatahandler.h \
     advisedatahandler.h \
     defaultdataprocess.h \
-    docadvisedatahandler.h
+    docadvisedatahandler.h \
+    bedcontroldatahandler.h
 
 unix {
     target.path = /usr/lib

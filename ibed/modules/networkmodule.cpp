@@ -35,6 +35,8 @@ bool NetworkModule::load(const QVariant &val)
     connect(m_defaultClient, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
     connect(m_defaultClient, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)));
     connect(m_defaultClient, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)));
+    connect(m_defaultClient, SIGNAL(motorMove(QMap<quint8,quint8>)),
+            this, SIGNAL(motorMove(QMap<quint8,quint8>)));
 
     return true;
 }
@@ -50,8 +52,9 @@ void NetworkModule::init()
                                    ServerManger::instance().port(ServerManger::Default));
 }
 
-void NetworkModule::reconnect(const QString &ip, quint16 port)
+void NetworkModule::reconnect(const QString &ip, quint16 port, quint16 device)
 {
+    m_defaultClient->setDeviceNum(device);
     m_defaultClient->connectServer(ip, port);
 }
 

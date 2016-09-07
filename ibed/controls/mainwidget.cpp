@@ -59,8 +59,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connectBtnAndWidget();
 
     //connect signals
-    connect(m_settingWidget, SIGNAL(reconnect(QString, quint16)),
-            this, SIGNAL(reconnect(QString, quint16)));
+    connect(m_settingWidget, SIGNAL(reconnect(QString, quint16, quint16)),
+            this, SIGNAL(reconnect(QString, quint16, quint16)));
 
     connect(m_adviseWidget, SIGNAL(updateClicked()), this, SIGNAL(updateAdvise()));
 
@@ -90,6 +90,7 @@ int MainWidget::infuMount() const
 {
     return m_infusionWidget->infuMount();
 }
+
 
 void MainWidget::setNetworkStatus(const QString &text)
 {

@@ -3,6 +3,7 @@
 
 #include "modules_global.h"
 #include "baseappmodule.h"
+#include <QPair>
 
 class QTimer;
 class SHT20;
@@ -16,6 +17,7 @@ public:
     HardwareModule(const QString &name);
     ~HardwareModule();
 
+
 public:
     bool load(const QVariant &val);
     void unload();
@@ -25,7 +27,7 @@ public slots:
     void setBrightness(int value);
     void setTurnOffTime(int value);
     void motorMove(int id, int dir);
-    void motorMove(const QList<int> id, int dir);
+    void motorMove(const QMap<quint8, quint8> &moves);
     void startInfusion(void);
     void stopInfusion(void);
 

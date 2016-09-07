@@ -80,17 +80,17 @@ void BedControl::motorMove(int id, BedControl::MotorDirection direction)
     }
 }
 
-void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
+void BedControl::motorMove(QList<MotorMove> moves)
 {
-    QSet<int> group1;
-    QSet<int> group2;
+    QList<MotorMove> group1;
+    QList<MotorMove> group2;
 
-    foreach(const int &index, id)
+    foreach(const MotorMove &index, moves)
     {
-        if((index >= 1) && (index <= 4))
-            group1.insert(index);
-        else if((index >= 5) && (index <= 6))
-            group2.insert(index);
+        if((index.id >= 1) && (index.id <= 4))
+            group1.append(index);
+        else if((index.id >= 5) && (index.id <= 6))
+            group2.append(index);
     }
 
     unsigned short address = 0;
@@ -102,10 +102,10 @@ void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
     if(group1.count() > 0)
     {
         address = 0x66;
-        foreach(const int &index, group1)
+        foreach(const MotorMove &index, group1)
         {
-            int temp = (index - 1) % 4;
-            switch(direction)
+            int temp = (index.id - 1) % 4;
+            switch(index.dir)
             {
             case Forword:
                 AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));
@@ -133,10 +133,10 @@ void BedControl::motorMove(QList<int> id, BedControl::MotorDirection direction)
     if(group2.count() > 0)
     {
         address = 0x65;
-        foreach(const int &index, group1)
+        foreach(const MotorMove &index, group1)
         {
-            int temp = (index - 1) % 4;
-            switch(direction)
+            int temp = (index.id - 1) % 4;
+            switch(index.dir)
             {
             case Forword:
                 AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));

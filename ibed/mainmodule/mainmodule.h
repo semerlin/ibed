@@ -3,6 +3,7 @@
 
 #include "mainmodule_global.h"
 #include <QObject>
+#include <QMap>
 
 class ModuleManger;
 
@@ -29,6 +30,8 @@ private slots:
     void onCallOutConnecting(void);
     void onCallOutConnected(void);
     void onCallOutTerminate(void);
+    void onMotorMove(const QMap<quint8, quint8> &moves);
+
 
 private:
     ModuleManger *m_manger;

@@ -75,5 +75,19 @@
         <file>res/images/rightup1.png</file>
         <file>res/images/humidity.png</file>
         <file>res/images/progressbk.png</file>
+        <file>res/images/advise_h.png</file>
+        <file>res/images/advise_l.png</file>
+        <file>res/images/baseinfo_h.png</file>
+        <file>res/images/baseinfo_l.png</file>
+        <file>res/images/bedcontrol_h.png</file>
+        <file>res/images/bedcontrol_l.png</file>
+        <file>res/images/education_h.png</file>
+        <file>res/images/education_l.png</file>
+        <file>res/images/infusion_h.png</file>
+        <file>res/images/infusion_l.png</file>
+        <file>res/images/inout_h.png</file>
+        <file>res/images/inout_l.png</file>
+        <file>res/images/setting_h.png</file>
+        <file>res/images/setting_l.png</file>
     </qresource>
 </RCC>

@@ -19,8 +19,8 @@ SettingWidget::SettingWidget(QWidget *parent) :
     connect(ui->pushButtonSave, SIGNAL(released()), this, SLOT(onPushButtonReleased()));
 
     //connect signals
-    connect(ui->widgetServerEth, SIGNAL(reconnect(QString, quint16)),
-            this, SIGNAL(reconnect(QString, quint16)));
+    connect(ui->widgetServerEth, SIGNAL(reconnect(QString, quint16, quint16)),
+            this, SIGNAL(reconnect(QString, quint16, quint16)));
 
     connect(ui->widgetScreenWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
 }
@@ -45,6 +45,11 @@ void SettingWidget::onPushButtonReleased()
 void SettingWidget::setStatusText(const QString &text)
 {
     ui->widgetServerEth->setStatusText(text);
+}
+
+quint8 SettingWidget::deviceNum() const
+{
+    ui->widgetServerEth->deviceNum();
 }
 
 void SettingWidget::on_pushButtonSave_clicked()

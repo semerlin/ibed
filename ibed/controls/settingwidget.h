@@ -17,17 +17,16 @@ public:
 
 public slots:
     void setStatusText(const QString &text);
+    quint8 deviceNum(void) const;
 
 signals:
-    void reconnect(const QString &ip, quint16 port);
+    void reconnect(const QString &ip, quint16 port, quint16 device);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
 
 private slots:
     void onPushButtonPress();
     void onPushButtonReleased();
-
-
     void on_pushButtonSave_clicked();
 
 private:

@@ -29,7 +29,7 @@ public:
     int infuMount(void) const;
 
 signals:
-    void reconnect(const QString &ip, quint16 port);
+    void reconnect(const QString &ip, quint16 port, quint16 device);
     void updateAdvise();
     void uploadInOut(const QStringList &data);
     void brightnessChanged(int value);
@@ -71,6 +71,8 @@ private slots:
     void onCallOutConnecting(void);
     void onCallOutConnected(void);
     void onCallOutTerminate(void);
+    void onBedCtrlPressed(void);
+    void onBedCtrlReleased(void);
 
 private:
     MainWidget *m_mainWidget;

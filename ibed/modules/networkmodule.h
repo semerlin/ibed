@@ -3,6 +3,7 @@
 
 #include "modules_global.h"
 #include "baseappmodule.h"
+#include <QMap>
 
 class DefaultClient;
 
@@ -22,7 +23,7 @@ public:
     void init(void);
 
 public slots:
-    void reconnect(const QString &ip, quint16 port);
+    void reconnect(const QString &ip, quint16 port, quint16 device);
     void getAdvise(void);
     void uploadInOut(const QStringList &data);
     void sendInfuStatus(int status);
@@ -46,6 +47,7 @@ signals:
     void adviseChanged(const QString &advise);
     void allergyChanged(const QString &allergy);
     void adviseUpdate(const QString &data);
+    void motorMove(const QMap<quint8, quint8> &moves);
 
 private:
     DefaultClient *m_defaultClient;

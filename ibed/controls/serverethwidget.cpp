@@ -60,5 +60,6 @@ void ServerEthWidget::setStatusText(const QString &text)
 void ServerEthWidget::on_pushButtonConnect_clicked()
 {
     ui->labelStatus->setText(QT_TRANSLATE_NOOP("Server", "正在连接..."));
-    emit reconnect(ui->widgetIp->text(), ui->widgetPort->text().toUInt());
+    emit reconnect(ui->widgetIp->text(), ui->widgetPort->text().toUInt(),
+                   ui->widgetDevice->text().toUInt());
 }

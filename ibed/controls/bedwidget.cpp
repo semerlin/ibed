@@ -31,7 +31,7 @@ void BedWidget::initButtons()
     QList<IconPushButton *> allPButtons = this->findChildren<IconPushButton *>();
     BOOST_FOREACH(IconPushButton *btn, allPButtons)
     {
-        btn->setIconSize(QSize(52, 52));
+        btn->setIconSize(QSize(72, 72));
         connect(btn, SIGNAL(pressed()), this, SLOT(onButtonPress()));
         connect(btn, SIGNAL(released()), this, SLOT(onButtonReleased()));
     }

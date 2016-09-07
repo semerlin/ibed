@@ -25,6 +25,13 @@ public:
         Count,
 
     }MotorDirection;
+
+    typedef struct
+    {
+        int id;
+        MotorDirection dir;
+    }MotorMove;
+
 public:
     static BedControl &instance(void);
 
@@ -32,7 +39,7 @@ public slots:
     void powerOn(void);
     void powerOff(void);
     void motorMove(int id, MotorDirection direction);
-    void motorMove(QList<int> id, MotorDirection direction);
+    void motorMove(QList<MotorMove> moves);
 
     void getMotorCurrent(void) const;
     void getChargeCurrent(void) const;

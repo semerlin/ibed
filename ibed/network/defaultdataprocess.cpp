@@ -7,6 +7,7 @@
 #include "baseinfodatahandler.h"
 #include "advisedatahandler.h"
 #include "docadvisedatahandler.h"
+#include "bedcontroldatahandler.h"
 
 DefaultDataProcess::DefaultDataProcess() :
     m_mutex(new QMutex),
@@ -44,6 +45,12 @@ DefaultDataProcess::DefaultDataProcess() :
     AdviseDataHandler *adviseHandler = new AdviseDataHandler(101);
     connect(adviseHandler, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)));
     addHandler(adviseHandler);
+
+    //bed control data handler
+    BedControlDataHandler *bedHandler = new BedControlDataHandler(15);
+    connect(bedHandler, SIGNAL(motorMove(QMap<quint8,quint8>)),
+            this, SIGNAL(motorMove(QMap<quint8,quint8>)));
+    addHandler(bedHandler);
 }
 
 DefaultDataProcess::~DefaultDataProcess()
@@ -98,5 +105,10 @@ void DefaultDataProcess::reset()
 QByteArray DefaultDataProcess::package(quint8 id, const NetProtocol::ContentList &contents)
 {
     return m_protocol->package(id, contents);
+}
+
+void DefaultDataProcess::setDeviceNum(quint16 device)
+{
+    m_protocol->setDeviceNum(device);
 }
 

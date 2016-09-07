@@ -45,7 +45,8 @@ bool UiModule::load(const QVariant &val)
 #endif
 
     //connect signals
-    connect(m_mainWidget, SIGNAL(reconnect(QString, quint16)), this, SIGNAL(reconnect(QString, quint16)));
+    connect(m_mainWidget, SIGNAL(reconnect(QString, quint16, quint16)),
+            this, SIGNAL(reconnect(QString, quint16, quint16)));
     connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
     connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
     connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
@@ -54,7 +55,9 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
     connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
     connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SIGNAL(bedCtrlPressed(int)));
+    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedCtrlPressed()));
     connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
+    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedCtrlReleased()));
     connect(m_mainWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
     connect(m_mainWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
 
@@ -84,6 +87,7 @@ int UiModule::infuMount() const
 {
     return m_mainWidget->infuMount();
 }
+
 
 void UiModule::onRegistered()
 {
@@ -267,4 +271,14 @@ void UiModule::onCallOutConnected()
 void UiModule::onCallOutTerminate()
 {
     m_callDialog->hide();
+}
+
+void UiModule::onBedCtrlPressed()
+{
+    m_standByTimer->stop();
+}
+
+void UiModule::onBedCtrlReleased()
+{
+    m_standByTimer->start();
 }

@@ -14,6 +14,12 @@
    <string>Form</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_8">
+   <property name="spacing">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
@@ -184,8 +190,17 @@
            <property name="spacing">
             <number>6</number>
            </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
+            <number>4</number>
+           </property>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
@@ -256,6 +271,22 @@
               </layout>
              </item>
              <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>5</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
               <widget class="QLabel" name="labelHuman1">
                <property name="text">
                 <string/>
@@ -264,6 +295,22 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>5</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -347,7 +394,7 @@
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>15</height>
+               <height>10</height>
               </size>
              </property>
             </spacer>
@@ -438,6 +485,9 @@
         </property>
         <property name="leftMargin">
          <number>15</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">

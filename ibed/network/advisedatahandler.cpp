@@ -31,6 +31,8 @@ void AdviseDataHandler::handle(quint8 id, const NetProtocol::ContentList &list)
                 case 10120:
                     emit adviseUpdate(content.data);
                     break;
+                default:
+                    break;
                 }
             }
         }

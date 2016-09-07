@@ -23,6 +23,7 @@ public:
     void addHandler(IDataHandler *handler);
     void reset(void);
     QByteArray package(quint8 id, const NetProtocol::ContentList &contents = NetProtocol::ContentList());
+    void setDeviceNum(quint16 device);
 
 signals:
     void registered(void);
@@ -39,6 +40,7 @@ signals:
     void adviseChanged(const QString& advise);
     void allergyChanged(const QString& allergy);
     void adviseUpdate(const QString& advise);
+    void motorMove(const QMap<quint8, quint8> &moves);
 
 private:
     QMutex *m_mutex;

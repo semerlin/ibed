@@ -51,6 +51,10 @@ DefaultClient::DefaultClient() :
     //advise info
     connect(m_dataProcess, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)), Qt::QueuedConnection);
 
+    //bed control
+    connect(m_dataProcess, SIGNAL(motorMove(QMap<quint8,quint8>)),
+            this, SIGNAL(motorMove(QMap<quint8,quint8>)));
+
     //heartbeat timer
     m_heartTimer->setInterval(1000);
     connect(m_heartTimer, SIGNAL(timeout()), this, SLOT(onHeartbeat()));
@@ -234,6 +238,11 @@ void DefaultClient::sendWeight(int weight)
 
         socketWrite(m_dataProcess->package(NetProtocol::Spo2Info, list));
     }
+}
+
+void DefaultClient::setDeviceNum(quint16 device)
+{
+    m_dataProcess->setDeviceNum(device);
 }
 
 void DefaultClient::onConnectTimeout()

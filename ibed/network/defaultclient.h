@@ -29,6 +29,7 @@ public:
     void sendInfuSpeed(int speed);
     void sendInfuLeft(int left);
     void sendWeight(int weight);
+    void setDeviceNum(quint16 device);
 
 private slots:
     void onConnectTimeout(void);
@@ -58,6 +59,7 @@ signals:
     void adviseChanged(const QString &advise);
     void allergyChanged(const QString &allergy);
     void adviseUpdate(const QString &data);
+    void motorMove(const QMap<quint8, quint8> &moves);
 
 signals:
     void dataReached(const QByteArray &data);

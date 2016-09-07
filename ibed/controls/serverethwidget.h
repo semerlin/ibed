@@ -24,7 +24,7 @@ public slots:
     void setStatusText(const QString &text);
 
 signals:
-    void reconnect(const QString &ip, quint16 port);
+    void reconnect(const QString &ip, quint16 port, quint16 device);
 
 private slots:
     void on_pushButtonConnect_clicked();

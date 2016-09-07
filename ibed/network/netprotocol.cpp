@@ -75,6 +75,7 @@ QByteArray NetProtocol::tryUnpackage(QByteArray &data)
 QByteArray NetProtocol::package(quint8 id, const NetProtocol::ContentList &contents)
 {
     //package data to send to server
+    m_package.device = AppSetting::instance().value(AppSetting::DeviceNum).toUInt();
     int length = 0;
     QByteArray data;
     data.append(m_package.head);

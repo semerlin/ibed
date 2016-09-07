@@ -50,7 +50,7 @@ public slots:
     void setWeight(int weight);
 
 signals:
-    void reconnect(const QString &ip, quint16 port);
+    void reconnect(const QString &ip, quint16 port, quint16 device);
     void updateAdvise(void);
     void uploadInOut(const QStringList &data);
     void brightnessChanged(int value);
