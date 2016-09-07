@@ -19,8 +19,8 @@ public:
     int time(void) const;
     void play(void);
 
-private slots:
-    void onStateChanged(Audio::State prev, Audio::State cur);
+//private slots:
+//    void onStateChanged(Audio::State prev, Audio::State cur);
 
 private:
     QString m_name;

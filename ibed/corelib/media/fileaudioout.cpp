@@ -8,8 +8,8 @@ FileAudioOut::FileAudioOut(const QString &fileName) :
     m_name(fileName),
     m_file(new QFile(fileName))
 {
-    connect(this, SIGNAL(stateChanged(Audio::State,Audio::State)),
-            this, SLOT(onStateChanged(Audio::State,Audio::State)));
+//    connect(this, SIGNAL(stateChanged(Audio::State,Audio::State)),
+//            this, SLOT(onStateChanged(Audio::State,Audio::State)));
 }
 
 FileAudioOut::~FileAudioOut()
@@ -54,24 +54,24 @@ void FileAudioOut::play()
     }
 }
 
-void FileAudioOut::onStateChanged(Audio::State prev, Audio::State cur)
-{
-    Q_UNUSED(prev)
-    switch(cur)
-    {
-    case Audio::ActiveState:
-        qDebug() << "state: active";
-        break;
-    case Audio::SuspendedState:
-        qDebug() << "state: suspend";
-        break;
-    case Audio::IdleState:
-        qDebug() << "state: idle";
-        break;
-    default:
-        break;
-    }
+//void FileAudioOut::onStateChanged(Audio::State prev, Audio::State cur)
+//{
+//    Q_UNUSED(prev)
+//    switch(cur)
+//    {
+//    case Audio::ActiveState:
+//        qDebug() << "state: active";
+//        break;
+//    case Audio::SuspendedState:
+//        qDebug() << "state: suspend";
+//        break;
+//    case Audio::IdleState:
+//        qDebug() << "state: idle";
+//        break;
+//    default:
+//        break;
+//    }
 
 
-}
+//}
 
