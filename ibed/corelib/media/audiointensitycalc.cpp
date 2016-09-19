@@ -2,6 +2,7 @@
 #include "qmath.h"
 #include "math.h"
 #include <QVector>
+#include "bitops.h"
 
 static int BitReverse(int j, int nu)
 {
@@ -120,6 +121,22 @@ int AudioIntensityCalc::calcIntensity(const QByteArray &data)
 
 void AudioIntensityCalc::getIntensity(const QByteArray &data)
 {
-    emit intensityChanged(calcIntensity(data));
+    QByteArray calData = data;
+    int size = calData.size();
+    quint32 hweight = Bitops::generic_hweight32(size);
+    if(hweight == 0)
+        return ;
+    else if(hweight == 1)
+    {
+        emit intensityChanged(calcIntensity(calData));
+    }
+    else
+    {
+        //get first 1 pos
+        quint32 realSize = 1 << (Bitops::generic_ffs(size) - 1);
+        calData.remove(size - 1, size - realSize);
+
+        emit intensityChanged(calcIntensity(calData));
+    }
 }
 

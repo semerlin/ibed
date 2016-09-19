@@ -145,17 +145,27 @@ void AudioIntensity::run()
 {
     while(1)
     {
-        int rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
-        if (rc == -EPIPE)
+        long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
+        if(rc == -EPIPE)
         {
             /* EPIPE means overrun */
             snd_pcm_prepare(m_handle);
         }
+        else if(rc == -EBADFD)
+        {
 
-        m_mutex->lock();
-        for(int i = 0; i < rc; ++i)
-            m_queue->enqueue(m_tmpData[i]);
-        m_mutex->unlock();
+        }
+        else if(rc == -ESTRPIPE)
+        {
+
+        }
+        else
+        {
+            m_mutex->lock();
+            for(int i = 0; i < rc; ++i)
+                m_queue->enqueue(m_tmpData[i]);
+            m_mutex->unlock();
+        }
     }
 }
 

@@ -16,7 +16,8 @@ SOURCES += utility.cpp \
     systemcall.cpp \
     util.cpp \
     formula.cpp \
-    crc.cpp
+    crc.cpp \
+    bitops.cpp
 
 HEADERS += utility.h\
         utility_global.h \
@@ -25,7 +26,8 @@ HEADERS += utility.h\
     util.h \
     formula.h \
     coveragecircularqueue.h \
-    crc.h
+    crc.h \
+    bitops.h
 
 unix {
     target.path = /usr/lib
