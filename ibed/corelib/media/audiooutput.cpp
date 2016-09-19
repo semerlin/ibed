@@ -380,7 +380,10 @@ void AudioOutputPrivate::start()
     //                break;
     //            }
                 else
+                {
+                    m_audio->m_mutex->unlock();
                     break;
+                }
             }
         }
         m_audio->m_mutex->unlock();
