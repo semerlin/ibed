@@ -5,6 +5,7 @@
 #include "modbus.h"
 #include "unistd.h"
 #include "powercontrol.h"
+#include "beddataprocess.h"
 
 BedDataSend::BedDataSend(BedControl *parent) :
     m_control(parent),
@@ -20,11 +21,8 @@ BedDataSend::~BedDataSend()
     quit();
 }
 
-void BedDataSend::appendSendData(BedDataSend::ModbusData *data)
+void BedDataSend::appendSendData(const ModbusData &data)
 {
-    if(data == NULL)
-        return;
-
     m_mutex->lock();
     m_dataQueue.enqueue(data);
     m_mutex->unlock();
@@ -42,18 +40,33 @@ void BedDataSend::run()
         while(m_dataQueue.count() > 0)
         {
             m_mutex->lock();
-            ModbusData *data = m_dataQueue.dequeue();
+            ModbusData data = m_dataQueue.dequeue();
             m_mutex->unlock();
 
 #ifdef TARGET_IMX
             PowerControl::instance().rs485DirectCtrl(1);
 #endif
-            m_control->m_modbus->write(data->m_code, data->m_address, data->m_data.data(), data->m_data.count());
+            m_control->m_process->reset();
+            switch(data.m_code)
+            {
+            case Modbus::WRITE_SingleRegister:
+                m_control->m_process->setRegAddress(data.m_address);
+                m_control->m_process->setContentLen(4);
+                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                break;
+            case Modbus::READ_InputRegister:
+                m_control->m_process->setRegAddress(data.m_address);
+                m_control->m_process->setContentLen(3);
+                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                break;
+            default:
+                break;
+            }
+
 
 #ifdef TARGET_IMX
-    PowerControl::instance().rs485DirectCtrl(0);
+            PowerControl::instance().rs485DirectCtrl(0);
 #endif
-            delete data;
             //sleep 100ms
             ::usleep(100000);
         }
@@ -61,4 +74,5 @@ void BedDataSend::run()
         m_waitMutex->unlock();
     }
 }
+
 

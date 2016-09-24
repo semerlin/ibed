@@ -63,6 +63,7 @@ void BaseButtonBox::setOrientation(Qt::Orientation orientation)
     else
         m_layout = new QVBoxLayout(this);
 
+    ui->verticalLayout->addLayout(m_layout);
     //add widget
     for(QHash<int, QAbstractButton *>::iterator iter = m_buttons.begin();
         iter != m_buttons.end(); ++iter)

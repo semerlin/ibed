@@ -19,6 +19,7 @@ public slots:
     void setContentLen(quint8 len);
     void setRegAddress(quint16 address);
     void onProcessData(const QByteArray &data);
+    void reset(void);
 
 public:
     void addDataHandler(IDataHandler *handler);
@@ -28,6 +29,9 @@ signals:
     void infuSpeedChanged(int);
     void infuMountChanged(int);
     void weightChanged(double);
+
+private:
+    void printRecvData(const QByteArray &data);
 
 
 private:

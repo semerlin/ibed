@@ -9,6 +9,8 @@ QT       += widgets
 TARGET = controls
 TEMPLATE = lib
 
+include(../global.pri)
+
 DEFINES += CONTROLS_LIBRARY
 
 SOURCES += controls.cpp \

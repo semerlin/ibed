@@ -25,20 +25,18 @@ BedControl &BedControl::instance()
 
 void BedControl::powerOn(void)
 {
-    m_process->setContentLen(4);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
+    m_send->appendSendData(ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
 }
 
 void BedControl::powerOff(void)
 {
-    m_process->setContentLen(4);
     QByteArray data;
     data.append((char)0x00);
     data.append((char)0x00);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
+    m_send->appendSendData(ModbusData(Modbus::WRITE_SingleRegister, 0x64, data));
 }
 
 void BedControl::motorMove(int id, BedControl::MotorDirection direction)
@@ -60,23 +58,22 @@ void BedControl::motorMove(int id, BedControl::MotorDirection direction)
         switch(direction)
         {
         case Forword:
-            AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(id));
+//            AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(id));
             data[1] |= (0x01 << (id * 2));
             break;
         case Reversal:
-            AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(id));
+//            AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(id));
             data[1] |= (0x02 << (id * 2));
             break;
         default:
-            AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(id));
+//            AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(id));
             break;
         }
 
-        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
-        m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
+        m_send->appendSendData(ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
     }
 }
 
@@ -108,24 +105,23 @@ void BedControl::motorMove(QList<MotorMove> moves)
             switch(index.dir)
             {
             case Forword:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));
                 data[1] |= (0x01 << (temp * 2));
                 break;
             case Reversal:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(temp));
                 data[1] |= (0x02 << (temp * 2));
                 break;
             default:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(temp));
                 break;
             }
         }
 
-        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
-        m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
+        m_send->appendSendData(ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
     }
 
 
@@ -133,116 +129,104 @@ void BedControl::motorMove(QList<MotorMove> moves)
     if(group2.count() > 0)
     {
         address = 0x65;
-        foreach(const MotorMove &index, group1)
+        data[0] = 0x00;
+        data[1] = 0x00;
+        foreach(const MotorMove &index, group2)
         {
             int temp = (index.id - 1) % 4;
             switch(index.dir)
             {
             case Forword:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: forword.").arg(temp));
                 data[1] |= (0x01 << (temp * 2));
                 break;
             case Reversal:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: reversal.").arg(temp));
                 data[1] |= (0x02 << (temp * 2));
                 break;
             default:
-                AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(temp));
+//                AppLogger::instance().log()->info(QString("motor: %1, motion: stop.").arg(temp));
                 break;
             }
         }
 
-        m_process->setContentLen(4);
         QByteArray senddata;
         senddata.append(data[0]);
         senddata.append(data[1]);
-        m_send->appendSendData(new BedDataSend::ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
+        m_send->appendSendData(ModbusData(Modbus::WRITE_SingleRegister, address, senddata));
     }
 }
 
 void BedControl::getMotorCurrent() const
 {
-    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 49, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 49, data));
 }
 
 void BedControl::getChargeCurrent() const
 {
-    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 50, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 50, data));
 }
 
 void BedControl::getDischargeCurrent() const
 {
-    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 51, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 51, data));
 }
 
 void BedControl::getHighBatteryVoltage() const
 {
-    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 53, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 53, data));
 }
 
 void BedControl::getLowBatteryVoltage() const
 {
-    m_process->setContentLen(3);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 52, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 52, data));
 }
 
 void BedControl::getInfusionCount() const
 {
-    m_process->setContentLen(3);
-    m_process->setRegAddress(69);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 69, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 69, data));
 }
 
 void BedControl::getInfusionSpeed() const
 {
-    m_process->setContentLen(3);
-    m_process->setRegAddress(70);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 70, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 70, data));
 }
 
 void BedControl::getInfusionMount() const
 {
-    m_process->setContentLen(3);
-    m_process->setRegAddress(71);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 71, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 71, data));
 }
 
 void BedControl::getWeight() const
 {
-    m_process->setContentLen(3);
-    m_process->setRegAddress(80);
     QByteArray data;
     data.append((char)0x00);
     data.append(0x01);
-    m_send->appendSendData(new BedDataSend::ModbusData(Modbus::READ_InputRegister, 80, data));
+    m_send->appendSendData(ModbusData(Modbus::READ_InputRegister, 80, data));
 }
 
 

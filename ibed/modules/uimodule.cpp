@@ -45,8 +45,8 @@ bool UiModule::load(const QVariant &val)
 #endif
 
     //connect signals
-    connect(m_mainWidget, SIGNAL(reconnect(QString, quint16, quint16)),
-            this, SIGNAL(reconnect(QString, quint16, quint16)));
+    connect(m_mainWidget, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
+            this, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)));
     connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
     connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
     connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));

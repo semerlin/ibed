@@ -18,6 +18,7 @@
 #include "ledintensity.h"
 #include "kbdbacklight.h"
 #include "unistd.h"
+#include <QDebug>
 
 #define OUT_BOUND_VAL (65536)
 
@@ -65,7 +66,7 @@ bool HardwareModule::load(const QVariant &val)
     connect(m_lightTimer, SIGNAL(timeout()), this, SLOT(updateLightIntensity()));
 
     m_temperTimer = new QTimer(this);
-    m_temperTimer->setInterval(1000);
+    m_temperTimer->setInterval(1500);
     connect(m_temperTimer, SIGNAL(timeout()), this, SLOT(updateTemper()));
 
 
@@ -124,6 +125,7 @@ bool HardwareModule::load(const QVariant &val)
     connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
 
     //start weight timer
+    BedControl::instance().getWeight(); //get zero point
     m_weightTimer->start();
 
     m_isLoaded = true;
@@ -253,7 +255,7 @@ void HardwareModule::updateLightIntensity()
     int temp = LightIntensity::instance().intensity();
     if(temp != m_lightIntensity)
     {
-        AppLogger::instance().log()->debug(QString("intensity changed to: %1").arg(m_lightIntensity));
+//        AppLogger::instance().log()->debug(QString("intensity changed to: %1").arg(m_lightIntensity));
         m_lightIntensity = temp;
         emit lightIntensityChanged(m_lightIntensity);
     }
@@ -268,7 +270,7 @@ void HardwareModule::updateTemper()
     m_i2cMutex->unlock();
     if(temp != m_temper)
     {
-        AppLogger::instance().log()->debug(QString("temperature changed to: %1").arg(m_temper));
+//        AppLogger::instance().log()->debug(QString("temperature changed to: %1").arg(m_temper));
         m_temper = temp;
         emit temperatureChanged(m_temper);
     }
@@ -278,7 +280,7 @@ void HardwareModule::updateTemper()
     m_i2cMutex->unlock();
     if(hum != m_humidity)
     {
-        AppLogger::instance().log()->debug(QString("humidity changed to: %1").arg(m_humidity));
+//        AppLogger::instance().log()->debug(QString("humidity changed to: %1").arg(m_humidity));
         m_humidity = hum;
         emit humidityChanged(m_humidity);
     }
@@ -301,10 +303,9 @@ void HardwareModule::onKeyStatusChanged()
 #ifdef TARGET_IMX
     m_i2cMutex->lock();
     QList<quint8> kbd0PressedKeys = m_kbdMange->pressedKeys(0);
-    ::usleep(10000);
+//    ::usleep(10000);
     QList<quint8> kbd1PressedKeys = m_kbdMange->pressedKeys(1);
     m_i2cMutex->unlock();
-
 
     //first, stop all motors
     BedControl::instance().motorMove(3, BedControl::Stop);
@@ -316,17 +317,17 @@ void HardwareModule::onKeyStatusChanged()
     {
         switch(kbd0PressedKeys.at(0))
         {
-        case 2:
-            BedControl::instance().motorMove(3, BedControl::Reversal);
-            break;
-        case 3:
-            BedControl::instance().motorMove(4, BedControl::Reversal);
-            break;
-        case 4:
+        case 0:
             BedControl::instance().motorMove(4, BedControl::Forword);
             break;
-        case 5:
+        case 1:
             BedControl::instance().motorMove(3, BedControl::Forword);
+            break;
+        case 6:
+            BedControl::instance().motorMove(3, BedControl::Reversal);
+            break;
+        case 7:
+            BedControl::instance().motorMove(4, BedControl::Reversal);
             break;
         default:
             break;
@@ -417,7 +418,7 @@ void HardwareModule::loadDrivers()
         QFile file(QString("/dev/%1").arg(info.baseName()));
         if(!file.exists())
         {
-            SystemCall::instance().cmd("insmod " + info.absoluteFilePath());
+            SystemCall::system("insmod " + info.absoluteFilePath());
             AppLogger::instance().log()->info(QString("load driver: %1").arg(info.fileName()));
         }
     }

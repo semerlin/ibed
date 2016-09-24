@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QStringList>
+#include "systemcall.h"
 
 #define SETTING_FILE ("./resource/setting/appsetting.ini")
 
@@ -87,6 +88,8 @@ void AppSetting::save()
     setting.setValue("sound", m_params["Sound"]);
     setting.setValue("turnofftime", m_params["TurnOffTime"]);
     setting.endGroup();
+
+    SystemCall::sync();
 }
 
 AppSetting::AppSetting()

@@ -8,11 +8,14 @@
 #include "advisedatahandler.h"
 #include "docadvisedatahandler.h"
 #include "bedcontroldatahandler.h"
+#include "qmetatype.h"
+#include <QDebug>
 
 DefaultDataProcess::DefaultDataProcess() :
     m_mutex(new QMutex),
     m_protocol(new NetProtocol)
 {
+    qRegisterMetaType<QMap<quint8, quint8> >("QMap<quint8, quint8>");
     RegisterDataHandler *regHandle = new RegisterDataHandler(2);
     connect(regHandle, SIGNAL(registered()), this, SIGNAL(registered()));
     addHandler(regHandle);
@@ -24,32 +27,32 @@ DefaultDataProcess::DefaultDataProcess() :
 
     //baseinfo handler
     BaseinfoDataHandler *baseHandle = new BaseinfoDataHandler(80);
-    connect(baseHandle, SIGNAL(nameChanged(QString)), this, SIGNAL(nameChanged(QString)));
-    connect(baseHandle, SIGNAL(sexChanged(QString)), this, SIGNAL(sexChanged(QString)));
-    connect(baseHandle, SIGNAL(ageChanged(QString)), this, SIGNAL(ageChanged(QString)));
-    connect(baseHandle, SIGNAL(bedChanged(QString)), this, SIGNAL(bedChanged(QString)));
-    connect(baseHandle, SIGNAL(levelChanged(QString)), this, SIGNAL(levelChanged(QString)));
-    connect(baseHandle, SIGNAL(timeChanged(QString)), this, SIGNAL(timeChanged(QString)));
-    connect(baseHandle, SIGNAL(doctorChanged(QString)), this, SIGNAL(doctorChanged(QString)));
-    connect(baseHandle, SIGNAL(eatChanged(QString)), this, SIGNAL(eatChanged(QString)));
-    connect(baseHandle, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)));
-    connect(baseHandle, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)));
+    connect(baseHandle, SIGNAL(nameChanged(QString)), this, SIGNAL(nameChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(sexChanged(QString)), this, SIGNAL(sexChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(ageChanged(QString)), this, SIGNAL(ageChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(bedChanged(QString)), this, SIGNAL(bedChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(levelChanged(QString)), this, SIGNAL(levelChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(timeChanged(QString)), this, SIGNAL(timeChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(doctorChanged(QString)), this, SIGNAL(doctorChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(eatChanged(QString)), this, SIGNAL(eatChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(nurseChanged(QString)), this, SIGNAL(nurseChanged(QString)), Qt::QueuedConnection);
+    connect(baseHandle, SIGNAL(allergyChanged(QString)), this, SIGNAL(allergyChanged(QString)), Qt::QueuedConnection);
     addHandler(baseHandle);
 
     //doctor advise handler
     DocAdviseDataHandler *docAdviseHandler = new DocAdviseDataHandler(81);
-    connect(docAdviseHandler, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)));
+    connect(docAdviseHandler, SIGNAL(adviseChanged(QString)), this, SIGNAL(adviseChanged(QString)), Qt::QueuedConnection);
     addHandler(docAdviseHandler);
 
     //adviseinfo handler
     AdviseDataHandler *adviseHandler = new AdviseDataHandler(101);
-    connect(adviseHandler, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)));
+    connect(adviseHandler, SIGNAL(adviseUpdate(QString)), this, SIGNAL(adviseUpdate(QString)), Qt::QueuedConnection);
     addHandler(adviseHandler);
 
     //bed control data handler
     BedControlDataHandler *bedHandler = new BedControlDataHandler(15);
     connect(bedHandler, SIGNAL(motorMove(QMap<quint8,quint8>)),
-            this, SIGNAL(motorMove(QMap<quint8,quint8>)));
+            this, SIGNAL(motorMove(QMap<quint8,quint8>)), Qt::QueuedConnection);
     addHandler(bedHandler);
 }
 
@@ -63,6 +66,14 @@ DefaultDataProcess::~DefaultDataProcess()
 void DefaultDataProcess::onProcessData(const QByteArray &newData)
 {
     QByteArray data;
+    //print network data
+//    QString printData;
+//    for(int i = 0; i < newData.count(); ++i)
+//    {
+//        printData += QString::number((quint8)newData.at(i), 16);
+//        printData += " ";
+//    }
+//    qDebug() << "network: " << printData;
     //append data
     m_mutex->lock();
     m_data.append(newData);
@@ -70,7 +81,7 @@ void DefaultDataProcess::onProcessData(const QByteArray &newData)
 
     do
     {
-        //perhaps there is more than one invalid packages in one buffer
+        //perhaps there is more than one valid packages in one buffer
         m_mutex->lock();
         data = m_protocol->tryUnpackage(m_data);
         m_mutex->unlock();

@@ -47,7 +47,7 @@ SHT20::SHT20(const QString &port, const quint8 address) :
     if(m_fd == -1)
         AppLogger::instance().log()->error(QString("open %1 failed.").arg(port));
 
-    AppLogger::instance().log()->debug(QString("open %1 success.").arg(port));
+//    AppLogger::instance().log()->debug(QString("open %1 success.").arg(port));
 }
 
 SHT20::~SHT20()

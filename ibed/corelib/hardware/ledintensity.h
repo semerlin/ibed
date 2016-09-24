@@ -37,7 +37,8 @@ private:
     void autoSetValue(quint8 value);
 
 private:
-    quint8 m_curVal;
+    quint8 m_onVal;
+    quint8 m_prevVal;
 };
 
 #endif // LEDINTENSITY_H

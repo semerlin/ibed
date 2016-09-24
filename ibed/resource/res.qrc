@@ -40,7 +40,6 @@
         <file>res/images/progress.png</file>
         <file>res/images/call.png</file>
         <file>res/images/standby.png</file>
-        <file>res/images/save.png</file>
         <file>res/images/left1_h.png</file>
         <file>res/images/left1_l.png</file>
         <file>res/images/left2_h.png</file>
@@ -89,5 +88,7 @@
         <file>res/images/inout_l.png</file>
         <file>res/images/setting_h.png</file>
         <file>res/images/setting_l.png</file>
+        <file>res/images/save_h.png</file>
+        <file>res/images/save_l.png</file>
     </qresource>
 </RCC>

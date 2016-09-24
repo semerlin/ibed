@@ -11,7 +11,6 @@
 #include "infusionwidget.h"
 #include "boost/foreach.hpp"
 #include <QPushButton>
-#include "util.h"
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
@@ -59,8 +58,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connectBtnAndWidget();
 
     //connect signals
-    connect(m_settingWidget, SIGNAL(reconnect(QString, quint16, quint16)),
-            this, SIGNAL(reconnect(QString, quint16, quint16)));
+    connect(m_settingWidget, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
+            this, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)));
 
     connect(m_adviseWidget, SIGNAL(updateClicked()), this, SIGNAL(updateAdvise()));
 

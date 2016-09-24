@@ -37,8 +37,8 @@ bool MainModule::initialize()
     connect(network, SIGNAL(registered()), ui, SLOT(onRegistered()));
     connect(network, SIGNAL(registerTimeout()), ui, SLOT(onRegisterTimeout()));
     connect(network, SIGNAL(disconnected()), ui, SLOT(onDisconnect()));
-    connect(ui, SIGNAL(reconnect(QString, quint16, quint16)),
-                     network, SLOT(reconnect(QString, quint16, quint16)));
+    connect(ui, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
+                     network, SLOT(reconnect(QString,quint16,quint16,QString,QString,QString)));
 
 
     connect(network, SIGNAL(nameChanged(QString)), ui, SLOT(onNameChanged(QString)));
@@ -166,6 +166,7 @@ void MainModule::onBedControlPressed(int id)
         QMap<quint8, quint8> moves;
         moves[3] = 2;
         moves[4] = 1;
+        moves[5] = 2;
         hardware->motorMove(moves);
         break;
     }
@@ -175,6 +176,15 @@ void MainModule::onBedControlPressed(int id)
     case 8:
         hardware->motorMove(2, 1);
         break;
+    case 9:
+    {
+        QMap<quint8, quint8> moves;
+        moves[3] = 2;
+        moves[4] = 2;
+        moves[5] = 1;
+        hardware->motorMove(moves);
+        break;
+    }
     case 10:
         hardware->motorMove(6, 2);
         break;
@@ -271,7 +281,7 @@ void MainModule::onInfuInputChanged(int input)
 
     if(ui->infuMount() > 0)
     {
-        int left = (ui->infuMount() - input) / ui->infuMount();
+        int left = (ui->infuMount() - input) * 100 / ui->infuMount();
         network->sendInfuLeft(left);
     }
 }
@@ -281,7 +291,7 @@ void MainModule::onCallOutConnecting()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onPlay("/ibed/resource/audio/callout.wav");
+//    media->onPlay("/ibed/resource/audio/callout.wav");
 }
 
 void MainModule::onCallOutConnected()
@@ -289,7 +299,7 @@ void MainModule::onCallOutConnected()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onStop("/ibed/resource/audio/callout.wav");
+//    media->onStop("/ibed/resource/audio/callout.wav");
 }
 
 void MainModule::onCallOutTerminate()
@@ -297,7 +307,7 @@ void MainModule::onCallOutTerminate()
     NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
-    media->onStop("/ibed/resource/audio/callout.wav");
+//    media->onStop("/ibed/resource/audio/callout.wav");
 }
 
 void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)

@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QSettings>
 #include "appsetting.h"
+#include "systemcall.h"
 
 
 ServerManger::ServerManger()
@@ -51,6 +52,8 @@ void ServerManger::save()
     setting.setValue("address", m_addresses[ServerManger::Monitor]);
     setting.setValue("port", m_ports[ServerManger::Monitor]);
     setting.endGroup();
+
+    SystemCall::sync();
 }
 
 void ServerManger::load()

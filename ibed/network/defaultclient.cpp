@@ -9,6 +9,11 @@
 #include <QTimer>
 #include <QHostAddress>
 #include <QStringList>
+#include "netconfig.h"
+#include "systemcall.h"
+#include "unistd.h"
+#include "applogger.h"
+#include "log4qt/logger.h"
 
 #define HEARTCNT_MAX (3)
 
@@ -18,7 +23,10 @@ DefaultClient::DefaultClient() :
     m_heartTimer(new QTimer(this)),
     m_heartCnt(0),
     m_dataProcess(new DefaultDataProcess),
-    m_dataThread(new QThread)
+    m_dataThread(new QThread),
+    m_ip(NetConfig::instance().address()),
+    m_netmask(NetConfig::instance().netmask()),
+    m_gateway(NetConfig::instance().gateway())
 {
     connect(m_socket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
@@ -80,7 +88,7 @@ void DefaultClient::connectServer(const QString &ip, quint16 port)
     clear();
     m_socket->connectToHost(QHostAddress(ip), port);
 
-    QTimer::singleShot(3000, this, SLOT(onConnectTimeout()));
+    QTimer::singleShot(5000, this, SLOT(onConnectTimeout()));
 }
 
 
@@ -245,6 +253,39 @@ void DefaultClient::setDeviceNum(quint16 device)
     m_dataProcess->setDeviceNum(device);
 }
 
+void DefaultClient::setLocalInfo(const QString &ip, const QString &netmask, const QString &gateway)
+{
+#ifdef TARGET_IMX
+    bool needCfg = false;
+    if(m_ip != ip)
+        needCfg = true;
+    if(m_netmask != netmask)
+        needCfg = true;
+    if(m_gateway != gateway)
+        needCfg = true;
+
+    if(needCfg)
+    {
+//        AppLogger::instance().log()->debug("reconfigure network");
+        clear();
+        //reconnect signals
+        disconnect(m_socket, SIGNAL(connected()), this, SLOT(onConnected()));
+        disconnect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+        disconnect(m_socket, SIGNAL(readyRead()), this, SLOT(onReadReady()));
+
+        delete m_socket;
+        //set local address
+        SystemCall::system(QString("./ethcfg %1 %2 %3 %4")
+                        .arg(NetConfig::instance().name())
+                        .arg(ip)
+                        .arg(netmask)
+                        .arg(gateway));
+
+        QTimer::singleShot(2000, this, SLOT(onReconnect()));
+    }
+#endif
+}
+
 void DefaultClient::onConnectTimeout()
 {
     if(m_socket->state() != QAbstractSocket::ConnectedState)
@@ -257,8 +298,8 @@ void DefaultClient::onConnectTimeout()
 void DefaultClient::onConnected()
 {
     //start register
-    socketWrite(m_dataProcess->package(NetProtocol::Register));
-    QTimer::singleShot(3000, this, SLOT(onRegisterTimeout()));
+    m_socket->write(m_dataProcess->package(NetProtocol::Register));
+    QTimer::singleShot(5000, this, SLOT(onRegisterTimeout()));
 }
 
 void DefaultClient::onDisconnected()
@@ -304,9 +345,19 @@ void DefaultClient::onHeartOk()
     m_heartCnt = 0;
 }
 
+void DefaultClient::onReconnect()
+{
+    m_socket = new QTcpSocket;
+    connect(m_socket, SIGNAL(connected()), this, SLOT(onConnected()));
+    connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReadReady()));
+
+}
+
 void DefaultClient::clear()
 {
     m_isRegistered = false;
+    m_socket->flush();
     m_socket->disconnectFromHost();
     m_dataProcess->reset();
     m_heartCnt = 0;
@@ -314,8 +365,13 @@ void DefaultClient::clear()
 
 bool DefaultClient::socketWrite(const QByteArray &data)
 {
-    m_socket->write(data);
-    return m_socket->waitForBytesWritten(10);
+    bool flag = false;
+    if(m_isRegistered)
+    {
+        m_socket->write(data);
+        flag = m_socket->waitForBytesWritten(10);
+    }
+    return flag;
 }
 
 

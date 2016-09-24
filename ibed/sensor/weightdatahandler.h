@@ -19,7 +19,8 @@ signals:
 
 private:
     double m_weight;
-
+    bool m_isFirstTime;
+    quint16 m_zeroPoint;
 };
 
 #endif // HEARTRATEDATAHANDLER_H

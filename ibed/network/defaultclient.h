@@ -30,6 +30,7 @@ public:
     void sendInfuLeft(int left);
     void sendWeight(int weight);
     void setDeviceNum(quint16 device);
+    void setLocalInfo(const QString &ip, const QString &netmask, const QString &gateway);
 
 private slots:
     void onConnectTimeout(void);
@@ -40,6 +41,7 @@ private slots:
     void onRegistered(void);
     void onHeartbeat(void);
     void onHeartOk(void);
+    void onReconnect(void);
 
 signals:
     void connected(void);
@@ -75,6 +77,9 @@ private:
     int m_heartCnt;
     DefaultDataProcess *m_dataProcess;
     QThread *m_dataThread;
+    QString m_ip;
+    QString m_netmask;
+    QString m_gateway;
 };
 
 #endif // MAINCLIENT_H

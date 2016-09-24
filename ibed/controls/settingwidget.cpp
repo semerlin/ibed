@@ -4,6 +4,8 @@
 #include "servermanger.h"
 #include "netconfig.h"
 #include "appsetting.h"
+#include "systemcall.h"
+#include "netconfig.h"
 
 SettingWidget::SettingWidget(QWidget *parent) :
     QWidget(parent),
@@ -12,15 +14,15 @@ SettingWidget::SettingWidget(QWidget *parent) :
     ui->setupUi(this);
 
     ui->pushButtonSave->setIcons(QStringList()
-                                    << ":/res/images/upload_l.png"
-                                    << ":/res/images/upload_h.png");
+                                    << ":/res/images/save_h.png"
+                                    << ":/res/images/save_l.png");
     ui->pushButtonSave->setText(QT_TRANSLATE_NOOP("Setting" ,"保存"));
     connect(ui->pushButtonSave, SIGNAL(pressed()), this, SLOT(onPushButtonPress()));
     connect(ui->pushButtonSave, SIGNAL(released()), this, SLOT(onPushButtonReleased()));
 
     //connect signals
-    connect(ui->widgetServerEth, SIGNAL(reconnect(QString, quint16, quint16)),
-            this, SIGNAL(reconnect(QString, quint16, quint16)));
+    connect(ui->widgetServerEth, SIGNAL(reconnect(QString,quint16,quint16)),
+            this, SLOT(onReconnect(QString,quint16,quint16)));
 
     connect(ui->widgetScreenWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
 }
@@ -49,7 +51,7 @@ void SettingWidget::setStatusText(const QString &text)
 
 quint8 SettingWidget::deviceNum() const
 {
-    ui->widgetServerEth->deviceNum();
+    return ui->widgetServerEth->deviceNum();
 }
 
 void SettingWidget::on_pushButtonSave_clicked()
@@ -57,6 +59,14 @@ void SettingWidget::on_pushButtonSave_clicked()
     saveLocal();
     saveServer();
     saveScreen();
+}
+
+void SettingWidget::onReconnect(const QString &ip, quint16 port, quint16 device)
+{
+    emit reconnect(ip, port, device,
+                   ui->widgetLocalEth->ip(),
+                   ui->widgetLocalEth->netmask(),
+                   ui->widgetLocalEth->gateway());
 }
 
 void SettingWidget::saveLocal()

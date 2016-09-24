@@ -20,7 +20,8 @@ public slots:
     quint8 deviceNum(void) const;
 
 signals:
-    void reconnect(const QString &ip, quint16 port, quint16 device);
+    void reconnect(const QString &ip, quint16 port, quint16 device,
+                   const QString &localIp, const QString localMask, const QString localGateway);
     void brightnessChanged(int value);
     void turnOffTimeChanged(int value);
 
@@ -28,6 +29,7 @@ private slots:
     void onPushButtonPress();
     void onPushButtonReleased();
     void on_pushButtonSave_clicked();
+    void onReconnect(const QString &ip, quint16 port, quint16 device);
 
 private:
     Ui::SettingWidget *ui;

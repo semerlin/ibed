@@ -18,12 +18,174 @@
     #define SYSTEM system
     #define POPEN popen
     #define PCLOSE pclose
+    #define FORK fork
+    #define EXIT exit
 #else
     #define SYSTEM system_user
     #define POPEN popen_user
     #define PCLOSE pclose_user
+    #define FORK vfork
+    #define EXIT _exit
 #endif
 
+//popen.c from:
+//http://cnds.eecs.jacobs-university.de/courses/os-2011/src/popen/popen.c
+typedef struct pinfo {
+    FILE         *file;
+    pid_t         pid;
+    struct pinfo *next;
+} pinfo;
+
+static pinfo *plist = NULL;
+
+FILE* popen_user(const char *command, const char *mode)
+{
+    //fd[0] is read fd, fd[1] is write fd
+    int fd[2];
+    pinfo *cur, *old;
+
+    if (mode[0] != 'r' && mode[0] != 'w') {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if (mode[1] != 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if (pipe(fd)) {
+        return NULL;
+    }
+
+    cur = (pinfo *) malloc(sizeof(pinfo));
+    if (! cur) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    cur->pid = FORK();
+    switch (cur->pid) {
+
+    case -1:                    /* fork() failed */
+        close(fd[0]);
+        close(fd[1]);
+        free(cur);
+        return NULL;
+
+    case 0:                     /* child */
+        for (old = plist; old; old = old->next) {
+            close(fileno(old->file));
+        }
+
+        if (mode[0] == 'r') {
+            //bind STDOUT_FILENO to write fd
+            dup2(fd[1], STDOUT_FILENO);
+        } else {
+            //bind STDIN_FILENO to read fd
+            dup2(fd[0], STDIN_FILENO);
+        }
+        close(fd[0]);   /* close other pipe fds */
+        close(fd[1]);
+
+        execl("/bin/sh", "sh", "-c", command, (char *) NULL);
+        EXIT(1);
+
+    default:                    /* parent */
+        if (mode[0] == 'r') {
+            close(fd[1]);
+            if (!(cur->file = fdopen(fd[0], mode))) {
+                close(fd[0]);
+            }
+        } else {
+            close(fd[0]);
+            if (!(cur->file = fdopen(fd[1], mode))) {
+                close(fd[1]);
+            }
+        }
+        cur->next = plist;
+        plist = cur;
+    }
+
+    return cur->file;
+}
+
+int pclose_user(FILE *file)
+{
+    pinfo *last, *cur;
+    int status;
+    pid_t pid;
+
+    /* search for an entry in the list of open pipes */
+
+    for (last = NULL, cur = plist; cur; last = cur, cur = cur->next) {
+        if (cur->file == file) break;
+    }
+    if (! cur) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    /* remove entry from the list */
+
+    if (last) {
+        last->next = cur->next;
+    } else {
+        plist = cur->next;
+    }
+
+    /* close stream and wait for process termination */
+
+    fclose(file);
+    do {
+        pid = waitpid(cur->pid, &status, 0);
+    } while (pid == -1 && errno == EINTR);
+
+    /* release the entry for the now closed pipe */
+
+    free(cur);
+
+    if (WIFEXITED(status)) {
+        return WEXITSTATUS(status);
+    }
+    errno = ECHILD;
+    return -1;
+}
+
+
+int system_user(const char* cmd)
+{
+#ifdef Q_OS_LINUX
+    int status;
+    pid_t pid;
+    pid = FORK();
+    if(pid == -1)
+    {
+        return -1;
+    }
+    else if(pid == 0)
+    {
+        char *argv[4];
+        argv[0] = "sh";
+        argv[1] = "-c";
+        argv[2] = (char *)cmd;
+        argv[3] = NULL;
+        execv("/bin/sh", (argv));
+        EXIT(-1);
+    }
+    if(waitpid(pid, &status, 0) == -1)
+    {
+        return -1;
+    }
+    else if(WIFEXITED(status))
+    {
+        return WEXITSTATUS(status);
+    }
+#endif
+    return -1;
+}
+
+#if 0
 /**
  * @brief user define system function.use vfork instead of fork
  * @param
@@ -38,22 +200,27 @@ static int system_user(const char *cmdstring)
         return (1);
 
     if((pid = vfork())<0)
-        status = -1;
+        return -1;
     else if(pid == 0)
     {
         execl(SHELL, "sh", "-c", cmdstring, (char *)0);
-        _exit(127);
+        _exit(-1);
     }
     else
     {
-        while(waitpid(pid, &status, 0) < 0)
-        {
-            if(errno != EINTR)
-            {
-                status = -1;
-                break;
-            }
-        }
+//        while(waitpid(pid, &status, 0) < 0)
+//        {
+//            if(errno != EINTR)
+//            {
+//                status = -1;
+//                break;
+//            }
+//        }
+
+        if(waitpid(pid, &status, 0) == -1)
+            return -1;
+        else if(WIFEXITED(status))
+            return WEXITSTATUS(status);
     }
 
     return status;
@@ -170,24 +337,11 @@ static int pclose_user(FILE *fp)
 
     return(stat);   /* return child's termination status */
 }
+#endif
 
 #endif
 
 
-SystemCall::SystemCall()
-{
-
-}
-
-/**
- * @brief return SystemCall reference
- * @return
- */
-SystemCall &SystemCall::instance()
-{
-    static SystemCall m_sysCall;
-    return m_sysCall;
-}
 
 /**
  * @brief run system command and return command excute information
@@ -195,20 +349,20 @@ SystemCall &SystemCall::instance()
  * @param return infomation after run this command string
  * @return return 0 if success, otherwise none zero
  */
-int SystemCall::cmd(const QString &cmd, QString &outinfo)
+int SystemCall::getCmdOut(const QString &cmd, QString &outinfo)
 {
 #ifdef Q_OS_LINUX
-    char buf[24];
+    char buf[32];
     memset(buf, '\0', sizeof(buf));
     FILE *stream;
     stream = POPEN(cmd.toLatin1().constData(), "r");
-    if(stream)
+    if(stream != NULL)
     {
-        unsigned char retLen = fread(buf, 1, 16, stream);
-        while(retLen != 0)
+        char retLen = fread(buf, 1, 16, stream);
+        while(retLen > 0)
         {
             buf[retLen] = '\0';
-            outinfo += buf;
+            outinfo += QString(buf);
             retLen = fread(buf, 1, 16, stream);
         }
 
@@ -224,9 +378,17 @@ int SystemCall::cmd(const QString &cmd, QString &outinfo)
  * @param cmd: command need to excute
  * @return -1 ,127 indicates failed
  */
-int SystemCall::cmd(const QString &cmd)
+int SystemCall::system(const QString &cmd)
 {
 #ifdef Q_OS_LINUX
-    return SYSTEM(cmd.toLatin1().constData());
+    QString tempCmd = cmd;
+    return SYSTEM(tempCmd.toLatin1().constData());
+#endif
+}
+
+void SystemCall::sync()
+{
+#ifdef Q_OS_LINUX
+    ::sync();
 #endif
 }

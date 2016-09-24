@@ -2,6 +2,7 @@
 #include <QFile>
 #include "appsetting.h"
 #include <QSettings>
+#include "systemcall.h"
 
 NetConfig &NetConfig::instance()
 {
@@ -24,6 +25,11 @@ QString NetConfig::gateway() const
     return m_gateway;
 }
 
+QString NetConfig::name() const
+{
+    return m_name;
+}
+
 void NetConfig::setAddress(const QString &ip)
 {
     if(m_address != ip)
@@ -42,6 +48,12 @@ void NetConfig::setGateway(const QString &gateway)
         m_gateway = gateway;
 }
 
+void NetConfig::setName(const QString &name)
+{
+    if(m_name != name)
+        m_name = name;
+}
+
 void NetConfig::save()
 {
     QSettings setting(AppSetting::instance().
@@ -51,6 +63,8 @@ void NetConfig::save()
     setting.setValue("ip", m_address);
     setting.setValue("netmask", m_netmask);
     setting.setValue("gateway", m_gateway);
+
+    SystemCall::sync();
 }
 
 void NetConfig::load()

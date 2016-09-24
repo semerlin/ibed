@@ -3,14 +3,15 @@
 
 WeightDataHandler::WeightDataHandler(quint8 code, quint16 address) :
     BaseDataHandler(code, address),
-    m_weight(0)
+    m_weight(0),
+    m_isFirstTime(true),
+    m_zeroPoint(0)
 {
 
 }
 
 void WeightDataHandler::handle(quint8 code, quint16 address, const QByteArray &data)
 {
-//    qDebug() << "get weight data";
     //check code
     if(code == fucCode())
     {
@@ -24,16 +25,28 @@ void WeightDataHandler::handle(quint8 code, quint16 address, const QByteArray &d
                 value <<= 8;
                 value += (data.at(4) & 0xff);
 
-//                qDebug() << "get weight data: " << value;
+//                qDebug() << "get weight data: " << QString::number(data.at(3), 16)
+//                         << "  " << QString::number(data.at(4), 16);
 
-                emit weightChanged(value);
 
-//                double weight = value;
-//                if(weight != m_weight)
-//                {
-//                    m_weight = weight;
-//                    emit weightChanged(m_weight);
-//                }
+                if(m_isFirstTime)
+                {
+                    m_isFirstTime = false;
+                    m_zeroPoint = value;
+                }
+
+                if(value <= m_zeroPoint)
+                    value = 0;
+                else
+                    value -= m_zeroPoint;
+
+                if(value != m_weight)
+                {
+                    m_weight = value;
+                    m_weight /= 100;
+                    m_weight *= 2.4;
+                    emit weightChanged(m_weight);
+                }
             }
         }
     }

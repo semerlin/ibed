@@ -2,9 +2,10 @@
 #include "systemcall.h"
 
 
-LedIntensity::LedIntensity()
+LedIntensity::LedIntensity() :
+    m_prevVal(100),
+    m_onVal(100)
 {
-    value();
 }
 
 
@@ -23,13 +24,13 @@ QString LedIntensity::name() const
 
 void LedIntensity::setValue(quint8 newValue)
 {
-    if(m_curVal != newValue)
+    if(m_onVal != newValue)
     {
-        quint8 prevVal = m_curVal;
-        m_curVal = newValue;
-        SystemCall::instance().cmd(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(newValue));
+        quint8 prevVal = m_prevVal;
+        m_onVal = newValue;
+        SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(newValue));
 
-        emit brightnessChanged(prevVal, m_curVal);
+        emit brightnessChanged(prevVal, m_onVal);
     }
 }
 
@@ -37,25 +38,23 @@ void LedIntensity::setValue(quint8 newValue)
 quint8 LedIntensity::value()
 {
     QString brightness;
-    SystemCall::instance().cmd(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
-    m_curVal = brightness.toInt();
-    return m_curVal;
+    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
+    return brightness.toInt();
 }
 
 quint8 LedIntensity::maxValue()
 {
     QString brightness;
-    SystemCall::instance().cmd(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
+    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
     return brightness.toInt();
 }
 
 void LedIntensity::autoSetValue(quint8 value)
 {
-    QString brightness;
-    SystemCall::instance().cmd(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
-    quint8 prevVal = brightness.toInt();
+    quint8 prevVal = m_prevVal;
 
-    SystemCall::instance().cmd(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(value));
+    SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(value));
+    m_prevVal = value;
     emit brightnessChanged(prevVal, value);
 }
 
@@ -64,11 +63,11 @@ void LedIntensity::EnterState(POWER_STATE state)
 {
    if(state == POWER_ON)
    {
-        autoSetValue(m_curVal);
+        autoSetValue(m_onVal);
    }
    else if(state == POWER_IDLE)
    {
-        autoSetValue(m_curVal / 2);
+        autoSetValue(m_onVal / 2);
    }
    else if(state == POWER_SUSPEND)
    {

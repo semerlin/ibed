@@ -23,7 +23,8 @@ public:
     void init(void);
 
 public slots:
-    void reconnect(const QString &ip, quint16 port, quint16 device);
+    void reconnect(const QString &ip, quint16 port, quint16 device,
+           const QString &localIp, const QString localMask, const QString localGateway);
     void getAdvise(void);
     void uploadInOut(const QStringList &data);
     void sendInfuStatus(int status);
@@ -49,8 +50,13 @@ signals:
     void adviseUpdate(const QString &data);
     void motorMove(const QMap<quint8, quint8> &moves);
 
+private slots:
+    void onReconnect(void);
+
 private:
     DefaultClient *m_defaultClient;
+    QString m_ip;
+    quint16 m_port;
 };
 
 #endif // NETWORKMODULE_H

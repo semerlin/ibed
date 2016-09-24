@@ -20,25 +20,23 @@ void BedControlDataHandler::handle(quint8 id, const NetProtocol::ContentList &li
         if(!list.isEmpty())
         {
             QMap<quint8, quint8> moves;
-            foreach(const NetProtocol::Content &content, list)
+            if(list.count() >= 2)
             {
-                quint8 id = 0;
-                quint8 dir = 0;
-                switch(content.id)
+                for(int i = 0; i < list.count() / 2; ++i)
                 {
-                //motor id
-                case 1510:
-                    id = content.data.at(0);
-                    break;
-                //motor direction
-                case 1511:
-                    dir = content.data.at(0);
-                    break;
-                default:
-                    break;
-                }
+                    quint8 id = 0;
+                    quint8 dir = 0;
 
-                moves.insert(id, dir);
+                    for(int j = 0; j < 2; j++)
+                    {
+                        if(list.at(i + j).id == 1510)
+                            id = list.at(i + j).data.at(0);
+                        else if(list.at(i +j).id == 1511)
+                            dir = list.at(i +j).data.at(0);
+                    }
+
+                    moves.insert(id, dir);
+                }
             }
 
             emit motorMove(moves);

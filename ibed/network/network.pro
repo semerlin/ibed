@@ -9,6 +9,8 @@ QT       += network
 TARGET = network
 TEMPLATE = lib
 
+include(../global.pri)
+
 DEFINES += NETWORK_LIBRARY
 
 SOURCES += network.cpp \
@@ -47,3 +49,13 @@ unix:!macx: LIBS += -L$$OUT_PWD/../commonunit/ -lcommonunit
 
 INCLUDEPATH += $$PWD/../commonunit
 DEPENDPATH += $$PWD/../commonunit
+
+unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
+
+INCLUDEPATH += $$PWD/../corelib/utility
+DEPENDPATH += $$PWD/../corelib/utility
+
+unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
+
+INCLUDEPATH += $$PWD/../3rdpart/log4qt
+DEPENDPATH += $$PWD/../3rdpart/log4qt

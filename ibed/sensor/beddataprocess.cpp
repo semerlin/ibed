@@ -10,6 +10,7 @@
 #include "weightdatahandler.h"
 #include "applogger.h"
 #include "modbus.h"
+#include <QDebug>
 
 BedDataProcess::BedDataProcess(quint8 address) :
     m_mutex(new QMutex),
@@ -26,10 +27,10 @@ BedDataProcess::BedDataProcess(quint8 address) :
     addDataHandler(mountHandler);
     addDataHandler(weightHandler);
 
-    connect(countHandler, SIGNAL(countChanged(int)), this, SIGNAL(infuCountChanged(int)));
-    connect(speedHandler, SIGNAL(speedChanged(int)), this, SIGNAL(infuSpeedChanged(int)));
-    connect(mountHandler, SIGNAL(mountChanged(int)), this, SIGNAL(infuMountChanged(int)));
-    connect(weightHandler, SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)));
+    connect(countHandler, SIGNAL(countChanged(int)), this, SIGNAL(infuCountChanged(int)), Qt::QueuedConnection);
+    connect(speedHandler, SIGNAL(speedChanged(int)), this, SIGNAL(infuSpeedChanged(int)), Qt::QueuedConnection);
+    connect(mountHandler, SIGNAL(mountChanged(int)), this, SIGNAL(infuMountChanged(int)), Qt::QueuedConnection);
+    connect(weightHandler, SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)), Qt::QueuedConnection);
 }
 
 void BedDataProcess::setContentLen(quint8 len)
@@ -48,58 +49,39 @@ void BedDataProcess::setRegAddress(quint16 address)
 
 void BedDataProcess::onProcessData(const QByteArray &data)
 {
-    //print modbus data
-//    QString printData;
-//    for(int i = 0; i < data.count(); ++i)
-//    {
-//        printData += QString::number((quint8)data.at(i), 16);
-//        printData += " ";
-//    }
-//    AppLogger::instance().log()->debug("Modbus: " + printData);
+//    printRecvData(data);
 
     //start processing
     m_mutex->lock();
     m_data.append(data);
+    quint8 contentlen = m_contentLen;
+    quint16 regAddress = m_regAddress;
 
-    if(m_data.count() >= (m_contentLen + 4))
+    if(m_data.count() >= (contentlen + 4))
     {
         //seek to head
         int index = m_data.indexOf(m_address);
         m_data.remove(0, index);
 
         //check length again
-        if(m_data.count() >= (m_contentLen + 4))
+        if(m_data.count() >= (contentlen + 4))
         {
             //get valid data
             QByteArray validData;
-            for(int i = 0; i < m_contentLen + 4; ++i)
+            for(int i = 0; i < contentlen + 4; ++i)
                 validData.append(m_data.at(i));
-            m_data.remove(0, m_contentLen + 4);
-//            m_mutex->unlock();
+            m_data.remove(0, contentlen + 4);
+            m_mutex->unlock();
 
             //check CRC
-            quint16 crc = CRC::mbCRC16((quint8 *)validData.data(), m_contentLen + 2);
-            quint16 rCrc = (validData.at(m_contentLen + 3) & 0xff);
+            quint16 crc = CRC::mbCRC16((quint8 *)validData.data(), contentlen + 2);
+            quint16 rCrc = (validData.at(contentlen + 3) & 0xff);
             rCrc <<= 8;
-            rCrc += (validData.at(m_contentLen + 2) & 0xff);
+            rCrc += (validData.at(contentlen + 2) & 0xff);
             if(crc == rCrc)
             {
                 //find handler
                 quint8 fucCode = (validData.at(1) & 0xff);
-                quint16 regAddress = 0;
-                switch(static_cast<Modbus::FunctionCode>(fucCode))
-                {
-                case Modbus::WRITE_SingleRegister:
-                    regAddress = validData.at(2);
-                    regAddress <<= 8;
-                    regAddress += validData.at(3);
-                    break;
-                case Modbus::READ_InputRegister:
-                    regAddress = m_regAddress;
-                    break;
-                default:
-                    break;
-                }
 
                 BOOST_FOREACH(IDataHandler *handler, m_handlers)
                 {
@@ -110,14 +92,19 @@ void BedDataProcess::onProcessData(const QByteArray &data)
                     }
                 }
             }
-            m_mutex->unlock();
-
         }
         else
             m_mutex->unlock();
     }
     else
         m_mutex->unlock();
+}
+
+void BedDataProcess::reset()
+{
+    m_mutex->lock();
+    m_data.clear();
+    m_mutex->unlock();
 }
 
 void BedDataProcess::addDataHandler(IDataHandler *handler)
@@ -128,5 +115,17 @@ void BedDataProcess::addDataHandler(IDataHandler *handler)
         m_handlers.append(handler);
 
     m_mutex->unlock();
+}
+
+void BedDataProcess::printRecvData(const QByteArray &data)
+{
+    //print modbus data
+    QString printData;
+    for(int i = 0; i < data.count(); ++i)
+    {
+        printData += QString::number((quint8)data.at(i), 16);
+        printData += " ";
+    }
+    AppLogger::instance().log()->debug("Modbus: " + printData);
 }
 

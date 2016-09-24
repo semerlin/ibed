@@ -2,9 +2,14 @@
 #include "registerdatahandler.h"
 #include "networkmodule.h"
 #include "servermanger.h"
+#include "systemcall.h"
+#include "netconfig.h"
+#include "QTimer"
 
 NetworkModule::NetworkModule(const QString &name) :
-    BaseAppModule(name)
+    BaseAppModule(name),
+    m_ip(""),
+    m_port(0)
 {
 
 }
@@ -17,6 +22,15 @@ NetworkModule::~NetworkModule()
 bool NetworkModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+
+#ifdef TARGET_IMX
+    //set local address
+    SystemCall::system(QString("./ethcfg %1 %2 %3 %4")
+                .arg(NetConfig::instance().name())
+                .arg(NetConfig::instance().address())
+                .arg(NetConfig::instance().netmask())
+                .arg(NetConfig::instance().gateway()));
+#endif
 
     m_defaultClient = new DefaultClient;
 
@@ -52,11 +66,16 @@ void NetworkModule::init()
                                    ServerManger::instance().port(ServerManger::Default));
 }
 
-void NetworkModule::reconnect(const QString &ip, quint16 port, quint16 device)
+void NetworkModule::reconnect(const QString &ip, quint16 port, quint16 device,
+                              const QString &localIp, const QString localMask, const QString localGateway)
 {
     m_defaultClient->setDeviceNum(device);
-    m_defaultClient->connectServer(ip, port);
+    m_defaultClient->setLocalInfo(localIp, localMask, localGateway);
+    m_ip = ip;
+    m_port = port;
+    QTimer::singleShot(3000, this, SLOT(onReconnect()));
 }
+
 
 void NetworkModule::getAdvise()
 {
@@ -86,4 +105,9 @@ void NetworkModule::sendInfuLeft(int left)
 void NetworkModule::sendWeight(double weight)
 {
     m_defaultClient->sendWeight(static_cast<char>(weight));
+}
+
+void NetworkModule::onReconnect()
+{
+    m_defaultClient->connectServer(m_ip, m_port);
 }

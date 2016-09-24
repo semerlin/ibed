@@ -58,10 +58,18 @@ void AdviseWidget::addAdvise(const QString &data)
     if(!data.isEmpty())
     {
         list = data.split('|');
-        list.removeAt(1);
-        list.insert(4, list.at(0));
-        m_adviseInfo.at(0)->appendData(list);
-        m_adviseInfo.at(1)->appendData(list);
+        if(list.at(1) == "长期")
+        {
+            list.removeAt(1);
+            list.insert(4, list.at(0));
+            m_adviseInfo.at(1)->appendData(list);
+        }
+        else
+        {
+            list.removeAt(1);
+            list.insert(4, list.at(0));
+            m_adviseInfo.at(0)->appendData(list);
+        }
     }
 }
 

@@ -13,6 +13,7 @@
 #include "boost/foreach.hpp"
 #include <QSet>
 #include "applogger.h"
+#include <QDebug>
 
 
 KeyboardMange::KeyboardMange() :
@@ -135,7 +136,8 @@ void KeyboardMange::onMonitorKeys()
 
         if(val == 0)
         {
-            AppLogger::instance().log()->debug("key pressed or released");
+//            qDebug() << "key pressed or";
+//            AppLogger::instance().log()->info("key pressed or released");
             emit keyStatusChanged();
         }
 

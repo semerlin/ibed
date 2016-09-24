@@ -6,14 +6,9 @@
 class UTILITYSHARED_EXPORT SystemCall
 {
 public:
-    static SystemCall &instance(void);
-
-public:
-    int cmd(const QString &cmd, QString &outinfo);
-    int cmd(const QString &cmd);
-
-public:
-    SystemCall();
+    static int getCmdOut(const QString &cmd, QString &outinfo);
+    static int system(const QString &cmd);
+    static void sync(void);
 };
 
 #endif // SYSTEMCALL_H

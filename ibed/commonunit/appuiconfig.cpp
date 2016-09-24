@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QColor>
 #include "util.h"
-#include <QDebug>
+#include "systemcall.h"
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
@@ -104,6 +104,7 @@ void AppUiConfig::save()
     setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
 
+    SystemCall::sync();
 }
 
 QString AppUiConfig::fontFamily() const
