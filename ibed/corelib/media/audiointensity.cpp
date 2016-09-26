@@ -14,21 +14,14 @@ AudioIntensity::AudioIntensity() :
     m_isMonitoring(false),
     m_handle(NULL),
     m_params(NULL),
-    m_calcTimer(new QTimer(this)),
-    m_queue(new CoverageCircularQueue<char>(4096)),
     m_mutex(new QMutex),
     m_intensityCalc(new AudioIntensityCalc),
-    m_calcThread(new QThread)
+    m_enableMonitor(false)
 {
     m_frames = 128;
     /* 2 bytes/sample, 2 channels */
     m_tmpData = (char *)malloc(m_frames * 4);
-    m_calcTimer->setInterval(500);
-    connect(m_calcTimer, SIGNAL(timeout()), this, SLOT(onCalcIntensity()));
 
-    m_intensityCalc->moveToThread(m_calcThread);
-    m_calcThread->start();
-    connect(this, SIGNAL(startCalc(QByteArray)), m_intensityCalc, SLOT(getIntensity(QByteArray)), Qt::QueuedConnection);
     connect(m_intensityCalc, SIGNAL(intensityChanged(int)), this, SLOT(onIntensityChanged(int)), Qt::QueuedConnection);
 }
 
@@ -38,11 +31,9 @@ AudioIntensity::~AudioIntensity()
     free(m_tmpData);
 
     delete m_intensityCalc;
-    delete m_calcThread;
 }
 
-
-bool AudioIntensity::startMonitor()
+bool AudioIntensity::initMonitor()
 {
     unsigned int val;
     int dir;
@@ -115,20 +106,23 @@ bool AudioIntensity::startMonitor()
     snd_pcm_hw_params_get_period_size(m_params,  &m_frames, &dir);
 
     start();
-    m_calcTimer->start();
-
-    m_isMonitoring = true;
 
     return true;
 }
 
+
+void AudioIntensity::startMonitor()
+{
+    m_enableMonitor = true;
+    m_isMonitoring = true;
+}
+
 void AudioIntensity::stopMonitor()
 {
-    quit();
-    m_calcTimer->stop();
     snd_pcm_close(m_handle);
 
     m_isMonitoring = false;
+    m_enableMonitor = false;
 }
 
 bool AudioIntensity::isMonitoring() const
@@ -145,39 +139,39 @@ void AudioIntensity::run()
 {
     while(1)
     {
-        long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
-        if(rc == -EPIPE)
+        if(m_enableMonitor)
         {
-            /* EPIPE means overrun */
+            QByteArray data;
+            snd_pcm_drop(m_handle);
             snd_pcm_prepare(m_handle);
-        }
-        else if(rc == -EBADFD)
-        {
+            for(int i = 0; i < 16; i++)
+            {
+                long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
+                if(rc == -EPIPE)
+                {
+                    /* EPIPE means overrun */
+                    snd_pcm_prepare(m_handle);
+                }
+                else if(rc == -EBADFD)
+                {
 
-        }
-        else if(rc == -ESTRPIPE)
-        {
+                }
+                else if(rc == -ESTRPIPE)
+                {
 
+                }
+                else
+                {
+                    for(int i = 0; i < rc; ++i)
+                        data.append(m_tmpData[i]);
+                }
+            }
+
+            m_intensityCalc->getIntensity(data);
         }
-        else
-        {
-            m_mutex->lock();
-            for(int i = 0; i < rc; ++i)
-                m_queue->enqueue(m_tmpData[i]);
-            m_mutex->unlock();
-        }
+
+        ::usleep(2000000);
     }
-}
-
-void AudioIntensity::onCalcIntensity()
-{
-    QByteArray data;
-    m_mutex->lock();
-    for(int i = 0; i < m_queue->size(); ++i)
-        data.append(m_queue->dequeue());
-    m_mutex->unlock();
-
-    emit startCalc(data);
 }
 
 void AudioIntensity::onIntensityChanged(int intensity)

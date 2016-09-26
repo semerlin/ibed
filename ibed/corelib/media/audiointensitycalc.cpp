@@ -133,8 +133,8 @@ void AudioIntensityCalc::getIntensity(const QByteArray &data)
     else
     {
         //get first 1 pos
-        quint32 realSize = 1 << (Bitops::generic_ffs(size) - 1);
-        calData.remove(size - 1, size - realSize);
+        quint32 realSize = 1 << (Bitops::generic_fls(size) - 1);
+        calData.remove(realSize, size - realSize);
 
         emit intensityChanged(calcIntensity(calData));
     }

@@ -20,7 +20,8 @@ public:
     ~AudioIntensity();
 
 public:
-    bool startMonitor(void);
+    bool initMonitor(void);
+    void startMonitor(void);
     void stopMonitor(void);
     bool isMonitoring(void) const;
     int intensity(void) const;
@@ -30,10 +31,8 @@ protected:
 
 signals:
     void intensityChanged(int intensity);
-    void startCalc(const QByteArray &data);
 
 private slots:
-    void onCalcIntensity(void);
     void onIntensityChanged(int intensity);
 
 private:
@@ -42,12 +41,11 @@ private:
     snd_pcm_t* m_handle; //PCI设备句柄
     snd_pcm_hw_params_t* m_params;//硬件信息和PCM流配置
     snd_pcm_uframes_t m_frames;
-    QTimer *m_calcTimer;
     char *m_tmpData;
-    CoverageCircularQueue<char> *m_queue;
+    QByteArray m_data;
     QMutex *m_mutex;
     AudioIntensityCalc *m_intensityCalc;
-    QThread *m_calcThread;
+    bool m_enableMonitor;
 };
 
 #endif // AUDIOINTENSITY_H
