@@ -9,9 +9,7 @@
 
 BedDataSend::BedDataSend(BedControl *parent) :
     m_control(parent),
-    m_waitMutex(new QMutex),
-    m_mutex(new QMutex),
-    m_waitCondition(new QWaitCondition)
+    m_mutex(new QMutex)
 {
     start();
 }
@@ -26,17 +24,12 @@ void BedDataSend::appendSendData(const ModbusData &data)
     m_mutex->lock();
     m_dataQueue.enqueue(data);
     m_mutex->unlock();
-    m_waitCondition->wakeAll();
 }
 
 void BedDataSend::run()
 {
     while(1)
     {
-        m_waitMutex->lock();
-//        if(m_dataQueue.count() <= 0)
-            m_waitCondition->wait(m_waitMutex);
-
         while(m_dataQueue.count() > 0)
         {
             m_mutex->lock();
@@ -71,7 +64,7 @@ void BedDataSend::run()
             ::usleep(100000);
         }
 
-        m_waitMutex->unlock();
+        ::usleep(500000);
     }
 }
 

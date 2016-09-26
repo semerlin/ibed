@@ -56,10 +56,7 @@ private:
     QQueue<ModbusData> m_dataQueue;
 
     BedControl *m_control;
-    QMutex *m_waitMutex;
     QMutex *m_mutex;
-    QWaitCondition *m_waitCondition;
-
 };
 
 #endif // BEDDATASEND_H
