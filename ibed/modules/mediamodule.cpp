@@ -35,6 +35,7 @@ void MediaModule::unload()
 
 void MediaModule::init()
 {
+    m_intensity->initMonitor();
     m_intensity->startMonitor();
 }
 
