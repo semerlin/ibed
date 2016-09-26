@@ -18,18 +18,18 @@ BedDataProcess::BedDataProcess(quint8 address) :
     m_address(address)
 {
     InfuCountDataHandler *countHandler = new InfuCountDataHandler(0x04, 69);
-    InfuSpeedDataHandler *speedHandler = new InfuSpeedDataHandler(0x04, 70);
-    InfuMountDataHandler *mountHandler = new InfuMountDataHandler(0x04, 71);
+//    InfuSpeedDataHandler *speedHandler = new InfuSpeedDataHandler(0x04, 70);
+//    InfuMountDataHandler *mountHandler = new InfuMountDataHandler(0x04, 71);
     WeightDataHandler *weightHandler = new WeightDataHandler(0x04, 80);
 
     addDataHandler(countHandler);
-    addDataHandler(speedHandler);
-    addDataHandler(mountHandler);
+//    addDataHandler(speedHandler);
+//    addDataHandler(mountHandler);
     addDataHandler(weightHandler);
 
     connect(countHandler, SIGNAL(countChanged(int)), this, SIGNAL(infuCountChanged(int)), Qt::QueuedConnection);
-    connect(speedHandler, SIGNAL(speedChanged(int)), this, SIGNAL(infuSpeedChanged(int)), Qt::QueuedConnection);
-    connect(mountHandler, SIGNAL(mountChanged(int)), this, SIGNAL(infuMountChanged(int)), Qt::QueuedConnection);
+//    connect(speedHandler, SIGNAL(speedChanged(int)), this, SIGNAL(infuSpeedChanged(int)), Qt::QueuedConnection);
+//    connect(mountHandler, SIGNAL(mountChanged(int)), this, SIGNAL(infuMountChanged(int)), Qt::QueuedConnection);
     connect(weightHandler, SIGNAL(weightChanged(double)), this, SIGNAL(weightChanged(double)), Qt::QueuedConnection);
 }
 
