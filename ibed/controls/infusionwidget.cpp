@@ -17,7 +17,7 @@ InfusionWidget::InfusionWidget(QWidget *parent) :
     ui->progressBarSpeed->setValue(90);
 
     ui->labelLeft->setText(tr("输液剩余%1").arg("55%"));
-    ui->labelSpeed->setText(tr("滴速%1滴/秒").arg(90));
+    ui->labelSpeed->setText(tr("滴速%1滴/分钟").arg(90));
 
     ui->pushButtonStart->setText(tr("开 始"));
     ui->pushButtonStop->setText(tr("停 止"));
@@ -52,7 +52,7 @@ void InfusionWidget::setLeft(int left)
 
 void InfusionWidget::setSpeed(int speed)
 {
-    ui->labelSpeed->setText(tr("滴速%1滴/分").arg(speed));
+    ui->labelSpeed->setText(tr("滴速%1滴/分钟").arg(speed));
     if(speed >= 100)
         ui->progressBarSpeed->setText("E");
     else
@@ -65,7 +65,7 @@ void InfusionWidget::on_pushButtonStart_clicked()
     ui->progressBarLeft->setValue(100);
     ui->progressBarLeft->setText("0");
     ui->labelLeft->setText(tr("输液剩余%1").arg("0%"));
-    ui->labelSpeed->setText(tr("滴速%1滴/秒").arg(0));
+    ui->labelSpeed->setText(tr("滴速%1滴/分钟").arg(0));
     ui->progressBarSpeed->setText("0");
     ui->progressBarSpeed->setValue(0);
     ui->pushButtonStop->setEnabled(true);
@@ -80,7 +80,7 @@ void InfusionWidget::on_pushButtonStop_clicked()
     ui->progressBarLeft->setValue(100);
     ui->progressBarLeft->setText("0");
     ui->labelLeft->setText(tr("输液剩余%1").arg("0%"));
-    ui->labelSpeed->setText(tr("滴速%1滴/秒").arg(0));
+    ui->labelSpeed->setText(tr("滴速%1滴/分钟").arg(0));
     ui->progressBarSpeed->setText("0");
     ui->progressBarSpeed->setValue(0);
     ui->pushButtonStop->setEnabled(false);
