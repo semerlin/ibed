@@ -117,11 +117,11 @@ bool HardwareModule::load(const QVariant &val)
     connect(&BedControl::instance(), SIGNAL(infuCountChanged(int)), this, SLOT(onInfuCountChanged(int)));
 
     m_infuTimer = new QTimer(this);
-    m_infuTimer->setInterval(2000);
+    m_infuTimer->setInterval(5000);
     connect(m_infuTimer, SIGNAL(timeout()), this, SLOT(updateInfusion()));
 
     m_weightTimer = new QTimer(this);
-    m_weightTimer->setInterval(5000);
+    m_weightTimer->setInterval(10000);
     connect(m_weightTimer, SIGNAL(timeout()), this, SLOT(updateWeight()));
 
     //start weight timer
@@ -388,7 +388,7 @@ void HardwareModule::onInfuCountChanged(int count)
 
     //calculate speed
 //    emit infuSpeedChanged(curCount * 60);
-    emit infuSpeedChanged(curCount / 2);
+    emit infuSpeedChanged(curCount / 5);
 
     //calculate input, 20drops = 1ML
     emit infuInputChanged(m_infuCount / 20);
