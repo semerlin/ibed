@@ -52,8 +52,11 @@ void InfusionWidget::setLeft(int left)
 
 void InfusionWidget::setSpeed(int speed)
 {
-    ui->labelSpeed->setText(tr("滴速%1滴/秒").arg(speed));
-    ui->progressBarSpeed->setText(QString::number(speed));
+    ui->labelSpeed->setText(tr("滴速%1滴/分").arg(speed));
+    if(speed >= 100)
+        ui->progressBarSpeed->setText("E");
+    else
+        ui->progressBarSpeed->setText(QString::number(speed));
     ui->progressBarSpeed->setValue(speed);
 }
 

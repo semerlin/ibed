@@ -388,7 +388,8 @@ void HardwareModule::onInfuCountChanged(int count)
 
     //calculate speed
 //    emit infuSpeedChanged(curCount * 60);
-    emit infuSpeedChanged(curCount / 5);
+    //n drops/min
+    emit infuSpeedChanged(curCount * 60 / 5);
 
     //calculate input, 20drops = 1ML
     emit infuInputChanged(m_infuCount / 20);
