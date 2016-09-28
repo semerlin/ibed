@@ -131,12 +131,11 @@ void KeyboardMange::onMonitorKeys()
 {
     if(m_fd >= 0)
     {
-        int val;
+        int val = 1;
         ::read(m_fd, &val, 1);
 
         if(val == 0)
         {
-//            qDebug() << "key pressed or";
 //            AppLogger::instance().log()->info("key pressed or released");
             emit keyStatusChanged();
         }
