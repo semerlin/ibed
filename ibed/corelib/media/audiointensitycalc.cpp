@@ -123,20 +123,23 @@ void AudioIntensityCalc::getIntensity(const QByteArray &data)
 {
     QByteArray calData = data;
     int size = calData.size();
-    quint32 hweight = Bitops::generic_hweight32(size);
-    if(hweight == 0)
-        return ;
-    else if(hweight == 1)
+    if(size >= 32)
     {
-        emit intensityChanged(calcIntensity(calData));
-    }
-    else
-    {
-        //get first 1 pos
-        quint32 realSize = 1 << (Bitops::generic_fls(size) - 1);
-        calData.remove(realSize, size - realSize);
+        quint32 hweight = Bitops::generic_hweight32(size);
+        if(hweight == 0)
+            return ;
+        else if(hweight == 1)
+        {
+            emit intensityChanged(calcIntensity(calData));
+        }
+        else
+        {
+            //get first 1 pos
+            quint32 realSize = 1 << (Bitops::generic_fls(size) - 1);
+            calData.remove(realSize, size - realSize);
 
-        emit intensityChanged(calcIntensity(calData));
+            emit intensityChanged(calcIntensity(calData));
+        }
     }
 }
 
