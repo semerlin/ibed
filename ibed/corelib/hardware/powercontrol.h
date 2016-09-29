@@ -11,15 +11,16 @@ public:
     static PowerControl &instance();
 
 public:
-    void spkEnable(bool flag);
+    bool lcdEnable(bool flag);
+    bool spkEnable(bool flag);
     /**
      * @brief control max485 read and write
      * @param direct: 0 read
      *                !0 write
      */
-    void rs485DirectCtrl(int direct);
+    bool rs485DirectCtrl(int direct);
 
-    void externalPowerOn(bool flag);
+    bool externalPowerOn(bool flag);
 
 private:
     PowerControl();

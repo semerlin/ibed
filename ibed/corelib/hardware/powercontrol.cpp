@@ -9,43 +9,87 @@ PowerControl &PowerControl::instance()
     return m_powerCtl;
 }
 
-void PowerControl::spkEnable(bool flag)
+bool PowerControl::lcdEnable(bool flag)
 {
     char value;
 
-    m_pcf->setAddress(PCF_ADDRESS);
-    m_pcf->read(&value, 1);
+    if(m_pcf->setAddress(PCF_ADDRESS) == -1)
+        return false;
+
+   if(m_pcf->read(&value, 1) == -1)
+       return false;
+
+    if(flag)
+        value |= 0x02;
+    else
+        value &= ~(0x02);
+    if(m_pcf->write(&value, 1) == -1)
+        return false;
+
+    return true;
+}
+
+bool PowerControl::spkEnable(bool flag)
+{
+    char value;
+
+    if(m_pcf->setAddress(PCF_ADDRESS) == -1)
+        return false;
+
+    if(m_pcf->read(&value, 1) == -1)
+        return false;
+
     if(flag)
         value |= 0x01;
     else
-        value &= 0xFE;
-    m_pcf->write(&value, 1);
+        value &= ~(0x01);
+
+    if(m_pcf->write(&value, 1) == -1)
+        return false;
+
+    return true;
 }
 
-void PowerControl::rs485DirectCtrl(int direct)
+bool PowerControl::rs485DirectCtrl(int direct)
 {
     char value;
 
-    m_pcf->setAddress(PCF_ADDRESS);
-    m_pcf->read(&value, 1);
+    if(m_pcf->setAddress(PCF_ADDRESS) == -1)
+        return false;
+
+    if(m_pcf->read(&value, 1) == -1)
+        return false;
+
     if(direct != 0)
         value |= 0x10;
     else
         value &= ~(0x10);
-    m_pcf->write(&value, 1);
+
+    if(m_pcf->write(&value, 1) == -1)
+        return false;
+
+    return true;
 }
 
-void PowerControl::externalPowerOn(bool flag)
+bool PowerControl::externalPowerOn(bool flag)
 {
     char value;
 
-    m_pcf->setAddress(PCF_ADDRESS);
-    m_pcf->read(&value, 1);
+    if(m_pcf->setAddress(PCF_ADDRESS) == -1)
+        return false;
+
+    if(m_pcf->read(&value, 1) == -1)
+        return false;
+
     if(flag)
-        value &= ~(1 << 6);
+        value &= ~(0x40);
     else
         value |= 0x40;
-    m_pcf->write(&value, 1);
+
+    if(m_pcf->write(&value, 1) == -1)
+        return false;
+
+    return true;
 }
 
 PowerControl::PowerControl() :
