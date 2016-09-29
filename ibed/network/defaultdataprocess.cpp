@@ -109,6 +109,7 @@ void DefaultDataProcess::addHandler(IDataHandler *handler)
 
 void DefaultDataProcess::reset()
 {
+    m_mutex->lock();
     m_data.clear();
     m_mutex->unlock();
 }
