@@ -37,7 +37,7 @@ public:
      * @brief set pcf8574 address
      * @param address
      */
-    void setAddress(quint8 address);
+    int setAddress(quint8 address);
 
     /**
      * @brief write data

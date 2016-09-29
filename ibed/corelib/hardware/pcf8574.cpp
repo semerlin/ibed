@@ -26,7 +26,7 @@ PCF8574::~PCF8574()
 bool PCF8574::open()
 {
     m_fd = ::open(m_port.toLatin1().data(), O_RDWR);
-    if(m_fd == -1)
+    if(m_fd < 0)
     {
         printf("[PCF8574::Error] open %s failed", m_port.toLatin1().data());
         return false;
@@ -48,17 +48,19 @@ void PCF8574::setPort(const QString &port)
     m_port = port;
 }
 
-void PCF8574::setAddress(quint8 address)
+int PCF8574::setAddress(quint8 address)
 {
+    if(m_fd < 0)
+        return -1;
+
     m_address = address;
-    if(m_fd >= 0)
-        ::ioctl(m_fd, I2C_SLAVE, m_address);
+    return ::ioctl(m_fd, I2C_SLAVE, m_address);
 }
 
 quint64 PCF8574::write(const QByteArray &data)
 {
     if(m_fd < 0)
-        return 0;
+        return -1;
 
     return ::write(m_fd, data.data(), data.count());
 }
@@ -66,7 +68,7 @@ quint64 PCF8574::write(const QByteArray &data)
 quint64 PCF8574::write(const char *data, quint64 maxSize)
 {
     if(m_fd < 0)
-        return 0;
+        return -1;
 
     return ::write(m_fd, data, maxSize);
 }
@@ -88,7 +90,7 @@ QByteArray PCF8574::read(quint64 maxSize)
 qint64 PCF8574::read(char *data, qint64 maxSize)
 {
     if(m_fd < 0)
-        return 0;
+        return -1;
 
     return ::read(m_fd, data, maxSize);
 }
