@@ -28,8 +28,13 @@ QList<quint8> Keyboard::pressedKeys() const
 {
     QList<quint8> keys;
     quint8 val;
-    m_pcf->setAddress(m_address);
-    if(m_pcf->read((char *)&val, 1) < 0)
+    if(m_pcf->setAddress(m_address) == -1)
+    {
+        AppLogger::instance().log()->error(QString("set keyboard(%1) address failed!").arg(m_address));
+        return keys;
+    }
+
+    if(m_pcf->read((char *)&val, 1) == -1)
     {
         AppLogger::instance().log()->error(QString("read keyboard(%1) failed!").arg(m_address));
         return keys;
@@ -48,8 +53,13 @@ QList<quint8> Keyboard::releasedKeys() const
 {
     QList<quint8> keys;
     quint8 val;
-    m_pcf->setAddress(m_address);
-    if(m_pcf->read((char *)&val, 1) < 0)
+    if(m_pcf->setAddress(m_address) == -1)
+    {
+        AppLogger::instance().log()->error(QString("set keyboard(%1) address failed!").arg(m_address));
+        return keys;
+    }
+
+    if(m_pcf->read((char *)&val, 1) == -1)
     {
         AppLogger::instance().log()->error(QString("read keyboard(%1) failed!").arg(m_address));
         return keys;

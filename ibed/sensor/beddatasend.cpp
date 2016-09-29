@@ -28,32 +28,39 @@ void BedDataSend::appendSendData(const ModbusData &data)
 
 void BedDataSend::run()
 {
+    bool canSend = true;
     while(1)
     {
         while(m_dataQueue.count() > 0)
         {
+            canSend = true;
+
             m_mutex->lock();
             ModbusData data = m_dataQueue.dequeue();
             m_mutex->unlock();
 
 #ifdef TARGET_IMX
-            PowerControl::instance().rs485DirectCtrl(1);
+            if(!PowerControl::instance().rs485DirectCtrl(1))
+                canSend = false;
 #endif
-            m_control->m_process->reset();
-            switch(data.m_code)
+            if(canSend)
             {
-            case Modbus::WRITE_SingleRegister:
-                m_control->m_process->setRegAddress(data.m_address);
-                m_control->m_process->setContentLen(4);
-                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
-                break;
-            case Modbus::READ_InputRegister:
-                m_control->m_process->setRegAddress(data.m_address);
-                m_control->m_process->setContentLen(3);
-                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
-                break;
-            default:
-                break;
+                m_control->m_process->reset();
+                switch(data.m_code)
+                {
+                case Modbus::WRITE_SingleRegister:
+                    m_control->m_process->setRegAddress(data.m_address);
+                    m_control->m_process->setContentLen(4);
+                    m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                    break;
+                case Modbus::READ_InputRegister:
+                    m_control->m_process->setRegAddress(data.m_address);
+                    m_control->m_process->setContentLen(3);
+                    m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                    break;
+                default:
+                    break;
+                }
             }
 
 

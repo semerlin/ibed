@@ -12,13 +12,10 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 
-static double sLastTemperValue = 0;
-static double sLastHumValue = 0;
-
 // CRC
 const unsigned short POLYNOMIAL = 0x131; //P(x)=x^8+x^5+x^4+1 = 100110001
 
-static unsigned char SHT2x_CalCrc(unsigned char data[], unsigned char nbrOfBytes)
+static unsigned char SHT2x_CalCrc(unsigned char *data, unsigned char nbrOfBytes)
 {
     unsigned char crc = 0;
     unsigned char byteCtr;
@@ -41,7 +38,9 @@ static unsigned char SHT2x_CalCrc(unsigned char data[], unsigned char nbrOfBytes
 
 SHT20::SHT20(const QString &port, const quint8 address) :
     m_fd(-1),
-    m_address(address)
+    m_address(address),
+    m_temper(0),
+    m_humidity(0)
 {
     m_fd = ::open(port.toLatin1().data(), O_RDWR);
     if(m_fd == -1)
@@ -61,22 +60,35 @@ double SHT20::temperature(void)
     if(m_fd < 0)
         return 0;
 
-    ::ioctl(m_fd, I2C_SLAVE, m_address);
+    if(::ioctl(m_fd, I2C_SLAVE, m_address) == -1)
+    {
+        AppLogger::instance().log()->error("set sht20 address failed!");
+        return m_temper;
+    }
 
     char data[4];
     data[0] = 0xe3;
-    ::write(m_fd, data, 1);
-    ::read(m_fd, data, 3);
+    if(::write(m_fd, data, 1) == -1)
+    {
+        AppLogger::instance().log()->error("write to sht20 address failed!");
+        return m_temper;
+    }
+
+    if(::read(m_fd, data, 3) == -1)
+    {
+        AppLogger::instance().log()->error("read from sht20 address failed!");
+        return m_temper;
+    }
 
     int val = data[0];
     val <<= 8;
     val += data[1];
 
     if(SHT2x_CalCrc((unsigned char*)data, 2) != data[2])
-        return sLastTemperValue;
+        return m_temper;
 
-    sLastTemperValue = -46.85 + 175.72 * val / 65535;
-    return sLastTemperValue;
+    m_temper = -46.85 + 175.72 * val / 65535;
+    return m_temper;
 }
 
 double SHT20::humidity(void)
@@ -84,21 +96,34 @@ double SHT20::humidity(void)
     if(m_fd < 0)
         return 0;
 
-    ::ioctl(m_fd, I2C_SLAVE, m_address);
+    if(::ioctl(m_fd, I2C_SLAVE, m_address) == -1)
+    {
+        AppLogger::instance().log()->error("set sht20 address failed!");
+        return m_temper;
+    }
 
     char data[4];
     data[0] = 0xe5;
-    ::write(m_fd, data, 1);
-    ::read(m_fd, data, 3);
+    if(::write(m_fd, data, 1) == -1)
+    {
+        AppLogger::instance().log()->error("write to sht20 address failed!");
+        return m_temper;
+    }
+
+    if(::read(m_fd, data, 3) == -1)
+    {
+        AppLogger::instance().log()->error("read from sht20 address failed!");
+        return m_temper;
+    }
 
     int val = data[0];
     val <<= 8;
     val += data[1];
 
     if(SHT2x_CalCrc((unsigned char*)data, 2) != data[2])
-        return sLastHumValue;
+        return m_humidity;
 
-    sLastHumValue = -6 + 125 * val / 65535;
-    return sLastHumValue;
+    m_humidity = -6 + 125 * val / 65535;
+    return m_humidity;
 }
 

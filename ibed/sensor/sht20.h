@@ -16,6 +16,8 @@ public:
 private:
     int m_fd;
     quint8 m_address;
+    double m_temper;
+    double m_humidity;
 };
 
 #endif // SHT20_H
