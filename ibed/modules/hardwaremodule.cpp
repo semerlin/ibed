@@ -88,6 +88,9 @@ bool HardwareModule::load(const QVariant &val)
         PowerMange::instance().run();
     }
 
+    //enable lcd power
+    PowerControl::instance().lcdEnable(true);
+
     //enable speaker
     PowerControl::instance().spkEnable(true);
 
