@@ -23,7 +23,7 @@ int LightIntensity::intensity() const
         return 0;
 
     int iRes = 0;
-    ioctl(m_fd, 21, &iRes);
+    ::ioctl(m_fd, 21, &iRes);
 
     return iRes * 100 / 4095;
 }
@@ -32,8 +32,6 @@ LightIntensity::LightIntensity() :
     m_fd(0)
 {
     m_fd = open("/dev/lradc", 0);
-    if(m_fd < 0)
-        close(m_fd);
 }
 
 LightIntensity::~LightIntensity()
