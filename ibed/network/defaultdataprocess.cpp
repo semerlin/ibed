@@ -17,12 +17,12 @@ DefaultDataProcess::DefaultDataProcess() :
 {
     qRegisterMetaType<QMap<quint8, quint8> >("QMap<quint8, quint8>");
     RegisterDataHandler *regHandle = new RegisterDataHandler(2);
-    connect(regHandle, SIGNAL(registered()), this, SIGNAL(registered()));
+    connect(regHandle, SIGNAL(registered()), this, SIGNAL(registered()), Qt::QueuedConnection);
     addHandler(regHandle);
 
     //heartreat handler
     HeartBeatDataHandler *heartHandle = new HeartBeatDataHandler(1);
-    connect(heartHandle, SIGNAL(heartbeat()), this, SIGNAL(heartbeat()));
+    connect(heartHandle, SIGNAL(heartbeat()), this, SIGNAL(heartbeat()), Qt::QueuedConnection);
     addHandler(heartHandle);
 
     //baseinfo handler
