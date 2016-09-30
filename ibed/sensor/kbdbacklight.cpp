@@ -17,6 +17,9 @@ KbdBacklight &KbdBacklight::instance()
 void KbdBacklight::turnOnBKL()
 {
     char val = 1;
+    if(m_fd == -1)
+        return;
+
     if(::write(m_fd, &val, 1) < 0)
         AppLogger::instance().log()->error("turn on keyboard backlight failed.");
 }
@@ -24,8 +27,11 @@ void KbdBacklight::turnOnBKL()
 void KbdBacklight::turnOffBKL()
 {
     char val = 0;
+    if(m_fd == -1)
+        return ;
+
     if(::write(m_fd, &val, 1) < 0)
-        AppLogger::instance().log()->error("turn on keyboard backlight failed.");
+        AppLogger::instance().log()->error("turn off keyboard backlight failed.");
 }
 
 KbdBacklight::KbdBacklight() :
@@ -34,8 +40,8 @@ KbdBacklight::KbdBacklight() :
     m_fd = ::open("/dev/kbdbkl", O_WRONLY);
     if(m_fd == -1)
         AppLogger::instance().log()->error("init keyboard backlight control failed.");
-
-    AppLogger::instance().log()->info("init keyboard backlight control success.");
+    else
+        AppLogger::instance().log()->info("init keyboard backlight control success.");
 }
 
 KbdBacklight::~KbdBacklight()
