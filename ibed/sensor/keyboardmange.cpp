@@ -129,7 +129,7 @@ void KeyboardMange::addKeyboard(Keyboard *keyboard)
 
 void KeyboardMange::onMonitorKeys()
 {
-    if(m_fd >= 0)
+    if(m_fd > 0)
     {
         int val = 1;
         ::read(m_fd, &val, 1);
