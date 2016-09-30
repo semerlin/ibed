@@ -159,7 +159,7 @@ Posix_SerialPort& Posix_SerialPort::operator=(const Posix_SerialPort &s)
 
 Posix_SerialPort::~Posix_SerialPort()
 {
-    if(m_fd)
+    if(m_fd != -1)
         ::close(m_fd);
 
 
