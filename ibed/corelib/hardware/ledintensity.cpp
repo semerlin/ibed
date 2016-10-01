@@ -28,7 +28,7 @@ void LedIntensity::setValue(quint8 newValue)
     {
         quint8 prevVal = m_prevVal;
         m_onVal = newValue;
-//        SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(newValue));
+        SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(newValue));
 
         emit brightnessChanged(prevVal, m_onVal);
     }
@@ -38,14 +38,14 @@ void LedIntensity::setValue(quint8 newValue)
 quint8 LedIntensity::value()
 {
     QString brightness;
-//    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
+    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
     return brightness.toInt();
 }
 
 quint8 LedIntensity::maxValue()
 {
     QString brightness;
-//    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
+    SystemCall::getCmdOut(QString("cat /sys/class/leds/led-pwm4/brightness"), brightness);
     return brightness.toInt();
 }
 
@@ -53,7 +53,7 @@ void LedIntensity::autoSetValue(quint8 value)
 {
     quint8 prevVal = m_prevVal;
 
-//    SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(value));
+    SystemCall::system(QString("echo %1 > /sys/class/leds/led-pwm4/brightness").arg(value));
     m_prevVal = value;
     emit brightnessChanged(prevVal, value);
 }
