@@ -44,17 +44,19 @@ bool CallBtn::init()
 
 void CallBtn::onMonitorKeys()
 {
-    if(m_fd >= 0)
+    if(m_fd > 0)
     {
         char val = 0;
-        ::read(m_fd, &val, 1);
-        if(val == 1)
+        if(::read(m_fd, &val, 1) != -1)
         {
-            emit callPressed();
-        }
-        else if(val == 2)
-        {
-            emit cancelPressed();
+            if(val == 1)
+            {
+                emit callPressed();
+            }
+            else if(val == 2)
+            {
+                emit cancelPressed();
+            }
         }
     }
 }
