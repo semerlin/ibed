@@ -1,6 +1,6 @@
 #include "bedcontrol.h"
 #include <QMutex>
-#include <QWaitCondition>
+#include <QTimer>
 #include "beddatasend.h"
 #include "modbus.h"
 #include "unistd.h"
@@ -9,14 +9,19 @@
 
 BedDataSend::BedDataSend(BedControl *parent) :
     m_control(parent),
-    m_mutex(new QMutex)
+    m_mutex(new QMutex),
+    m_sendTimer(new QTimer(this))
 {
-    start();
+    m_sendTimer->setInterval(150);
+    connect(m_sendTimer, SIGNAL(timeout()), this, SLOT(onSendData()));
+    m_sendTimer->start();
 }
 
 BedDataSend::~BedDataSend()
 {
-    quit();
+    delete m_sendTimer;
+    delete m_mutex;
+    delete m_control;
 }
 
 void BedDataSend::appendSendData(const ModbusData &data)
@@ -26,53 +31,45 @@ void BedDataSend::appendSendData(const ModbusData &data)
     m_mutex->unlock();
 }
 
-void BedDataSend::run()
+void BedDataSend::onSendData()
 {
     bool canSend = true;
-    while(1)
+
+    if(m_dataQueue.count() > 0)
     {
-        while(m_dataQueue.count() > 0)
+        m_mutex->lock();
+        ModbusData data = m_dataQueue.dequeue();
+        m_mutex->unlock();
+
+#ifdef TARGET_IMX
+        if(!PowerControl::instance().rs485DirectCtrl(1))
+            canSend = false;
+#endif
+        if(canSend)
         {
-            canSend = true;
-
-            m_mutex->lock();
-            ModbusData data = m_dataQueue.dequeue();
-            m_mutex->unlock();
-
-#ifdef TARGET_IMX
-            if(!PowerControl::instance().rs485DirectCtrl(1))
-                canSend = false;
-#endif
-            if(canSend)
+            m_control->m_process->reset();
+            switch(data.m_code)
             {
-                m_control->m_process->reset();
-                switch(data.m_code)
-                {
-                case Modbus::WRITE_SingleRegister:
-                    m_control->m_process->setRegAddress(data.m_address);
-                    m_control->m_process->setContentLen(4);
-                    m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
-                    break;
-                case Modbus::READ_InputRegister:
-                    m_control->m_process->setRegAddress(data.m_address);
-                    m_control->m_process->setContentLen(3);
-                    m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
-                    break;
-                default:
-                    break;
-                }
+            case Modbus::WRITE_SingleRegister:
+                m_control->m_process->setRegAddress(data.m_address);
+                m_control->m_process->setContentLen(4);
+                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                break;
+            case Modbus::READ_InputRegister:
+                m_control->m_process->setRegAddress(data.m_address);
+                m_control->m_process->setContentLen(3);
+                m_control->m_modbus->write(data.m_code, data.m_address, data.m_data.data(), data.m_data.count());
+                break;
+            default:
+                break;
             }
-
-
-#ifdef TARGET_IMX
-            PowerControl::instance().rs485DirectCtrl(0);
-#endif
-            //sleep 100ms
-            ::usleep(100000);
         }
 
-        ::usleep(500000);
+#ifdef TARGET_IMX
+        PowerControl::instance().rs485DirectCtrl(0);
+#endif
     }
 }
+
 
 

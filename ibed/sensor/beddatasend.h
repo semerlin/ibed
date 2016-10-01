@@ -8,6 +8,7 @@
 class BedControl;
 class QMutex;
 class QWaitCondition;
+class QTimer;
 
 class ModbusData
 {
@@ -39,7 +40,7 @@ public:
 };
 
 
-class BedDataSend : public QThread
+class BedDataSend : public QObject
 {
     Q_OBJECT
 public:
@@ -49,14 +50,15 @@ public:
 public:
     void appendSendData(const ModbusData &data);
 
-protected:
-    void run();
+private slots:
+    void onSendData(void);
 
 private:
     QQueue<ModbusData> m_dataQueue;
 
     BedControl *m_control;
     QMutex *m_mutex;
+    QTimer *m_sendTimer;
 };
 
 #endif // BEDDATASEND_H
