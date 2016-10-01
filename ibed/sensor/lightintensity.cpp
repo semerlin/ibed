@@ -8,7 +8,6 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <errno.h>
-#include <linux/i2c-dev.h>
 
 
 LightIntensity &LightIntensity::instance()
