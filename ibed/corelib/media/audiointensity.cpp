@@ -144,7 +144,7 @@ void AudioIntensity::run()
             QByteArray data;
             snd_pcm_drop(m_handle);
             snd_pcm_prepare(m_handle);
-            for(int i = 0; i < 16; i++)
+            for(int i = 0; i < 64; i++)
             {
                 long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
                 if(rc == -EPIPE)
@@ -170,7 +170,7 @@ void AudioIntensity::run()
             m_intensityCalc->getIntensity(data);
         }
 
-        ::usleep(2000000);
+        ::usleep(1000000);
     }
 }
 
