@@ -105,8 +105,6 @@ bool MainModule::initialize()
     connect(call, SIGNAL(callOutLocalTerminate()), this, SLOT(onCallOutTerminate()));
     connect(call, SIGNAL(callOutRemoteTerminate()), this, SLOT(onCallOutTerminate()));
 
-    connect(this, SIGNAL(play(QString)), media, SLOT(onPlay(QString)));
-
     //connect app click signal
     BaseApplication *app = dynamic_cast<BaseApplication *>(qApp);
     if(app != NULL)

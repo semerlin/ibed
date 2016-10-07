@@ -18,9 +18,6 @@ public:
     bool initialize(void);
     ModuleManger *manger(void) const;
 
-signals:
-    void play(const QString &name);
-
 private slots:
     void onBedControlPressed(int id);
     void onBedControlReleased(int id);
