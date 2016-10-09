@@ -35,6 +35,8 @@ AudioIntensity::~AudioIntensity()
 
 bool AudioIntensity::initMonitor()
 {
+    QMutexLocker locker(m_mutex);
+
     unsigned int val;
     int dir;
 
@@ -105,24 +107,32 @@ bool AudioIntensity::initMonitor()
     /* Use a buffer large enough to hold one period */
     snd_pcm_hw_params_get_period_size(m_params,  &m_frames, &dir);
 
-    start();
-
     return true;
 }
 
 
 void AudioIntensity::startMonitor()
 {
+    if(!isRunning())
+        start();
+
     m_enableMonitor = true;
     m_isMonitoring = true;
 }
 
+
 void AudioIntensity::stopMonitor()
 {
-    snd_pcm_close(m_handle);
-
-    m_isMonitoring = false;
     m_enableMonitor = false;
+    m_mutex->lock();
+    if(m_handle != NULL)
+    {
+        snd_pcm_drop(m_handle);
+        snd_pcm_close(m_handle);
+        m_handle = NULL;
+    }
+    m_mutex->unlock();
+    m_isMonitoring = false;
 }
 
 bool AudioIntensity::isMonitoring() const
@@ -142,35 +152,44 @@ void AudioIntensity::run()
         if(m_enableMonitor)
         {
             QByteArray data;
-            snd_pcm_drop(m_handle);
-            snd_pcm_prepare(m_handle);
-            for(int i = 0; i < 64; i++)
+            m_mutex->lock();
+            if(m_handle != NULL)
             {
-                long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
-                if(rc == -EPIPE)
+                snd_pcm_drop(m_handle);
+                snd_pcm_prepare(m_handle);
+                for(int i = 0; i < 32; i++)
                 {
-                    /* EPIPE means overrun */
-                    snd_pcm_prepare(m_handle);
-                }
-                else if(rc == -EBADFD)
-                {
+                    if(!m_enableMonitor)
+                        break;
 
-                }
-                else if(rc == -ESTRPIPE)
-                {
+                    long rc = snd_pcm_readi(m_handle, m_tmpData, m_frames);
+                    if(rc == -EPIPE)
+                    {
+                        /* EPIPE means overrun */
+                        snd_pcm_prepare(m_handle);
+                    }
+                    else if(rc == -EBADFD)
+                    {
 
-                }
-                else
-                {
-                    for(int i = 0; i < rc; ++i)
-                        data.append(m_tmpData[i]);
+                    }
+                    else if(rc == -ESTRPIPE)
+                    {
+
+                    }
+                    else
+                    {
+                        for(int i = 0; i < rc; ++i)
+                            data.append(m_tmpData[i]);
+                    }
                 }
             }
+
+            m_mutex->unlock();
 
             m_intensityCalc->getIntensity(data);
         }
 
-        ::usleep(1000000);
+        ::usleep(2000000);
     }
 }
 
