@@ -273,11 +273,12 @@ void UiModule::onCallInConnecting()
 
 void UiModule::onCallConnected()
 {
-
+    m_callWidget->beginTimer();
 }
 
 void UiModule::onCallTerminate()
 {
+    m_callWidget->endTimer();
     m_callWidget->hide();
 }
 
