@@ -31,7 +31,8 @@ void CallWidget::beginTimer()
 {
     m_timeCnt = 0;
     ui->labelTime->setText("00:00:00");
-    m_timer->start();
+    if(!m_timer->isActive())
+        m_timer->start();
 }
 
 void CallWidget::endTimer()
