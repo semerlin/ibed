@@ -53,6 +53,12 @@ void ServerManger::save()
     setting.setValue("port", m_ports[ServerManger::Monitor]);
     setting.endGroup();
 
+    setting.beginGroup("Sip");
+    setting.setValue("address", m_addresses[ServerManger::Sip]);
+    setting.setValue("port", m_ports[ServerManger::Sip]);
+    setting.endGroup();
+
+
     SystemCall::sync();
 }
 
@@ -76,6 +82,12 @@ void ServerManger::load()
     m_addresses[ServerManger::Monitor] = setting.value("address", "192.168.0.150").toString();
     m_ports[ServerManger::Monitor] = setting.value("port", 9000).toUInt();
     setting.endGroup();
+
+    setting.beginGroup("Sip");
+    m_addresses[ServerManger::Sip] = setting.value("address", "192.168.0.156").toString();
+    m_ports[ServerManger::Sip] = setting.value("port", 5060).toUInt();
+    setting.endGroup();
+
 }
 
 void ServerManger::createDefault()
@@ -91,4 +103,10 @@ void ServerManger::createDefault()
     setting.setValue("address", "192.168.0.11");
     setting.setValue("port", 3000);
     setting.endGroup();
+
+    setting.beginGroup("Sip");
+    setting.setValue("address", "192.168.0.156");
+    setting.setValue("port", 5060);
+    setting.endGroup();
+
 }

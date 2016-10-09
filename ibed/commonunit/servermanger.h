@@ -14,6 +14,7 @@ public:
     {
         Default,
         Monitor,
+        Sip,
         Count,
     }ServerType;
 

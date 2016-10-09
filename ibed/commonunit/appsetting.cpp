@@ -43,7 +43,7 @@ bool AppSetting::initialize()
     setting.beginGroup("Config");
     m_params["LogConfig"] = setting.value("logConfig", "./resource/setting/log.conf").toString();
     m_params["UiConfig"] = setting.value("uiConfig", "./resource/setting/appuiconfig.ini").toString();
-    m_params["ServerConfig"] = setting.value("netConfig", "./resource/setting/serverconfig.ini").toString();
+    m_params["ServerConfig"] = setting.value("serverConfig", "./resource/setting/serverconfig.ini").toString();
     m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
     m_params["DriverConfig"] = setting.value("driverConfig", "./resource/driver").toString();
     m_params["EduAudioPath"] = setting.value("eduPath", "./resource/education").toString();
