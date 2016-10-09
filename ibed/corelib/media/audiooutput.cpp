@@ -32,6 +32,7 @@ AudioOutput::AudioOutput(const AudioFormat &format, QObject *parent) :
     qRegisterMetaType<Audio::Mode>("Audio::Mode");
 
     m_private->moveToThread(m_thread);
+    m_thread->start();
     connect(this, SIGNAL(started()), m_private, SLOT(start()), Qt::QueuedConnection);
     connect(m_private, SIGNAL(finished(Audio::Error)),
             this, SLOT(onFinished(Audio::Error)), Qt::QueuedConnection);
@@ -218,7 +219,7 @@ void AudioOutput::start(QIODevice *device)
 
     m_device = device;
 
-    m_thread->start();
+//    m_thread->start();
 
     m_state = ActiveState;
 
@@ -329,7 +330,6 @@ void AudioOutput::onFinished(Audio::Error error)
 
 
 
-
 //#include "audiooutput.moc"
 
 
@@ -372,13 +372,9 @@ void AudioOutputPrivate::start()
             if(ret < 0)
             {
                 if(ret == -EPIPE)
+                {
                     ::snd_pcm_prepare(m_audio->m_pcm);
-    //            else if(ret == -EBADFD)
-    //            {
-    //                //user stopped
-    //                emit finished(Audio::IOError);
-    //                break;
-    //            }
+                }
                 else
                 {
                     m_audio->m_mutex->unlock();

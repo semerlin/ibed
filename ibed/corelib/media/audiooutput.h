@@ -18,7 +18,7 @@ class MEDIASHARED_EXPORT AudioOutput : public QObject
     Q_OBJECT
 public:
     AudioOutput(const AudioFormat &format = AudioFormat(), QObject *parent = 0);
-    ~AudioOutput();
+    virtual ~AudioOutput();
 
 public:
     Audio::Error error() const;
