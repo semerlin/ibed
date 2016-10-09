@@ -31,7 +31,8 @@ SOURCES += basecontrols.cpp \
     dotlabel.cpp \
     baselabel.cpp \
     pixmaplabel.cpp \
-    basedialog.cpp
+    basedialog.cpp \
+    clickablelabel.cpp
 
 HEADERS += basecontrols.h\
         basecontrols_global.h \
@@ -54,7 +55,8 @@ HEADERS += basecontrols.h\
     dotlabel.h \
     baselabel.h \
     pixmaplabel.h \
-    basedialog.h
+    basedialog.h \
+    clickablelabel.h
 
 unix {
     target.path = /usr/lib

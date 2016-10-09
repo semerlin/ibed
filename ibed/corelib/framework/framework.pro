@@ -9,6 +9,8 @@ QT       += gui
 TARGET = framework
 TEMPLATE = lib
 
+include(../../boost.pri)
+
 DEFINES += FRAMEWORK_LIBRARY
 
 SOURCES += framework.cpp \

@@ -7,7 +7,7 @@
 
 class MainWidget;
 class StandbyWidget;
-class CallDialog;
+class CallWidget;
 class ProgressDialog;
 class NumIPMethod;
 class QTimer;
@@ -42,6 +42,8 @@ signals:
     void bedCtrlReleased(int id);
     void infuStart(void);
     void infuStop(void);
+    void callOutRequest(void);
+    void callTerminate(void);
 
 private slots:
     void onRegistered();
@@ -70,15 +72,16 @@ private slots:
     void onInfuInputChanged(int mount);
     void onInfuSpeedChanged(int speed);
     void onCallOutConnecting(void);
-    void onCallOutConnected(void);
-    void onCallOutTerminate(void);
+    void onCallInConnecting(void);
+    void onCallConnected(void);
+    void onCallTerminate(void);
     void onBedCtrlPressed(void);
     void onBedCtrlReleased(void);
 
 private:
     MainWidget *m_mainWidget;
     StandbyWidget *m_standbyWidget;
-    CallDialog *m_callDialog;
+    CallWidget *m_callWidget;
     ProgressDialog *m_progressDialog;
 #ifdef TARGET_IMX
     NumIPMethod *m_method;

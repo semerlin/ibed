@@ -30,6 +30,9 @@ public slots:
     void setAllergy(const QString &allergy);
     void setLevelColor(const QColor &text, const QColor &bk);
 
+signals:
+    void callPressed(void);
+
 private:
     Ui::BaseInfoWidget *ui;
 };

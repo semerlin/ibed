@@ -19,9 +19,11 @@ bool CallModule::load(const QVariant &val)
     m_callMange = new CallMange;
 
     connect(m_callMange, SIGNAL(callOutConnecting()), this, SIGNAL(callOutConnecting()));
-    connect(m_callMange, SIGNAL(callOutConnected()), this, SIGNAL(callOutConnected()));
-    connect(m_callMange, SIGNAL(callOutLocalTerminate()), this, SIGNAL(callOutLocalTerminate()));
-    connect(m_callMange, SIGNAL(callOutRemoteTerminate()), this, SIGNAL(callOutRemoteTerminate()));
+    connect(m_callMange, SIGNAL(callInConnecting()), this, SIGNAL(callInConnecting()));
+    connect(m_callMange, SIGNAL(callConnected()), this, SIGNAL(callConnected()));
+    connect(m_callMange, SIGNAL(callTerminate()), this, SIGNAL(callTerminate()));
+
+    m_callMange->init();
 
     return true;
 }
@@ -30,3 +32,19 @@ void CallModule::unload()
 {
     delete m_callMange;
 }
+
+void CallModule::callOutRequest()
+{
+    m_callMange->onCallOutRequest();
+}
+
+void CallModule::callHangup()
+{
+    m_callMange->onTerminate();
+}
+
+void CallModule::restart()
+{
+    m_callMange->onRestart();
+}
+

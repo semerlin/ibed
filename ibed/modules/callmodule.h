@@ -17,11 +17,16 @@ public:
     bool load(const QVariant &val);
     void unload();
 
+public slots:
+    void callOutRequest(void);
+    void callHangup(void);
+    void restart(void);
+
 signals:
     void callOutConnecting(void);
-    void callOutConnected(void);
-    void callOutLocalTerminate(void);
-    void callOutRemoteTerminate(void);
+    void callInConnecting(void);
+    void callConnected(void);
+    void callTerminate(void);
 
 private:
     CallMange *m_callMange;

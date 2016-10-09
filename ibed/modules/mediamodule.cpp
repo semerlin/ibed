@@ -2,6 +2,7 @@
 #include "audiointensity.h"
 #include "mediamodule.h"
 #include <QFileInfo>
+#include <QTimer>
 
 MediaModule::MediaModule(const QString &name) :
     BaseAppModule(name)
@@ -39,6 +40,17 @@ void MediaModule::init()
     m_intensity->startMonitor();
 }
 
+void MediaModule::startMonitor()
+{
+    m_intensity->initMonitor();
+    m_intensity->startMonitor();
+}
+
+void MediaModule::stopMonitor()
+{
+    m_intensity->stopMonitor();
+}
+
 void MediaModule::onPlay(const QString &name)
 {
     if(m_curPlay == name)
@@ -54,8 +66,8 @@ void MediaModule::onPlay(const QString &name)
             m_player->stop();
 
         m_player->setName(name);
-        m_player->play();
         m_curPlay = name;
+        QTimer::singleShot(200, this, SLOT(playTimeOut()));
     }
 }
 
@@ -69,5 +81,13 @@ void MediaModule::onPause(const QString &name)
 void MediaModule::onStop(const QString &name)
 {
     Q_UNUSED(name)
-    m_player->stop();
+    if(m_player->state() != Audio::IdleState)
+        m_player->stop();
 }
+
+void MediaModule::playTimeOut()
+{
+    m_player->play();
+}
+
+

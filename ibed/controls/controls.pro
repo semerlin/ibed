@@ -10,6 +10,7 @@ TARGET = controls
 TEMPLATE = lib
 
 include(../global.pri)
+include(../boost.pri)
 
 DEFINES += CONTROLS_LIBRARY
 
@@ -34,8 +35,8 @@ SOURCES += controls.cpp \
     infusionwidget.cpp \
     bedwidget.cpp \
     standbywidget.cpp \
-    calldialog.cpp \
-    progressdialog.cpp
+    progressdialog.cpp \
+    callwidget.cpp
 
 HEADERS += controls.h\
         controls_global.h \
@@ -60,7 +61,8 @@ HEADERS += controls.h\
     bedwidget.h \
     standbywidget.h \
     calldialog.h \
-    progressdialog.h
+    progressdialog.h \
+    callwidget.h
 
 unix {
     target.path = /usr/lib
@@ -86,8 +88,8 @@ FORMS += \
     infusionwidget.ui \
     bedwidget.ui \
     standbywidget.ui \
-    calldialog.ui \
-    progressdialog.ui
+    progressdialog.ui \
+    callwidget.ui
 
 unix:!macx: LIBS += -L$$OUT_PWD/../corelib/basecontrols/ -lbasecontrols
 

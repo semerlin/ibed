@@ -12,6 +12,7 @@ TEMPLATE = lib
 
 include(../global.pri)
 include(../alsa.pri)
+include(../sipinc.pri)
 
 DEFINES += MODULES_LIBRARY
 

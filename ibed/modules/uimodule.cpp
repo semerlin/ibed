@@ -1,7 +1,7 @@
 #include <QTimer>
 #include "mainwidget.h"
 #include "standbywidget.h"
-#include "calldialog.h"
+#include "callwidget.h"
 #include "progressdialog.h"
 #include "numipmethod.h"
 #include "uimodule.h"
@@ -34,7 +34,8 @@ bool UiModule::load(const QVariant &val)
 
     m_mainWidget =new MainWidget;
     m_standbyWidget =new StandbyWidget;
-    m_callDialog =new CallDialog;
+    m_callWidget = new CallWidget(m_mainWidget);
+    m_callWidget->hide();
     m_progressDialog =new ProgressDialog;
 
     //register input method
@@ -60,6 +61,9 @@ bool UiModule::load(const QVariant &val)
     connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedCtrlReleased()));
     connect(m_mainWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
     connect(m_mainWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
+    connect(m_mainWidget, SIGNAL(callOutRequest()), this, SIGNAL(callOutRequest()));
+
+    connect(m_callWidget, SIGNAL(reject()), this, SIGNAL(callTerminate()));
 
 
     return true;
@@ -69,7 +73,7 @@ void UiModule::unload()
 {
     delete m_standByTimer;
     delete m_progressDialog;
-    delete m_callDialog;
+    delete m_callWidget;
     delete m_standbyWidget;
     delete m_mainWidget;
 }
@@ -78,9 +82,6 @@ void UiModule::showMainWidget()
 {
     m_mainWidget->show();
     m_standByTimer->start();
-
-//  m_callDialog->show();
-//    m_progressDialog->show();
 }
 
 int UiModule::infuMount() const
@@ -260,17 +261,24 @@ void UiModule::onInfuSpeedChanged(int speed)
 
 void UiModule::onCallOutConnecting()
 {
-    m_callDialog->show();
+    m_callWidget->show();
+    m_callWidget->setGeometry(321, 88, 158, 304);
 }
 
-void UiModule::onCallOutConnected()
+void UiModule::onCallInConnecting()
+{
+    m_callWidget->show();
+    m_callWidget->setGeometry(321, 88, 158, 304);
+}
+
+void UiModule::onCallConnected()
 {
 
 }
 
-void UiModule::onCallOutTerminate()
+void UiModule::onCallTerminate()
 {
-    m_callDialog->hide();
+    m_callWidget->hide();
 }
 
 void UiModule::onBedCtrlPressed()

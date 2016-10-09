@@ -9,6 +9,9 @@
 #include "baseapplication.h"
 #include "callmodule.h"
 #include <QDebug>
+#include "fileaudioout.h"
+#include <QTimer>
+
 
 MainModule::MainModule() :
     m_manger(new ModuleManger)
@@ -96,14 +99,18 @@ bool MainModule::initialize()
     connect(media, SIGNAL(intensityChanged(int)), ui, SLOT(onAudioIntensityChanged(int)));
 
     connect(call, SIGNAL(callOutConnecting()), ui, SLOT(onCallOutConnecting()));
-    connect(call, SIGNAL(callOutConnected()), ui, SLOT(onCallOutConnected()));
-    connect(call, SIGNAL(callOutLocalTerminate()), ui, SLOT(onCallOutTerminate()));
-    connect(call, SIGNAL(callOutRemoteTerminate()), ui, SLOT(onCallOutTerminate()));
+    connect(call, SIGNAL(callInConnecting()), ui, SLOT(onCallInConnecting()));
+    connect(call, SIGNAL(callConnected()), ui, SLOT(onCallConnected()));
+    connect(call, SIGNAL(callTerminate()), ui, SLOT(onCallTerminate()));
 
-    connect(call, SIGNAL(callOutConnecting()), this, SLOT(onCallOutConnecting()));
-    connect(call, SIGNAL(callOutConnected()), this, SLOT(onCallOutConnected()));
-    connect(call, SIGNAL(callOutLocalTerminate()), this, SLOT(onCallOutTerminate()));
-    connect(call, SIGNAL(callOutRemoteTerminate()), this, SLOT(onCallOutTerminate()));
+//    connect(call, SIGNAL(callOutConnecting()), this, SLOT(onCallOutConnecting()));
+//    connect(call, SIGNAL(callInConnecting()), this, SLOT(onCallInConnecting()));
+//    connect(call, SIGNAL(callConnected()), this, SLOT(onCallConnected()));
+    connect(call, SIGNAL(callTerminate()), this, SLOT(onCallTerminate()));
+
+//    connect(ui, SIGNAL(callOutRequest()), call, SLOT(callOutRequest()));
+    connect(ui, SIGNAL(callOutRequest()), this, SLOT(prepareCall()));
+    connect(ui, SIGNAL(callTerminate()), call, SLOT(callHangup()));
 
     //connect app click signal
     BaseApplication *app = dynamic_cast<BaseApplication *>(qApp);
@@ -284,28 +291,30 @@ void MainModule::onInfuInputChanged(int input)
     }
 }
 
-void MainModule::onCallOutConnecting()
+//void MainModule::onCallOutConnecting()
+//{
+//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+////    media->callPlay("./resource/audio/callout.wav");
+//}
+
+//void MainModule::onCallInConnecting()
+//{
+//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+//    //    media->onPlay("./resource/audio/callout.wav");
+//}
+
+//void MainModule::onCallConnected()
+//{
+//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+////    media->onStop("");
+//}
+
+void MainModule::onCallTerminate()
 {
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-
-//    media->onPlay("/ibed/resource/audio/callout.wav");
-}
-
-void MainModule::onCallOutConnected()
-{
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-
-//    media->onStop("/ibed/resource/audio/callout.wav");
-}
-
-void MainModule::onCallOutTerminate()
-{
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-
-//    media->onStop("/ibed/resource/audio/callout.wav");
+    call->restart();
+    media->startMonitor();
 }
 
 void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
@@ -322,5 +331,20 @@ void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
     }
 
     hardware->motorMove(moves);
+}
+
+void MainModule::prepareCall()
+{
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+
+    media->onStop("");
+    media->stopMonitor();
+    QTimer::singleShot(300, this, SLOT(callOutTimer()));
+}
+
+void MainModule::callOutTimer()
+{
+    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
+    call->callOutRequest();
 }
 

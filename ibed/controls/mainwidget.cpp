@@ -78,6 +78,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(m_infusionWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
     connect(m_infusionWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
 
+    connect(m_baseInfoWidget, SIGNAL(callPressed()), this, SIGNAL(callOutRequest()));
+
 }
 
 MainWidget::~MainWidget()

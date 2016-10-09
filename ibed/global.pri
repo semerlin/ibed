@@ -5,6 +5,7 @@
 # platform control, imx/x86, default is x86
 contains(TARGET_CPU, imx) {
     DEFINES += TARGET_IMX
+    DEFINES += PJ_AUTOCONF
 } else:contains(TARGET_CPU, x86) {
     DEFINES += TARGET_X86
 } else {

@@ -47,6 +47,8 @@ BaseInfoWidget::BaseInfoWidget(QWidget *parent) :
     ui->widgetAllergy->setPixmap(QPixmap(":/res/images/medicine.png"));
     ui->widgetAllergy->setData(QT_TRANSLATE_NOOP("BaseInfo", "无"));
     ui->widgetAllergy->setDataReadOnly(true);
+
+    connect(ui->labelName, SIGNAL(clicked()), this, SIGNAL(callPressed()));
 }
 
 BaseInfoWidget::~BaseInfoWidget()

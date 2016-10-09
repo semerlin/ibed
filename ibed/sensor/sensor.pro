@@ -10,6 +10,7 @@ TARGET = sensor
 TEMPLATE = lib
 
 include(../global.pri)
+include(../boost.pri)
 
 DEFINES += SENSOR_LIBRARY
 

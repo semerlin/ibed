@@ -20,6 +20,8 @@ public:
     bool load(const QVariant &val);
     void unload();
     void init(void);
+    void startMonitor(void);
+    void stopMonitor(void);
 
 signals:
     void intensityChanged(int intensity);
@@ -28,6 +30,9 @@ public slots:
     void onPlay(const QString &name);
     void onPause(const QString &name);
     void onStop(const QString &name);
+
+private slots:
+    void playTimeOut(void);
 
 private:
     FileAudioOut *m_player;

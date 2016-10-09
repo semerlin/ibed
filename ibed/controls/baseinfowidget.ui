@@ -59,7 +59,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="labelName">
+        <widget class="ClickableLabel" name="labelName">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -413,6 +413,11 @@
    <extends>QWidget</extends>
    <header>patientadvisewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header>clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

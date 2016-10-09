@@ -24,11 +24,15 @@ private slots:
     void onInfuStart(void);
     void onInfuStop(void);
     void onInfuInputChanged(int input);
-    void onCallOutConnecting(void);
-    void onCallOutConnected(void);
-    void onCallOutTerminate(void);
+//    void onCallOutConnecting(void);
+//    void onCallInConnecting(void);
+//    void onCallConnected(void);
+    void onCallTerminate(void);
     void onMotorMove(const QMap<quint8, quint8> &moves);
+    void prepareCall(void);
 
+private slots:
+    void callOutTimer(void);
 
 private:
     ModuleManger *m_manger;

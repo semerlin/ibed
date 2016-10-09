@@ -63,6 +63,7 @@ signals:
     void bedCtrlReleased(int id);
     void infuStart(void);
     void infuStop(void);
+    void callOutRequest(void);
 
 private slots:
     void onTopWidgetButtonClick(int id);

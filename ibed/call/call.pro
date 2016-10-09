@@ -9,40 +9,23 @@ QT       -= gui
 TARGET = call
 TEMPLATE = lib
 
+include(../global.pri)
+include(../sip.pri)
+
+
 DEFINES += CALL_LIBRARY
 
-SOURCES += call.cpp \
+SOURCES += \
     callbtn.cpp \
-    callin.cpp \
-    callinconnectedstate.cpp \
-    callinconnectingstate.cpp \
-    callinlocalterminatestate.cpp \
-    callinremoteterminatestate.cpp \
     callmange.cpp \
-    callout.cpp \
-    calloutconnectedstate.cpp \
-    calloutconnectingstate.cpp \
-    calloutlocalterminatestate.cpp \
-    calloutremoteterminatestate.cpp \
-    calltranstraction.cpp
+    sip.cpp
 
 HEADERS += call.h\
         call_global.h \
     callbtn.h \
     calldef.h \
-    callevent.h \
-    callin.h \
-    callinconnectedstate.h \
-    callinconnectingstate.h \
-    callinlocalterminatestate.h \
-    callinremoteterminatestate.h \
     callmange.h \
-    callout.h \
-    calloutconnectedstate.h \
-    calloutconnectingstate.h \
-    calloutlocalterminatestate.h \
-    calloutremoteterminatestate.h \
-    calltranstraction.h
+    sip.h
 
 unix {
     target.path = /usr/lib
@@ -64,3 +47,8 @@ unix:!macx: LIBS += -L$$OUT_PWD/../corelib/utility/ -lutility
 
 INCLUDEPATH += $$PWD/../corelib/utility
 DEPENDPATH += $$PWD/../corelib/utility
+
+unix:!macx: LIBS += -L$$OUT_PWD/../commonunit/ -lcommonunit
+
+INCLUDEPATH += $$PWD/../commonunit
+DEPENDPATH += $$PWD/../commonunit

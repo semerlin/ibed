@@ -1,67 +1,92 @@
 #include "callbtn.h"
-#include "callout.h"
-#include "callin.h"
 #include "callmange.h"
-#include "callevent.h"
+#include "sip.h"
+#include "appsetting.h"
+#include "servermanger.h"
 
 CallMange::CallMange() :
-    m_btn(new CallBtn)
+    m_sip(new Sip),
+    m_isIdle(true)
 {
-    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
-    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onLocalTerminate()));
-    m_btn->init();
+#ifdef TARGET_IMX
+    m_btn = new CallBtn;
+//    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
+//    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onLocalTerminate()));
+//    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onTerminate()));
+#endif
 
-    m_callOut = new CallOut;
-    m_callIn = new CallIn;
+    connect(m_sip, SIGNAL(stateChanged(CallState,CallState)), this, SLOT(onStateChanged(CallState,CallState)));
+}
 
-    connect(m_callOut, SIGNAL(connecting()), this, SIGNAL(callOutConnecting()));
-    connect(m_callOut, SIGNAL(connected()), this, SIGNAL(callOutConnected()));
-    connect(m_callOut, SIGNAL(localTerminate()), this, SIGNAL(callOutLocalTerminate()));
-    connect(m_callOut, SIGNAL(remoteTerminate()), this, SIGNAL(callOutRemoteTerminate()));
+bool CallMange::init()
+{
+#ifdef TARGET_IMX
+    if(!m_btn->init())
+        return false;
+#endif
 
-    m_activeMachine = NULL;
+
+    return true;
 }
 
 void CallMange::onCallOutRequest()
 {
-    if(m_activeMachine == NULL)
+    if(m_isIdle)
     {
-        m_activeMachine = m_callOut;
-        m_activeMachine->start();
+        if(!m_sip->init())
+            return;
+
+        if(!m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
+                       "intellicare", ServerManger::instance().address(ServerManger::Sip)))
+            return;
+
+        m_isIdle = false;
+
+        m_sip->dial("0");
     }
 }
 
-void CallMange::onCallInRequest()
+void CallMange::onTerminate()
 {
-    if(m_activeMachine == NULL)
-    {
-        m_activeMachine = m_callIn;
-        m_callIn->start();
-    }
-
+    m_sip->hangup();
+    m_sip->reset();
+    m_isIdle = true;
 }
 
-void CallMange::onConnected()
+void CallMange::onRestart()
 {
-    if(m_activeMachine != NULL)
-        m_activeMachine->postEvent(new CallEvent(Call::Connected));
-}
-
-void CallMange::onLocalTerminate()
-{
-    if(m_activeMachine != NULL)
+    if(!m_isIdle)
     {
-        m_activeMachine->postEvent(new CallEvent(Call::LocalTerminate));
-        m_activeMachine = NULL;
+        m_sip->destroy();
+        m_isIdle = true;
     }
 }
 
-void CallMange::onRemoteTerminate()
+void CallMange::onStateChanged(CallState prev, CallState current)
 {
-    if(m_activeMachine != NULL)
+    Q_UNUSED(prev)
+
+    switch(current)
     {
-        m_activeMachine->postEvent(new CallEvent(Call::RemoteTerminate));
-        m_activeMachine = NULL;
+    case Calling:
+    case Connecting:
+    case Early:
+        emit callOutConnecting();
+        break;
+    case Incoming:
+        m_isIdle = false;
+        m_sip->answer();
+        emit callInConnecting();
+        break;
+    case Confirmed:
+        emit callConnected();
+        break;
+    case Disconnected:
+        m_sip->reset();
+        emit callTerminate();
+        break;
+    default:
+        break;
     }
 }
 

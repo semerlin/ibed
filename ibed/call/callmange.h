@@ -2,11 +2,10 @@
 #define CALLMANGE_H
 
 #include <QObject>
+#include "call.h"
 
+class Sip;
 class CallBtn;
-class CallOut;
-class CallIn;
-class QStateMachine;
 
 class CallMange : public QObject
 {
@@ -15,24 +14,27 @@ class CallMange : public QObject
 public:
     CallMange();
 
+public:
+    bool init();
+
+public slots:
+    void onCallOutRequest(void);
+    void onTerminate(void);
+    void onRestart(void);
+
 signals:
     void callOutConnecting(void);
-    void callOutConnected(void);
-    void callOutLocalTerminate(void);
-    void callOutRemoteTerminate(void);
+    void callInConnecting(void);
+    void callConnected(void);
+    void callTerminate(void);
 
 private slots:
-    void onCallOutRequest(void);
-    void onCallInRequest(void);
-    void onConnected(void);
-    void onLocalTerminate(void);
-    void onRemoteTerminate(void);
+    void onStateChanged(CallState prev, CallState current);
 
 private:
+    Sip *m_sip;
+    bool m_isIdle;
     CallBtn *m_btn;
-    CallOut *m_callOut;
-    CallIn *m_callIn;
-    QStateMachine *m_activeMachine;
 };
 
 #endif // CALLMANGE_H

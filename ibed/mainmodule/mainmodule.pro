@@ -10,6 +10,7 @@ TARGET = mainmodule
 TEMPLATE = lib
 
 include(../alsa.pri)
+include(../sipinc.pri)
 
 DEFINES += MAINMODULE_LIBRARY
 
