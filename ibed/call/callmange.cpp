@@ -50,6 +50,7 @@ void CallMange::onTerminate()
 {
     m_sip->hangup();
     m_sip->reset();
+    m_sip->destroy();
     m_isIdle = true;
 }
 
