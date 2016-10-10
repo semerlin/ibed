@@ -30,11 +30,13 @@ signals:
 
 private slots:
     void onStateChanged(CallState prev, CallState current);
+    void initSip(void);
 
 private:
     Sip *m_sip;
     bool m_isIdle;
     CallBtn *m_btn;
+    bool m_isInited;
 };
 
 #endif // CALLMANGE_H
