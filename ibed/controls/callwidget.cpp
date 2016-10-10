@@ -38,6 +38,8 @@ void CallWidget::beginTimer()
 void CallWidget::endTimer()
 {
     m_timer->stop();
+    m_timeCnt = 0;
+    ui->labelTime->setText("00:00:00");
 }
 
 void CallWidget::on_pushButtonCancel_clicked()
