@@ -49,8 +49,19 @@ void CallWidget::onTimeout()
 {
     ++m_timeCnt;
 
-    QTime time(0, 0);
-    time.addSecs(m_timeCnt);
+    int sec = m_timeCnt % 60;
+    int minute = m_timeCnt / 60 % 60;
+    int hour = m_timeCnt / 3600;
 
-    ui->labelTime->setText(time.toString());
+    QByteArray time;
+    time.append(hour / 10 + 0x30);
+    time.append(hour % 10 + 0x30);
+    time.append(':');
+    time.append(minute / 10 + 0x30);
+    time.append(minute % 10 + 0x30);
+    time.append(':');
+    time.append(sec / 10 + 0x30);
+    time.append(sec % 10 + 0x30);
+
+    ui->labelTime->setText(time.data());
 }
