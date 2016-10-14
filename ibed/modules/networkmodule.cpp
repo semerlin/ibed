@@ -25,11 +25,11 @@ bool NetworkModule::load(const QVariant &val)
 
 #ifdef TARGET_IMX
     //set local address
-//    SystemCall::system(QString("./ethcfg %1 %2 %3 %4")
-//                .arg(NetConfig::instance().name())
-//                .arg(NetConfig::instance().address())
-//                .arg(NetConfig::instance().netmask())
-//                .arg(NetConfig::instance().gateway()));
+    SystemCall::system(QString("./ethcfg %1 %2 %3 %4")
+                .arg(NetConfig::instance().name())
+                .arg(NetConfig::instance().address())
+                .arg(NetConfig::instance().netmask())
+                .arg(NetConfig::instance().gateway()));
 #endif
 
     m_defaultClient = new DefaultClient;
