@@ -103,12 +103,8 @@ bool MainModule::initialize()
     connect(call, SIGNAL(callConnected()), ui, SLOT(onCallConnected()));
     connect(call, SIGNAL(callTerminate()), ui, SLOT(onCallTerminate()));
 
-//    connect(call, SIGNAL(callOutConnecting()), this, SLOT(onCallOutConnecting()));
-//    connect(call, SIGNAL(callInConnecting()), this, SLOT(onCallInConnecting()));
-//    connect(call, SIGNAL(callConnected()), this, SLOT(onCallConnected()));
     connect(call, SIGNAL(callTerminate()), this, SLOT(onCallTerminate()));
 
-//    connect(ui, SIGNAL(callOutRequest()), call, SLOT(callOutRequest()));
     connect(ui, SIGNAL(callOutRequest()), this, SLOT(prepareCall()));
     connect(ui, SIGNAL(callTerminate()), call, SLOT(callHangup()));
 
@@ -291,30 +287,11 @@ void MainModule::onInfuInputChanged(int input)
     }
 }
 
-//void MainModule::onCallOutConnecting()
-//{
-//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-////    media->callPlay("./resource/audio/callout.wav");
-//}
-
-//void MainModule::onCallInConnecting()
-//{
-//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-//    //    media->onPlay("./resource/audio/callout.wav");
-//}
-
-//void MainModule::onCallConnected()
-//{
-//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-////    media->onStop("");
-//}
 
 void MainModule::onCallTerminate()
 {
-    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-    call->restart();
-    media->startMonitor();
+//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+//    media->startMonitor();
 }
 
 void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
@@ -338,7 +315,7 @@ void MainModule::prepareCall()
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
     media->onStop("");
-    media->stopMonitor();
+//    media->stopMonitor();
     QTimer::singleShot(300, this, SLOT(callOutTimer()));
 }
 
