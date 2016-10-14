@@ -49,7 +49,12 @@ bool Sip::init()
     pjsua_logging_config_default(&log_cfg);
     log_cfg.console_level = 4;
 
-    status = pjsua_init(&cfg, &log_cfg, NULL);
+    pjsua_media_config media_cfg;
+    pjsua_media_config_default(&media_cfg);
+    media_cfg.clock_rate = 8000;
+    media_cfg.ec_tail_len = 0;
+
+    status = pjsua_init(&cfg, &log_cfg, &media_cfg);
 
     if (status != PJ_SUCCESS)
         return false;
