@@ -15,12 +15,12 @@ public:
     CallMange();
 
 public:
-    bool init();
+    bool init(void);
+    void regToServer(void);
 
 public slots:
     void onCallOutRequest(void);
     void onTerminate(void);
-    void onRestart(void);
 
 signals:
     void callOutConnecting(void);

@@ -31,6 +31,13 @@ bool CallMange::init()
     return true;
 }
 
+void CallMange::regToServer()
+{
+    m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
+                       "intellicare", ServerManger::instance().address(ServerManger::Sip));
+}
+
+
 void CallMange::onCallOutRequest()
 {
     if(m_isIdle)
@@ -45,18 +52,9 @@ void CallMange::onTerminate()
 {
     m_sip->hangup();
     m_sip->reset();
-    initSip();
     m_isIdle = true;
 }
 
-void CallMange::onRestart()
-{
-    if(!m_isIdle)
-    {
-        initSip();
-        m_isIdle = true;
-    }
-}
 
 void CallMange::onStateChanged(CallState prev, CallState current)
 {
@@ -79,6 +77,7 @@ void CallMange::onStateChanged(CallState prev, CallState current)
         break;
     case Disconnected:
         m_sip->reset();
+        m_isIdle = true;
         emit callTerminate();
         break;
     default:
