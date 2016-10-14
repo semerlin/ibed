@@ -43,8 +43,5 @@ void CallModule::callHangup()
     m_callMange->onTerminate();
 }
 
-void CallModule::restart()
-{
-    m_callMange->onRestart();
-}
+
 

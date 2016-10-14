@@ -20,7 +20,6 @@ public:
 public slots:
     void callOutRequest(void);
     void callHangup(void);
-    void restart(void);
 
 signals:
     void callOutConnecting(void);
