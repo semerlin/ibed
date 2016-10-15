@@ -326,6 +326,12 @@ void HardwareModule::onKeyStatusChanged()
         case 1:
             BedControl::instance().motorMove(3, BedControl::Forword);
             break;
+        case 3: //call
+            emit callPressed();
+            break;
+        case 4: //hangup
+            emit cancelPressed();
+            break;
         case 6:
             BedControl::instance().motorMove(3, BedControl::Reversal);
             break;
@@ -345,6 +351,9 @@ void HardwareModule::onKeyStatusChanged()
     {
         switch(kbd1PressedKeys.at(0))
         {
+        case 0:  //call
+            emit callPressed();
+            break;
         case 2:
             BedControl::instance().motorMove(3, BedControl::Forword);
             break;
@@ -356,6 +365,9 @@ void HardwareModule::onKeyStatusChanged()
             break;
         case 5:
             BedControl::instance().motorMove(3, BedControl::Reversal);
+            break;
+        case 7:  //hangup
+            emit cancelPressed();
             break;
         default:
             break;

@@ -108,6 +108,10 @@ bool MainModule::initialize()
     connect(ui, SIGNAL(callOutRequest()), this, SLOT(prepareCall()));
     connect(ui, SIGNAL(callTerminate()), call, SLOT(callHangup()));
 
+    connect(hardware, SIGNAL(callPressed()), this, SLOT(prepareCall()));
+    connect(hardware, SIGNAL(cancelPressed()), call, SLOT(callHangup()));
+
+
     //connect app click signal
     BaseApplication *app = dynamic_cast<BaseApplication *>(qApp);
     if(app != NULL)

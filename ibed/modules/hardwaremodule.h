@@ -38,6 +38,8 @@ signals:
     void infuSpeedChanged(int speed);
     void infuInputChanged(int input);
     void weightChanged(double weight);
+    void callPressed(void);
+    void cancelPressed(void);
 
 private slots:
     void updateLightIntensity(void);
