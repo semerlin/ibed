@@ -11,9 +11,8 @@ CallMange::CallMange() :
 {
 #ifdef TARGET_IMX
     m_btn = new CallBtn;
-//    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
-//    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onLocalTerminate()));
-//    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onTerminate()));
+    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
+    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onTerminate()));
 #endif
 
     connect(m_sip, SIGNAL(stateChanged(CallState,CallState)), this, SLOT(onStateChanged(CallState,CallState)));
