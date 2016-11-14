@@ -24,6 +24,7 @@ public:
     void hangup(void);
     void destroy();
     void reset(void);
+    void setPort(unsigned port);
 
 signals:
     void stateChanged(CallState prev, CallState current);
@@ -46,6 +47,7 @@ private:
     static pjsua_call_id m_callId;
     CallState m_prev;
     CallState m_cur;
+    unsigned m_port;
 };
 
 

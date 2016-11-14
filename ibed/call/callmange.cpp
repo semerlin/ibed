@@ -10,9 +10,9 @@ CallMange::CallMange() :
     m_isInited(false)
 {
 #ifdef TARGET_IMX
-    m_btn = new CallBtn;
-    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
-    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onTerminate()));
+//    m_btn = new CallBtn;
+//    connect(m_btn, SIGNAL(callPressed()), this, SLOT(onCallOutRequest()));
+//    connect(m_btn, SIGNAL(cancelPressed()), this, SLOT(onTerminate()));
 #endif
 
     connect(m_sip, SIGNAL(stateChanged(CallState,CallState)), this, SLOT(onStateChanged(CallState,CallState)));
@@ -21,8 +21,8 @@ CallMange::CallMange() :
 bool CallMange::init()
 {
 #ifdef TARGET_IMX
-    if(!m_btn->init())
-        return false;
+//    if(!m_btn->init())
+//        return false;
 #endif
 
     initSip();
@@ -43,6 +43,8 @@ void CallMange::onCallOutRequest()
     {
         m_isIdle = false;
 
+        m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
+                           "intellicare", ServerManger::instance().address(ServerManger::Sip));
         m_sip->dial("0");
     }
 }
@@ -91,6 +93,8 @@ void CallMange::initSip()
         m_sip->destroy();
         m_isInited = false;
     }
+
+    m_sip->setPort(ServerManger::instance().port(ServerManger::Sip));
 
     if(!m_sip->init())
         return;

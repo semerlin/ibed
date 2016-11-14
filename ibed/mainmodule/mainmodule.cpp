@@ -294,8 +294,8 @@ void MainModule::onInfuInputChanged(int input)
 
 void MainModule::onCallTerminate()
 {
-//    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-//    media->startMonitor();
+    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+    media->startMonitor();
 }
 
 void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
@@ -319,7 +319,7 @@ void MainModule::prepareCall()
     MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
 
     media->onStop("");
-//    media->stopMonitor();
+    media->stopMonitor();
     QTimer::singleShot(300, this, SLOT(callOutTimer()));
 }
 

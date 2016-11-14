@@ -15,7 +15,8 @@ Sip::Sip() :
     m_isRegistered(false),
     m_timer(new QTimer(this)),
     m_prev(Idle),
-    m_cur(Idle)
+    m_cur(Idle),
+    m_port(5060)
 {
     qRegisterMetaType<CallState>("CallState");
     m_timer->setInterval(100);
@@ -64,7 +65,7 @@ bool Sip::init()
     pjsua_transport_config trans_cfg;
 
     pjsua_transport_config_default(&trans_cfg);
-    trans_cfg.port = 5060;
+    trans_cfg.port = m_port;
     status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &trans_cfg, NULL);
     if(status != PJ_SUCCESS)
         return false;
@@ -168,6 +169,11 @@ void Sip::reset()
     m_prevState = Idle;
     m_cur = Idle;
     m_curState = Idle;
+}
+
+void Sip::setPort(unsigned port)
+{
+    m_port = port;
 }
 
 void Sip::onIncomingCall(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_rx_data *rdata)
