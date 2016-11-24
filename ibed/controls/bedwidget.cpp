@@ -1,10 +1,14 @@
 #include "bedwidget.h"
 #include "ui_bedwidget.h"
 #include "boost/foreach.hpp"
+#include <QTimer>
+#include <QDateTime>
+#include <QDebug>
 
 BedWidget::BedWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::BedWidget)
+    ui(new Ui::BedWidget),
+    m_timer(new QTimer)
 {
     ui->setupUi(this);
 
@@ -14,11 +18,18 @@ BedWidget::BedWidget(QWidget *parent) :
     ui->labelWeightPic->setPixmap(QString(":/res/images/weight.png"));
     ui->labelWeight->setText("0Kg");
     initButtons();
+
+    m_timer->setInterval(100);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    m_pressIDs.clear();
+    m_releasedIDs.clear();
+    m_timer->start();
 }
 
 BedWidget::~BedWidget()
 {
     delete ui;
+    delete m_timer;
 }
 
 void BedWidget::setWeight(const QString &weight)
@@ -119,7 +130,8 @@ void BedWidget::onButtonPress()
     btn->changeToIcon(1);
     QString name = btn->objectName();
     name.remove("pushButton");
-    emit buttonPress(name.toInt());
+    m_pressIDs.enqueue(qMakePair(qMakePair(name.toInt(), QDateTime::currentMSecsSinceEpoch()), false));
+//    emit buttonPress(name.toInt());
 }
 
 void BedWidget::onButtonReleased()
@@ -128,5 +140,49 @@ void BedWidget::onButtonReleased()
     btn->changeToIcon(0);
     QString name = btn->objectName();
     name.remove("pushButton");
-    emit buttonReleased(name.toInt());
+    m_releasedIDs.enqueue(qMakePair(qMakePair(name.toInt(), QDateTime::currentMSecsSinceEpoch()), false));
+//    emit buttonReleased(name.toInt());
+}
+
+void BedWidget::onTimeout()
+{
+    QPair<QPair<int, qint64>, bool> pressID;
+    QPair<QPair<int, qint64>, bool> releasedID;
+    quint64 ellipseTime = 0;
+
+    //check released buttons first
+    for(int i = 0; i < m_releasedIDs.count(); ++i)
+    {
+        pressID = m_pressIDs.dequeue();
+        releasedID = m_releasedIDs.dequeue();
+        if(pressID.first.first != releasedID.first.first)
+            continue;
+        else
+        {
+            ellipseTime = releasedID.first.second - pressID.first.second;
+            if(ellipseTime >= 500)
+            {
+                //valid button release
+                emit buttonReleased(releasedID.first.first);
+            }
+
+//            qDebug() << QString("key press %1 ms").arg(ellipseTime);
+        }
+    }
+
+    //check pressed buttons
+    for(int i = 0; i < m_pressIDs.count(); ++i)
+    {
+        pressID = m_pressIDs.at(i);
+        ellipseTime = QDateTime::currentMSecsSinceEpoch() - pressID.first.second;
+        if(ellipseTime >= 500)
+        {
+            //valid button press
+            if(!pressID.second)
+            {
+                emit buttonPress(pressID.first.first);
+                m_pressIDs[i].second = true;
+            }
+        }
+    }
 }

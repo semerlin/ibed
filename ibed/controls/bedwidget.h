@@ -2,10 +2,14 @@
 #define BEDWIDGET_H
 
 #include <QWidget>
+#include <QPair>
+#include <QQueue>
 
 namespace Ui {
 class BedWidget;
 }
+
+class QTimer;
 
 class BedWidget : public QWidget
 {
@@ -28,9 +32,13 @@ private:
 private slots:
     void onButtonPress(void);
     void onButtonReleased(void);
+    void onTimeout(void);
 
 private:
     Ui::BedWidget *ui;
+    QTimer *m_timer;
+    QQueue<QPair<QPair<int, qint64>, bool> > m_pressIDs;
+    QQueue<QPair<QPair<int, qint64>, bool> > m_releasedIDs;
 };
 
 #endif // BEDWIDGET_H

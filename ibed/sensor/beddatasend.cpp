@@ -12,7 +12,7 @@ BedDataSend::BedDataSend(BedControl *parent) :
     m_mutex(new QMutex),
     m_sendTimer(new QTimer(this))
 {
-    m_sendTimer->setInterval(150);
+    m_sendTimer->setInterval(250);
     connect(m_sendTimer, SIGNAL(timeout()), this, SLOT(onSendData()));
     m_sendTimer->start();
 }
