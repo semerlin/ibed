@@ -7,6 +7,10 @@ namespace Ui {
 class LaunchWidget;
 }
 
+/**
+ * @brief application launch widget
+ */
+class LaunchWidgetPrivate;
 class LaunchWidget : public IAppLaunchWidget
 {
     Q_OBJECT
@@ -14,18 +18,24 @@ class LaunchWidget : public IAppLaunchWidget
 public:
     explicit LaunchWidget(QWidget *parent = 0);
     ~LaunchWidget();
+
 public:
-    void setRange(int min, int max);
+    /**
+     * @brief set launch total steps
+     * @param steps - launch total steps
+     */
+    void setSteps(int steps);
 
 public slots:
     void increaseStep();
-    void printMsg(const QString &msg);
+    void printMsg(const QString &msg = QString());
+
+protected:
+    LaunchWidgetPrivate * const d_ptr;
 
 private:
     Ui::LaunchWidget *ui;
-    int m_currentVal;
-    int m_maxVal;
-    int m_minVal;
+    Q_DECLARE_PRIVATE(LaunchWidget);
 };
 
 #endif // LANCHWIDGET_H

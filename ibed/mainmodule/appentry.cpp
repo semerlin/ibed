@@ -59,7 +59,7 @@ int AppEntry::run(int argc, char **argv)
 
 
     //start lanch
-    m_widget->setRange(0, m_mainModule->manger()->unloadedModules().count());
+    m_widget->setSteps( m_mainModule->manger()->unloadedModules().count());
 
     BaseAppLaunch launcher(m_widget, m_mainModule->manger());
     connect(&launcher, SIGNAL(launchFinished()), this, SLOT(onLaunchFinished()));

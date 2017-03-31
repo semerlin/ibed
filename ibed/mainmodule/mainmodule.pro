@@ -23,7 +23,8 @@ HEADERS += mainmodule.h\
         mainmodule_global.h \
     appentry.h \
     launchwidget.h \
-    baseapplication.h
+    baseapplication.h \
+    launchwidget_p.h
 
 unix {
     target.path = /usr/lib

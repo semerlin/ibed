@@ -1,37 +1,38 @@
 #include "launchwidget.h"
 #include "ui_launchwidget.h"
+#include "launchwidget_p.h"
 
 LaunchWidget::LaunchWidget(QWidget *parent) :
     IAppLaunchWidget(parent),
     ui(new Ui::LaunchWidget),
-    m_currentVal(0),
-    m_maxVal(0),
-    m_minVal(0)
+    d_ptr(new LaunchWidgetPrivate)
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
-    ui->progressBar_launch->setValue(m_currentVal);
+    ui->progressBar_launch->setValue(0);
 }
 
 LaunchWidget::~LaunchWidget()
 {
     delete ui;
+    delete d_ptr;
 }
 
-void LaunchWidget::setRange(int min, int max)
+void LaunchWidget::setSteps(int steps)
 {
-    m_minVal = min;
-    m_maxVal = max;
-    ui->progressBar_launch->setRange(min, max);
+    Q_D(LaunchWidget);
+    d->m_totalStep = steps;
+    ui->progressBar_launch->setRange(0, steps);
 }
 
 void LaunchWidget::increaseStep()
 {
-    m_currentVal ++;
-    if(m_currentVal > m_maxVal)
-        m_currentVal = m_maxVal;
+    Q_D(LaunchWidget);
+    d->m_currentStep ++;
+    if(d->m_currentStep > d->m_totalStep)
+        d->m_currentStep = d->m_totalStep;
 
-    ui->progressBar_launch->setValue(m_currentVal);
+    ui->progressBar_launch->setValue(d->m_currentStep);
 }
 
 void LaunchWidget::printMsg(const QString &msg)
