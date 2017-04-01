@@ -13,7 +13,7 @@ EducationWidget::EducationWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_font.setFamily(AppUiConfig::instance().fontFamily());
+    m_font.setFamily(AppUiConfig::instance().fontFamily(AppUiConfig::Font_Zh));
     m_font.setPixelSize(12);
     m_largeFont = m_font;
     m_largeFont.setPixelSize(24);

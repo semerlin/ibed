@@ -1,3 +1,32 @@
+/*****************************************************************************
+**
+**  Copyright (C) 2016-2017 HuangYang
+**
+**  This file is part of IBED
+**
+**  This program is free software; you can redistribute it and/or modify
+**  it under the terms of the GNU General Public License version 3 as
+**  published by the Free Software Foundation.
+**
+**  You should have received a copy of the GNU General Public License
+**  along with OST. If not, see <http://www.gnu.org/licenses/>.
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**  @file     appuiconfig.cpp
+**  @brief    application ui environment
+**  @details  none
+**  @author   huang yang
+**  @email    elious.huang@gmail.com
+**  @version  v1.0.0.0
+**  @license  GNU General Public License (GPL)
+**
+*****************************************************************************/
+
 #include "appuiconfig.h"
 #include "appsetting.h"
 #include <QFile>
@@ -10,22 +39,16 @@
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
-        << "Font_en"
-        << "Font_zh"
-        << "QssPath"
+        << "SkinPath"
         << "LaunchQss"
-        << "DefaultQss"
+        << "ApplicationQss"
         << "InoutEditColor"
         << "MusicSelectBackground";
 
-static const QStringList s_fontParams = QStringList()
-        << "Font_en"
-        << "Font_zh";
-
 static const QStringList s_qssParams = QStringList()
-        << "QssPath"
+        << "SkinPath"
         << "LaunchQss"
-        << "DefaultQss";
+        << "ApplicationQss";
 
 static const QStringList s_colorParams = QStringList()
         << "InoutEditColor"
@@ -42,64 +65,47 @@ bool AppUiConfig::initialize()
 {
     QString fileName = AppSetting::instance().
             value(AppSetting::UiConfig).toString();
-    QFile file(fileName);
-    if(file.exists())
-    {
-        loadValue(fileName);
-    }
-    else
-    {
+    if(!QFile::exists(fileName))
         setDefault();
-        loadValue(fileName);
-    }
+
+    loadValue(fileName);
 
     return true;
 }
 
 QVariant AppUiConfig::value(AppUiConfig::Parameter param) const
 {
-    if(s_allParams.count() > param)
+    Q_ASSERT(s_allParams.count() > param);
+    QString name = s_allParams.at(param);
+
+    if(s_qssParams.contains(name))
+        return m_params[name];
+    else
     {
-        QString name = s_allParams.at(param);
-
-        if((s_fontParams.contains(name)) ||
-           (s_qssParams.contains(name)))
-        {
-            return m_params[name];
-        }
-        else if(s_colorParams.contains(name))
-        {
-            return Util::stringListToColor(m_params[name].toStringList()).rgb();
-        }
+        Q_ASSERT(s_colorParams.contains(name));
+        return Util::stringListToColor(m_params[name].toStringList()).rgb();
     }
-
-    return QVariant(QVariant::Invalid);
 }
 
 void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
 {
-    if(s_allParams.count() > param)
-    {
-        m_params[s_allParams.at(param)] = val;
-    }
+    Q_ASSERT(s_allParams.count() > param);
+    m_params[s_allParams.at(param)] = val;
 }
 
 void AppUiConfig::save()
 {
     QSettings setting(AppSetting::instance().
                       value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
-    setting.beginGroup("FONT");
-    setting.setValue("en", m_params["Font_en"].toString());
-    setting.setValue("zh", m_params["Font_zh"].toString());
-    setting.endGroup();
 
-    setting.beginGroup("QSS");
-    setting.setValue("path", m_params["QssPath"].toString());
+    //save "Skin" and "Color" configure, "Font" configure can't be nodified in program
+    setting.beginGroup("Skin");
+    setting.setValue("path", m_params["SkinPath"].toString());
     setting.setValue("launch", m_params["LaunchQss"].toString());
-    setting.setValue("default", m_params["DefaultQss"].toString());
+    setting.setValue("application", m_params["ApplicationQss"].toString());
     setting.endGroup();
 
-    setting.beginGroup("COLOR");
+    setting.beginGroup("Color");
     setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
     setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
@@ -107,13 +113,12 @@ void AppUiConfig::save()
     SystemCall::sync();
 }
 
-QString AppUiConfig::fontFamily() const
+QString AppUiConfig::fontFamily(AppFont font) const
 {
-   return m_fontFamily;
+   return m_fontFamily[font];
 }
 
-AppUiConfig::AppUiConfig() :
-    m_fontFamily("")
+AppUiConfig::AppUiConfig()
 {
 
 }
@@ -123,18 +128,18 @@ void AppUiConfig::setDefault()
 {
     QSettings setting(AppSetting::instance().
                       value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
-    setting.beginGroup("FONT");
+    setting.beginGroup("Font");
     setting.setValue("en", "./resource/ui/font/arial.ttf");
     setting.setValue("zh", "./resource/ui/font/W3.otf");
     setting.endGroup();
 
-    setting.beginGroup("QSS");
-    setting.setValue("path", "./resource/qss");
+    setting.beginGroup("Skin");
+    setting.setValue("path", "./resource/skin");
     setting.setValue("launch", "launch.qss");
-    setting.setValue("default", "default.qss");
+    setting.setValue("application", "default.qss");
     setting.endGroup();
 
-    setting.beginGroup("COLOR");
+    setting.beginGroup("Color");
     setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
     setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
@@ -145,25 +150,29 @@ void AppUiConfig::loadValue(const QString &name)
 {
     //read config
     QSettings setting(name, QSettings::IniFormat);
-    setting.beginGroup("FONT");
-    m_params["Font_en"] = setting.value("en");
-    m_params["Font_zh"] = setting.value("zh");
+    setting.beginGroup("Font");
+    QString fontEn = setting.value("en", "./resource/ui/font/arial.ttf").toString();
+    QString fontZh = setting.value("zh", "./resource/ui/font/W3.otf").toString();
     setting.endGroup();
-    QFontDatabase::addApplicationFont(m_params["Font_en"].toString());
-    int id = QFontDatabase::addApplicationFont(m_params["Font_zh"].toString());
+    m_fontFamily[Font_En] = getFontFamily(QFontDatabase::addApplicationFont(fontEn));
+    m_fontFamily[Font_Zh] = getFontFamily(QFontDatabase::addApplicationFont(fontZh));
+
+    setting.beginGroup("Skin");
+    m_params["SkinPath"] = setting.value("path", "./resource/skin");
+    m_params["LaunchQss"] = setting.value("launch", "launch.qss");
+    m_params["ApplicationQss"] = setting.value("application", "default.qss");
+    setting.endGroup();
+
+    setting.beginGroup("Color");
+    m_params["InoutEditColor"] = setting.value("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
+    m_params["MusicSelectBackground"] = setting.value("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
+    setting.endGroup();
+
+}
+
+QString AppUiConfig::getFontFamily(int id)
+{
     QStringList list = QFontDatabase::applicationFontFamilies(id);
-    m_fontFamily = list.at(0);
-
-    setting.beginGroup("QSS");
-    m_params["QssPath"] = setting.value("path");
-    m_params["LaunchQss"] = setting.value("launch");
-    m_params["DefaultQss"] = setting.value("default");
-    setting.endGroup();
-
-    setting.beginGroup("COLOR");
-    m_params["InoutEditColor"] = setting.value("inoutEditColor");
-    m_params["MusicSelectBackground"] = setting.value("musicSelectBackground");
-    setting.endGroup();
-
+    return list.at(0);
 }
 

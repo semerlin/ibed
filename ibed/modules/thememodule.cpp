@@ -41,7 +41,7 @@ bool ThemeModule::load(const QVariant &val)
     //make pair qss file and its short name, for example
     //"C:/test/default.qss" and "default"
     QStringList qss = m_loader->findAllQss(AppUiConfig::instance().
-                                           value(AppUiConfig::QssPath).toString());
+                                           value(AppUiConfig::SkinPath).toString());
     foreach(const QString &name, qss)
     {
         QString fileName;
@@ -58,9 +58,16 @@ bool ThemeModule::load(const QVariant &val)
 
     QString shortCut = Util::fileName(
                 AppUiConfig::instance().
-                value(AppUiConfig::DefaultQss).toString());
+                value(AppUiConfig::LaunchQss).toString());
+
+    //remove launch skin, we only need to change application skin in program
+    if(m_themes.contains(shortCut))
+        m_themes.remove(shortCut);
 
     //load default qss
+    shortCut = Util::fileName(
+                AppUiConfig::instance().
+                value(AppUiConfig::ApplicationQss).toString());
     if(m_themes.contains(shortCut))
         ret = m_loader->loadQss(m_themes[shortCut]);
     else

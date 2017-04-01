@@ -83,7 +83,7 @@ int AppEntry::run(int argc, char **argv)
     //launch widget qss need load first
     AppLogger::instance().log()->info("initialize launch widget ui");
     QssLoader qssLoader;
-    qssLoader.loadQss(m_widget, AppUiConfig::instance().value(AppUiConfig::QssPath).toString() +
+    qssLoader.loadQss(m_widget, AppUiConfig::instance().value(AppUiConfig::SkinPath).toString() +
                       QDir::separator() +
                       AppUiConfig::instance().value(AppUiConfig::LaunchQss).toString());
 

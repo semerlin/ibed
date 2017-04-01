@@ -24,7 +24,7 @@ InOutWidget::InOutWidget(QWidget *parent) :
     ui->labelIn->setText(QT_TRANSLATE_NOOP("InOut", "入量"));
     ui->labelOut->setText(QT_TRANSLATE_NOOP("InOut", "出量"));
 
-    QFont font(AppUiConfig::instance().fontFamily());
+    QFont font(AppUiConfig::instance().fontFamily(AppUiConfig::Font_Zh));
     font.setPixelSize(12);
     QString name = font.family();
     int height = QFontMetrics(font).height() + 15;

@@ -5,38 +5,73 @@
 #include <QString>
 #include <QHash>
 
-class QVariant;
-
+/**
+ * @brief application global ui configure
+ */
 class COMMONUNITSHARED_EXPORT AppUiConfig
 {
 public:
     typedef enum
     {
-        Font_en,
-        Font_zh,
-        QssPath,
+        SkinPath,
         LaunchQss,
-        DefaultQss,
+        ApplicationQss,
         InoutEditColor,
         MusicSelectBackground,
 
         Param_count,
     }Parameter;
+
+    typedef enum
+    {
+       Font_En,
+       Font_Zh
+    }AppFont;
+
 public:
     static AppUiConfig &instance();
+
+    /**
+     * @brief initialize application ui environment
+     * @return true - initalize success
+     *         false - initialize failed
+     *         in this version, we always return true
+     */
     bool initialize(void);
+
+    /**
+     * @brief get parameter value
+     * @param param - parameter enum name
+     * @return
+     */
     QVariant value(Parameter param) const;
+
+    /**
+     * @brief set parameter value
+     * @param param - parameter name
+     * @param val - parameter value
+     */
     void setValue(Parameter param, const QVariant &val);
+
+    /**
+     * @brief save ui environment to ini file
+     */
     void save();
 
-    QString fontFamily(void) const;
+    /**
+     * @brief get font family name
+     * @param font - font enum name
+     * @return font family name
+     */
+    QString fontFamily(AppFont font) const;
 
 private:
     AppUiConfig();
     void setDefault(void);
     void loadValue(const QString &name);
+    QString getFontFamily(int id);
     QHash<QString, QVariant> m_params;
-    QString m_fontFamily;
+    QHash<AppFont, QString> m_fontFamily;
 };
 
 #endif // APPUICONFIG_H

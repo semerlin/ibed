@@ -27,7 +27,8 @@ HEADERS += utility.h\
     formula.h \
     coveragecircularqueue.h \
     crc.h \
-    bitops.h
+    bitops.h \
+    funcsimplify.h
 
 unix {
     target.path = /usr/lib
