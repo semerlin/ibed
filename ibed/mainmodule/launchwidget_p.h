@@ -3,6 +3,9 @@
 
 #include "mainmodule_global.h"
 
+/**
+ * @brief launch widget private data class
+ */
 class MAINMODULESHARED_EXPORT LaunchWidgetPrivate
 {
 public:

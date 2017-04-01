@@ -7,6 +7,9 @@
 class LaunchWidget;
 class MainModule;
 
+/**
+ * @brief application entry class
+ */
 class MAINMODULESHARED_EXPORT AppEntry : public QObject
 {
     Q_OBJECT
@@ -15,6 +18,12 @@ public:
     static AppEntry &instance();
 
 public:
+    /**
+     * @brief application entry
+     * @param argc - parameter number
+     * @param argv - parameter list
+     * @return
+     */
     int run(int argc, char **argv);
 
 private slots:

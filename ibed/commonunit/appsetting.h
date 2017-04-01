@@ -2,13 +2,14 @@
 #define APPSETTING_H
 
 #include "commonunit_global.h"
-#include <QObject>
 #include <QHash>
 #include <QVariant>
 
-class COMMONUNITSHARED_EXPORT AppSetting : public QObject
+/**
+ * @brief application global settings
+ */
+class COMMONUNITSHARED_EXPORT AppSetting
 {
-    Q_OBJECT
 public:
     typedef enum
     {
@@ -30,11 +31,33 @@ public:
 
         Param_Count,
     }Parameter;
+
 public:
     static AppSetting &instance(void);
+
+    /**
+     * @brief initialize application settings
+     * @return
+     */
     bool initialize(void);
+
+    /**
+     * @brief get parameter value
+     * @param param - parameter enum name
+     * @return parameter value
+     */
     QVariant value(Parameter param) const;
+
+    /**
+     * @brief set parameter value
+     * @param param - parameter enum name
+     * @param val - parameter value
+     */
     void setValue(Parameter param, const QVariant &val);
+
+    /**
+     * @brief save application settings to ini file
+     */
     void save(void);
 
 private:
