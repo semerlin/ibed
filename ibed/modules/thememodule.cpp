@@ -87,13 +87,23 @@ bool ThemeModule::load(const QVariant &val)
     shortCut = Util::fileName(
                 AppUiConfig::instance().
                 value(AppUiConfig::ApplicationQss).toString());
+    QString name;
     if(d->m_themes.contains(shortCut))
+    {
+        name = shortCut;
         ret = QssLoader::loadQss(d->m_themes[shortCut]);
+    }
     else
+    {
+        name = d->m_themes.begin().key();
         ret = QssLoader::loadQss(d->m_themes.begin().value());
+    }
 
     if(ret)
+    {
         m_isLoaded = true;
+        emit themeChanged(name);
+    }
     else
         m_error = QString("file '%1' does not exists").arg(shortCut);
 
@@ -127,5 +137,8 @@ void ThemeModule::changeToTheme(const QString &theme)
 {
     Q_D(ThemeModule);
     if(d->m_themes.contains(theme))
-        QssLoader::loadQss(d->m_themes[theme]);
+    {
+        if(QssLoader::loadQss(d->m_themes[theme]))
+            emit themeChanged(theme);
+    }
 }

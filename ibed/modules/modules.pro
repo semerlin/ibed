@@ -22,7 +22,8 @@ SOURCES += modules.cpp \
     uimodule.cpp \
     networkmodule.cpp \
     mediamodule.cpp \
-    callmodule.cpp
+    callmodule.cpp \
+    uimodule_p.cpp
 
 HEADERS += modules.h\
         modules_global.h \
@@ -32,7 +33,8 @@ HEADERS += modules.h\
     networkmodule.h \
     mediamodule.h \
     callmodule.h \
-    thememodule_p.h
+    thememodule_p.h \
+    uimodule_p.h
 
 unix {
     target.path = /usr/lib

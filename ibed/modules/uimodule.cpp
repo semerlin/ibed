@@ -1,3 +1,32 @@
+/*****************************************************************************
+**
+**  Copyright (C) 2016-2017 HuangYang
+**
+**  This file is part of IBED
+**
+**  This program is free software; you can redistribute it and/or modify
+**  it under the terms of the GNU General Public License version 3 as
+**  published by the Free Software Foundation.
+**
+**  You should have received a copy of the GNU General Public License
+**  along with this program. If not, see <http://www.gnu.org/licenses/>.
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**  @file     uimodule.cpp
+**  @brief    application ui display control
+**  @details  control ui display, message update, actions
+**  @author   huang yang
+**  @email    elious.huang@gmail.com
+**  @version  v1.0.0.0
+**  @license  GNU General Public License (GPL)
+**
+*****************************************************************************/
+
 #include <QTimer>
 #include "mainwidget.h"
 #include "standbywidget.h"
@@ -7,9 +36,11 @@
 #include "uimodule.h"
 #include <QResource>
 #include <QApplication>
+#include "uimodule_p.h"
 
 UiModule::UiModule(const QString &name) :
-    BaseAppModule(name)
+    BaseAppModule(name),
+    d_ptr(new UiModulePrivate(this))
 {
 
 }
@@ -22,272 +53,236 @@ UiModule::~UiModule()
 bool UiModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
+    Q_D(UiModule);
 
-    m_standByTimer = new QTimer(this);
-    m_standByCount = 0;
-    m_standByTimer->setInterval(1000);
-    connect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
+    d->init();
 
     //register resource
     QResource::registerResource("./resource/ui/res.rcc");
-
-
-    m_mainWidget =new MainWidget;
-    m_standbyWidget =new StandbyWidget;
-    m_callWidget = new CallWidget(m_mainWidget);
-    m_callWidget->hide();
-    m_progressDialog =new ProgressDialog;
-
-    //register input method
-#ifdef TARGET_IMX
-    m_method = new NumIPMethod(m_mainWidget);
-    m_method->setGeometry(0, 420, 800, 60);
-    QWSServer::setCurrentInputMethod(m_method);
-#endif
-
-    //connect signals
-    connect(m_mainWidget, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
-            this, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)));
-    connect(m_mainWidget, SIGNAL(updateAdvise()), this, SIGNAL(updateAdvise()));
-    connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), this, SIGNAL(uploadInOut(QStringList)));
-    connect(m_mainWidget, SIGNAL(brightnessChanged(int)), this, SIGNAL(brightnessChanged(int)));
-    connect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), this, SIGNAL(turnOffTimeChanged(int)));
-    connect(m_mainWidget, SIGNAL(play(QString)), this, SIGNAL(play(QString)));
-    connect(m_mainWidget, SIGNAL(pause(QString)), this, SIGNAL(pause(QString)));
-    connect(m_mainWidget, SIGNAL(stop(QString)), this, SIGNAL(stop(QString)));
-    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SIGNAL(bedCtrlPressed(int)));
-    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedCtrlPressed()));
-    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SIGNAL(bedCtrlReleased(int)));
-    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedCtrlReleased()));
-    connect(m_mainWidget, SIGNAL(infuStart()), this, SIGNAL(infuStart()));
-    connect(m_mainWidget, SIGNAL(infuStop()), this, SIGNAL(infuStop()));
-    connect(m_mainWidget, SIGNAL(callOutRequest()), this, SIGNAL(callOutRequest()));
-
-    connect(m_callWidget, SIGNAL(reject()), this, SIGNAL(callTerminate()));
-
 
     return true;
 }
 
 void UiModule::unload()
 {
-    delete m_standByTimer;
-    delete m_progressDialog;
-    delete m_callWidget;
-    delete m_standbyWidget;
-    delete m_mainWidget;
+    Q_D(UiModule);
+    d->deinit();
 }
 
 void UiModule::showMainWidget()
 {
-    m_mainWidget->show();
-    m_standByTimer->start();
+    Q_D(UiModule);
+    d->m_mainWidget->show();
+    d->m_standByTimer->start();
 }
 
 int UiModule::infuMount() const
 {
-    return m_mainWidget->infuMount();
+    return d_ptr->m_mainWidget->infuMount();
 }
 
 
 void UiModule::onRegistered()
 {
-    m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接成功!"));
+    Q_D(UiModule);
+    d->m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接成功!"));
 }
 
 void UiModule::onRegisterTimeout()
 {
-    m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接失败!"));
+    Q_D(UiModule);
+    d->m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接失败!"));
 }
 
 void UiModule::onDisconnect()
 {
-    m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接失败!"));
+    Q_D(UiModule);
+    d->m_mainWidget->setNetworkStatus(QT_TRANSLATE_NOOP("Server", "连接失败!"));
 }
 
 void UiModule::onNameChanged(const QString &name)
 {
-    m_mainWidget->setName(name);
-    m_standbyWidget->setName(name);
+    Q_D(UiModule);
+    d->m_mainWidget->setName(name);
+    d->m_standbyWidget->setName(name);
 }
 
 void UiModule::onSexChanged(const QString &sex)
 {
-    m_mainWidget->setSex(sex);
+    Q_D(UiModule);
+    d->m_mainWidget->setSex(sex);
 }
 
 void UiModule::onAgeChanged(const QString &age)
 {
-    m_mainWidget->setAge(age);
-    m_standbyWidget->setAge(age.toInt());
+    Q_D(UiModule);
+    d->m_mainWidget->setAge(age);
+    d->m_standbyWidget->setAge(age.toInt());
 }
 
 void UiModule::onBedChanged(const QString &bed)
 {
-    m_mainWidget->setBed(bed);
-    m_standbyWidget->setBedNum(bed.toInt());
+    Q_D(UiModule);
+    d->m_mainWidget->setBed(bed);
+    d->m_standbyWidget->setBedNum(bed.toInt());
 }
 
 void UiModule::onLevelChanged(const QString &level)
 {
+    Q_D(UiModule);
     QString display;
     switch(level.toInt())
     {
     case 0:
         display = "特级护理";
-        m_mainWidget->setLevelColor(Qt::white, Qt::red);
+        d->m_mainWidget->setLevelColor(Qt::white, Qt::red);
         break;
     case 1:
         display = "一级护理";
-        m_mainWidget->setLevelColor(Qt::white, QColor(255, 0, 255));
+        d->m_mainWidget->setLevelColor(Qt::white, QColor(255, 0, 255));
         break;
     case 2:
         display = "二级护理";
-        m_mainWidget->setLevelColor(Qt::white, Qt::blue);
+        d->m_mainWidget->setLevelColor(Qt::white, Qt::blue);
         break;
     case 3:
         display = "三级护理";
-        m_mainWidget->setLevelColor(Qt::gray, Qt::white);
+        d->m_mainWidget->setLevelColor(Qt::gray, Qt::white);
         break;
     default:
         display = "三级护理";
-        m_mainWidget->setLevelColor(Qt::gray, Qt::white);
+        d->m_mainWidget->setLevelColor(Qt::gray, Qt::white);
         break;
     }
 
-    m_mainWidget->setLevel(display);
-    m_standbyWidget->setNursery(level.toInt());
+    d->m_mainWidget->setLevel(display);
+    d->m_standbyWidget->setNursery(level.toInt());
 }
 
 void UiModule::onTimeChanged(const QString &time)
 {
+    Q_D(UiModule);
     int index = time.indexOf("/");
-    m_mainWidget->setTime(time.left(index) + "\n" + time.right(time.count() - index - 1));
+    d->m_mainWidget->setTime(time.left(index) + "\n" + time.right(time.count() - index - 1));
 }
 
 void UiModule::onDoctorChanged(const QString &doctor)
 {
-    m_mainWidget->setDoctor(doctor);
+    Q_D(UiModule);
+    d->m_mainWidget->setDoctor(doctor);
 }
 
 void UiModule::onEatChanged(const QString &eat)
 {
-    m_mainWidget->setEat(eat);
+    Q_D(UiModule);
+    d->m_mainWidget->setEat(eat);
 }
 
 void UiModule::onNurseChanged(const QString &nurse)
 {
-    m_mainWidget->setNurse(nurse);
+    Q_D(UiModule);
+    d->m_mainWidget->setNurse(nurse);
 }
 
 void UiModule::onAdviseChanged(const QString &advise)
 {
-    m_mainWidget->setAdvise(advise);
+    Q_D(UiModule);
+    d->m_mainWidget->setAdvise(advise);
 }
 
 void UiModule::onAllergyChanged(const QString &allergy)
 {
-    m_mainWidget->setAllergy(allergy);
+    Q_D(UiModule);
+    d->m_mainWidget->setAllergy(allergy);
 }
 
 void UiModule::onAdviseUpdate(const QString &data)
 {
-    m_mainWidget->addAdvise(data);
-}
-
-void UiModule::onStandbyTimeout()
-{
-    if(m_standByCount++ > 6)
-    {
-        if(m_standbyWidget->isHidden())
-            m_standbyWidget->show();
-    }
-}
-
-void UiModule::onStandbyClicked()
-{
-    m_standByCount = 0;
-    m_standbyWidget->hide();
+    Q_D(UiModule);
+    d->m_mainWidget->addAdvise(data);
 }
 
 void UiModule::onLightIntensityChanged(int intensity)
 {
-    m_standbyWidget->setLightIntensity(QString::number(intensity));
+    Q_D(UiModule);
+    d->m_standbyWidget->setLightIntensity(QString::number(intensity));
 }
 
 void UiModule::onTemperatureChanged(int temper)
 {
-    m_standbyWidget->setTemperature(QString::number(temper)+"℃");
+    Q_D(UiModule);
+    d->m_standbyWidget->setTemperature(QString::number(temper)+"℃");
 }
 
 void UiModule::onHumidityChanged(int humidity)
 {
-    m_standbyWidget->setHumidity(QString::number(humidity) + "%");
+    Q_D(UiModule);
+    d->m_standbyWidget->setHumidity(QString::number(humidity) + "%");
 }
 
 void UiModule::onAudioIntensityChanged(int intensity)
 {
-    m_standbyWidget->setAudioIntensity(QString::number(intensity));
+    Q_D(UiModule);
+    d->m_standbyWidget->setAudioIntensity(QString::number(intensity));
 }
 
 void UiModule::onClicked()
 {
-    m_standByCount = 0;
-    if(!m_standbyWidget->isHidden())
-        m_standbyWidget->hide();
+    Q_D(UiModule);
+    d->m_standByCount = 0;
+    if(!d->m_standbyWidget->isHidden())
+        d->m_standbyWidget->hide();
 }
 
 void UiModule::onWeightChanged(double weight)
 {
+    Q_D(UiModule);
     int temp = static_cast<int>(weight);
-    m_standbyWidget->setWeight(QString::number(temp)+"Kg");
-    m_mainWidget->setWeight(weight);
+    d->m_standbyWidget->setWeight(QString::number(temp)+"Kg");
+    d->m_mainWidget->setWeight(weight);
 }
 
 void UiModule::onInfuInputChanged(int mount)
 {
-    if(m_mainWidget->infuMount() > 0)
+    Q_D(UiModule);
+    if(d->m_mainWidget->infuMount() > 0)
     {
-        int left = (m_mainWidget->infuMount() - mount) * 100 / m_mainWidget->infuMount();
-        m_mainWidget->setLeft(left);
+        int left = (d->m_mainWidget->infuMount() - mount) * 100 / d->m_mainWidget->infuMount();
+        d->m_mainWidget->setLeft(left);
     }
 }
 
 
 void UiModule::onInfuSpeedChanged(int speed)
 {
-    m_mainWidget->setSpeed(speed);
+    Q_D(UiModule);
+    d->m_mainWidget->setSpeed(speed);
 }
 
 void UiModule::onCallOutConnecting()
 {
-    m_callWidget->show();
-    m_callWidget->setGeometry(321, 88, 158, 304);
+    Q_D(UiModule);
+    d->m_callWidget->show();
+    d->m_callWidget->setGeometry(321, 88, 158, 304);
 }
 
 void UiModule::onCallInConnecting()
 {
-    m_callWidget->show();
-    m_callWidget->setGeometry(321, 88, 158, 304);
+    Q_D(UiModule);
+    d->m_callWidget->show();
+    d->m_callWidget->setGeometry(321, 88, 158, 304);
 }
 
 void UiModule::onCallConnected()
 {
-    m_callWidget->beginTimer();
+    Q_D(UiModule);
+    d->m_callWidget->beginTimer();
 }
 
 void UiModule::onCallTerminate()
 {
-    m_callWidget->endTimer();
-    m_callWidget->hide();
+    Q_D(UiModule);
+    d->m_callWidget->endTimer();
+    d->m_callWidget->hide();
 }
 
-void UiModule::onBedCtrlPressed()
-{
-    m_standByTimer->stop();
-}
-
-void UiModule::onBedCtrlReleased()
-{
-    m_standByTimer->start();
-}
