@@ -4,9 +4,8 @@
 #include "framework_global.h"
 #include <QVariant>
 
-class FRAMEWORKSHARED_EXPORT IAppModule : public QObject
+class FRAMEWORKSHARED_EXPORT IAppModule
 {
-    Q_OBJECT
 public:
     IAppModule() {}
     virtual ~IAppModule() {}
@@ -14,16 +13,15 @@ public:
 public:
     /**
      * @brief load this module
-     * @param val: value pass in this module
-     * @return true: load success
-     *         false: load failed
+     * @param val - value pass to this module
+     * @return load status
      */
     virtual bool load(const QVariant &val = QVariant(QVariant::Invalid)) = 0;
 
     /**
-     * @brief is this module has already beenl loaded?
-     * @return true: yes
-     *         false: no
+     * @brief is this module has already been loaded?
+     * @return true -  yes
+     *         false -  no
      */
     virtual bool isLoaded(void) const = 0;
 
@@ -34,8 +32,9 @@ public:
 
     /**
      * @brief reload this module
+     * @return reload status
      */
-    virtual void reload(void) = 0;
+    virtual bool reload(void) = 0;
 
     /**
      * @brief set module name
@@ -49,19 +48,10 @@ public:
     virtual QString name(void) const = 0;
 
     /**
-     * @brief error string if load failed
-     * @return error string
+     * @brief error code if load failed
+     * @return error code
      */
     virtual QString error(void) const = 0;
-
-    /**
-     * @brief is this module can run in thread that
-     *        is not the main thread
-     */
-    virtual bool canRunInThread(void) const  = 0;
-
-signals:
-    void message(const QString &msg);
 };
 
 #endif // IAPPMODULE

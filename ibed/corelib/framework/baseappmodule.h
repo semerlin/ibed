@@ -3,22 +3,26 @@
 
 #include "framework_global.h"
 #include "iappmodule.h"
+#include <QObject>
 
-class FRAMEWORKSHARED_EXPORT BaseAppModule : public IAppModule
+class FRAMEWORKSHARED_EXPORT BaseAppModule : public QObject, public IAppModule
 {
+    Q_OBJECT
 public:
-    explicit BaseAppModule(const QString &name = "NullModule");
-    virtual ~BaseAppModule();
+    explicit BaseAppModule(const QString &name = "empty");
+    virtual ~BaseAppModule(){}
 
 public:
-    virtual bool load(const QVariant &extraVal = QVariant(QVariant::Invalid));
+    virtual bool load(const QVariant &extraVal = QVariant(QVariant::Invalid)) = 0;
     virtual bool isLoaded() const;
-    virtual void unload();
-    virtual void reload();
+    virtual void unload() = 0;
+    virtual bool reload();
     void setName(const QString &name);
     QString name() const;
     QString error() const;
-    virtual bool canRunInThread() const;
+
+signals:
+    void message(const QString &msg);
 
 protected:
     bool m_isLoaded;

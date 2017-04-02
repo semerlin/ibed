@@ -31,7 +31,8 @@ HEADERS += modules.h\
     uimodule.h \
     networkmodule.h \
     mediamodule.h \
-    callmodule.h
+    callmodule.h \
+    thememodule_p.h
 
 unix {
     target.path = /usr/lib

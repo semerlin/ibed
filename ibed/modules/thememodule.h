@@ -3,9 +3,8 @@
 
 #include "modules_global.h"
 #include "baseappmodule.h"
-#include <QHash>
 
-class QssLoader;
+class ThemeModulePrivate;
 
 class MODULESSHARED_EXPORT ThemeModule : public BaseAppModule
 {
@@ -17,10 +16,12 @@ public:
     bool load(const QVariant &val);
     void unload();
     QStringList themes(void);
+    void changeToTheme(const QString &theme);
 
 private:
-    QssLoader *m_loader;
-    QHash<QString, QString> m_themes;  //shortcut name first
+    ThemeModulePrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(ThemeModule);
+    Q_DISABLE_COPY(ThemeModule);
 };
 
 #endif // QSSMODULE_H
