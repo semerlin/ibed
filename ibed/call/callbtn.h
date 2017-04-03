@@ -5,6 +5,8 @@
 #include "call_global.h"
 class QTimer;
 
+class CallBtnPrivate;
+
 class CALLSHARED_EXPORT CallBtn : public QObject
 {
     Q_OBJECT
@@ -13,18 +15,27 @@ public:
     ~CallBtn();
 
 public:
+    /**
+     * @brief init call button monitor
+     * @return
+     */
     bool init();
 
 signals:
+    /**
+     * @brief this signal is emitted as soon as button pressed
+     */
     void callPressed(void);
+
+    /**
+     * @brief this signal is emitted as soon as button released
+     */
     void cancelPressed(void);
 
-private slots:
-    void onMonitorKeys(void);
-
 private:
-    int m_fd;
-    QTimer *m_timer;
+    CallBtnPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(CallBtn)
+
 };
 
 #endif // CALLBTN_H

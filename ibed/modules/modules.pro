@@ -22,8 +22,7 @@ SOURCES += modules.cpp \
     uimodule.cpp \
     networkmodule.cpp \
     mediamodule.cpp \
-    callmodule.cpp \
-    uimodule_p.cpp
+    callmodule.cpp
 
 HEADERS += modules.h\
         modules_global.h \

@@ -17,25 +17,21 @@ DEFINES += CALL_LIBRARY
 
 SOURCES += \
     callbtn.cpp \
-    callmange.cpp \
-    sip.cpp
+    sip.cpp \
+    callmanage.cpp
 
 HEADERS += call.h\
         call_global.h \
     callbtn.h \
-    calldef.h \
-    callmange.h \
-    sip.h
+    sip.h \
+    callbtn_p.h \
+    callmanage_p.h \
+    callmanage.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
-
-unix:!macx: LIBS += -L$$OUT_PWD/../commonunit/ -lcommonunit
-
-INCLUDEPATH += $$PWD/../commonunit
-DEPENDPATH += $$PWD/../commonunit
 
 unix:!macx: LIBS += -L$$OUT_PWD/../3rdpart/log4qt/ -llog4qt
 

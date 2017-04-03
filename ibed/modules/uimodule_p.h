@@ -17,6 +17,7 @@ class MODULESSHARED_EXPORT UiModulePrivate : public QObject
     Q_OBJECT
 public:
     explicit UiModulePrivate(UiModule *parent);
+    ~UiModulePrivate();
 
 public:
     /**

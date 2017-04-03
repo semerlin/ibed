@@ -46,6 +46,7 @@ ThemeModule::ThemeModule(const QString &name) :
 ThemeModule::~ThemeModule()
 {
     unload();
+    delete d_ptr;
 }
 
 bool ThemeModule::load(const QVariant &val)

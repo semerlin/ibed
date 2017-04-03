@@ -47,7 +47,7 @@ UiModule::UiModule(const QString &name) :
 
 UiModule::~UiModule()
 {
-    unload();
+    delete d_ptr;
 }
 
 bool UiModule::load(const QVariant &val)
@@ -284,5 +284,128 @@ void UiModule::onCallTerminate()
     Q_D(UiModule);
     d->m_callWidget->endTimer();
     d->m_callWidget->hide();
+}
+
+
+
+UiModulePrivate::UiModulePrivate(UiModule *parent) :
+    m_mainWidget(NULL),
+    m_standbyWidget(NULL),
+    m_callWidget(NULL),
+    m_progressDialog(NULL),
+    #ifdef TARGET_IMX
+    m_method(NULL),
+    #endif
+    m_standByCount(0),
+    q_ptr(parent)
+{
+}
+
+UiModulePrivate::~UiModulePrivate()
+{
+    delete m_standByTimer;
+    delete m_progressDialog;
+    delete m_callWidget;
+    delete m_standbyWidget;
+    delete m_mainWidget;
+}
+
+void UiModulePrivate::init()
+{
+    Q_Q(UiModule);
+    m_standByTimer = new QTimer(this);
+    m_standByCount = 0;
+    m_standByTimer->setInterval(1000);
+    connect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
+
+    //register resource
+    QResource::registerResource("./resource/ui/res.rcc");
+
+
+    m_mainWidget =new MainWidget;
+    m_standbyWidget =new StandbyWidget;
+    m_callWidget = new CallWidget(m_mainWidget);
+    m_callWidget->hide();
+    m_progressDialog =new ProgressDialog;
+
+    //register input method
+#ifdef TARGET_IMX
+    m_method = new NumIPMethod(m_mainWidget);
+    m_method->setGeometry(0, 420, 800, 60);
+    QWSServer::setCurrentInputMethod(m_method);
+#endif
+
+    //connect signals
+    connect(m_mainWidget, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
+            q, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)));
+    connect(m_mainWidget, SIGNAL(updateAdvise()), q, SIGNAL(updateAdvise()));
+    connect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), q, SIGNAL(uploadInOut(QStringList)));
+    connect(m_mainWidget, SIGNAL(brightnessChanged(int)), q, SIGNAL(brightnessChanged(int)));
+    connect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), q, SIGNAL(turnOffTimeChanged(int)));
+    connect(m_mainWidget, SIGNAL(play(QString)), q, SIGNAL(play(QString)));
+    connect(m_mainWidget, SIGNAL(pause(QString)), q, SIGNAL(pause(QString)));
+    connect(m_mainWidget, SIGNAL(stop(QString)), q, SIGNAL(stop(QString)));
+    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), q, SIGNAL(bedCtrlPressed(int)));
+    connect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedCtrlPressed()));
+    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), q, SIGNAL(bedCtrlReleased(int)));
+    connect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedCtrlReleased()));
+    connect(m_mainWidget, SIGNAL(infuStart()), q, SIGNAL(infuStart()));
+    connect(m_mainWidget, SIGNAL(infuStop()), q, SIGNAL(infuStop()));
+    connect(m_mainWidget, SIGNAL(callOutRequest()), q, SIGNAL(callOutRequest()));
+
+    connect(m_callWidget, SIGNAL(reject()), q, SIGNAL(callTerminate()));
+}
+
+void UiModulePrivate::deinit()
+{
+    Q_Q(UiModule);
+    //register resource
+    QResource::unregisterResource("./resource/ui/res.rcc");
+
+    //disconnect signals
+    disconnect(m_standByTimer, SIGNAL(timeout()), this, SLOT(onStandbyTimeout()));
+    disconnect(m_mainWidget, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)),
+            q, SIGNAL(reconnect(QString,quint16,quint16,QString,QString,QString)));
+    disconnect(m_mainWidget, SIGNAL(updateAdvise()), q, SIGNAL(updateAdvise()));
+    disconnect(m_mainWidget, SIGNAL(uploadInOut(QStringList)), q, SIGNAL(uploadInOut(QStringList)));
+    disconnect(m_mainWidget, SIGNAL(brightnessChanged(int)), q, SIGNAL(brightnessChanged(int)));
+    disconnect(m_mainWidget, SIGNAL(turnOffTimeChanged(int)), q, SIGNAL(turnOffTimeChanged(int)));
+    disconnect(m_mainWidget, SIGNAL(play(QString)), q, SIGNAL(play(QString)));
+    disconnect(m_mainWidget, SIGNAL(pause(QString)), q, SIGNAL(pause(QString)));
+    disconnect(m_mainWidget, SIGNAL(stop(QString)), q, SIGNAL(stop(QString)));
+    disconnect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), q, SIGNAL(bedCtrlPressed(int)));
+    disconnect(m_mainWidget, SIGNAL(bedCtrlPressed(int)), this, SLOT(onBedCtrlPressed()));
+    disconnect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), q, SIGNAL(bedCtrlReleased(int)));
+    disconnect(m_mainWidget, SIGNAL(bedCtrlReleased(int)), this, SLOT(onBedCtrlReleased()));
+    disconnect(m_mainWidget, SIGNAL(infuStart()), q, SIGNAL(infuStart()));
+    disconnect(m_mainWidget, SIGNAL(infuStop()), q, SIGNAL(infuStop()));
+    disconnect(m_mainWidget, SIGNAL(callOutRequest()), q, SIGNAL(callOutRequest()));
+
+    disconnect(m_callWidget, SIGNAL(reject()), q, SIGNAL(callTerminate()));
+
+    delete m_standByTimer;
+    delete m_progressDialog;
+    delete m_callWidget;
+    delete m_standbyWidget;
+    delete m_mainWidget;
+}
+
+void UiModulePrivate::onStandbyTimeout()
+{
+    if(m_standByCount++ > 6)
+    {
+        if(m_standbyWidget->isHidden())
+            m_standbyWidget->show();
+    }
+}
+
+void UiModulePrivate::onBedCtrlPressed()
+{
+    m_standByTimer->stop();
+}
+
+void UiModulePrivate::onBedCtrlReleased()
+{
+    m_standByTimer->start();
 }
 
