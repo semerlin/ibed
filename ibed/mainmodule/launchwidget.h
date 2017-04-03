@@ -35,7 +35,8 @@ protected:
 
 private:
     Ui::LaunchWidget *ui;
-    Q_DECLARE_PRIVATE(LaunchWidget);
+    Q_DECLARE_PRIVATE(LaunchWidget)
+    Q_DISABLE_COPY(LaunchWidget)
 };
 
 #endif // LANCHWIDGET_H

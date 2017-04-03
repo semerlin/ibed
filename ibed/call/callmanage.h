@@ -45,8 +45,8 @@ signals:
 
 private:
     CallManagePrivate *const d_ptr;
-    Q_DECLARE_PRIVATE(CallManage);
-    Q_DISABLE_COPY(CallManage);
+    Q_DECLARE_PRIVATE(CallManage)
+    Q_DISABLE_COPY(CallManage)
 
 };
 

@@ -26,7 +26,7 @@ private slots:
 
 private:
     CallBtn *const q_ptr;
-    Q_DECLARE_PUBLIC(CallBtn);
+    Q_DECLARE_PUBLIC(CallBtn)
 };
 
 #endif // CALLBTN_P

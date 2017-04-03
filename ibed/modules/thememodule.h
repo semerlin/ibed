@@ -40,8 +40,8 @@ signals:
 
 private:
     ThemeModulePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ThemeModule);
-    Q_DISABLE_COPY(ThemeModule);
+    Q_DECLARE_PRIVATE(ThemeModule)
+    Q_DISABLE_COPY(ThemeModule)
 };
 
 #endif // QSSMODULE_H

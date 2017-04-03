@@ -30,7 +30,7 @@ private slots:
 
 private:
     CallManage *const q_ptr;
-    Q_DECLARE_PUBLIC(CallManage);
+    Q_DECLARE_PUBLIC(CallManage)
 };
 
 #endif // CALLMANAGE_P

@@ -35,7 +35,7 @@ signals:
 private:
     CallBtnPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(CallBtn)
-
+    Q_DISABLE_COPY(CallBtn)
 };
 
 #endif // CALLBTN_H

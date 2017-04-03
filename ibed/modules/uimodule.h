@@ -266,8 +266,8 @@ signals:
 
 private:
     UiModulePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(UiModule);
-    Q_DISABLE_COPY(UiModule);
+    Q_DECLARE_PRIVATE(UiModule)
+    Q_DISABLE_COPY(UiModule)
 };
 
 #endif // UIMODULE_H

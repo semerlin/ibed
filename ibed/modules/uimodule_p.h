@@ -48,7 +48,7 @@ private slots:
 
 private:
     UiModule * const q_ptr;
-    Q_DECLARE_PUBLIC(UiModule);
+    Q_DECLARE_PUBLIC(UiModule)
 };
 
 
