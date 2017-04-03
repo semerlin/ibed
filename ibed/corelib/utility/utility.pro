@@ -28,7 +28,7 @@ HEADERS += utility.h\
     coveragecircularqueue.h \
     crc.h \
     bitops.h \
-    funcsimplify.h
+    funcwrap.h
 
 unix {
     target.path = /usr/lib
