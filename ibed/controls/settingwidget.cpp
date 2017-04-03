@@ -1,7 +1,7 @@
 #include "settingwidget.h"
 #include "ui_settingwidget.h"
 #include "util.h"
-#include "servermanger.h"
+#include "servermanager.h"
 #include "netconfig.h"
 #include "appsetting.h"
 #include "systemcall.h"

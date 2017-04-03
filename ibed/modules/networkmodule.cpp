@@ -1,7 +1,7 @@
 #include "defaultclient.h"
 #include "registerdatahandler.h"
 #include "networkmodule.h"
-#include "servermanger.h"
+#include "servermanager.h"
 #include "systemcall.h"
 #include "netconfig.h"
 #include "QTimer"

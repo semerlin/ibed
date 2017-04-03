@@ -15,18 +15,18 @@ SOURCES += commonunit.cpp \
     applogger.cpp \
     appsetting.cpp \
     appuiconfig.cpp \
-    servermanger.cpp \
-    netconfig.cpp
+    netconfig.cpp \
+    servermanager.cpp
 
 HEADERS += commonunit.h\
         commonunit_global.h \
     applogger.h \
     appsetting.h \
     appuiconfig.h \
-    servermanger.h \
     netconfig.h \
     appuiconfig_p.h \
-    appsetting_p.h
+    appsetting_p.h \
+    servermanager.h
 
 unix {
     target.path = /usr/lib

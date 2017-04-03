@@ -1,6 +1,6 @@
 #include "serverethwidget.h"
 #include "ui_serverethwidget.h"
-#include "servermanger.h"
+#include "servermanager.h"
 #include "appsetting.h"
 
 ServerEthWidget::ServerEthWidget(QWidget *parent) :

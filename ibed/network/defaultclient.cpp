@@ -5,7 +5,7 @@
 #include "netprotocol.h"
 #include <QTcpSocket>
 #include "defaultclient.h"
-#include "servermanger.h"
+#include "servermanager.h"
 #include <QTimer>
 #include <QHostAddress>
 #include <QStringList>

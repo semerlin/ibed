@@ -32,7 +32,7 @@
 #include "callmanage.h"
 #include "sip.h"
 #include "appsetting.h"
-#include "servermanger.h"
+#include "servermanager.h"
 #include "callmanage_p.h"
 
 CallManage::CallManage() :
