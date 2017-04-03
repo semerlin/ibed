@@ -2,8 +2,9 @@
 #define APPSETTING_H
 
 #include "commonunit_global.h"
-#include <QHash>
 #include <QVariant>
+
+class AppSettingPrivate;
 
 /**
  * @brief application global settings
@@ -62,8 +63,9 @@ public:
 
 private:
     AppSetting();
-    void setDefault();
-    QHash<QString, QVariant> m_params;
+    ~AppSetting();
+    AppSettingPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(AppSetting)
 };
 
 #endif // APPSETTING_H

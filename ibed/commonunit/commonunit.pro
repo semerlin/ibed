@@ -24,7 +24,9 @@ HEADERS += commonunit.h\
     appsetting.h \
     appuiconfig.h \
     servermanger.h \
-    netconfig.h
+    netconfig.h \
+    appuiconfig_p.h \
+    appsetting_p.h
 
 unix {
     target.path = /usr/lib

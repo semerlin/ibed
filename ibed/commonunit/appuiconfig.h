@@ -5,6 +5,8 @@
 #include <QString>
 #include <QHash>
 
+class AppUiConfigPrivate;
+
 /**
  * @brief application global ui configure
  */
@@ -67,11 +69,9 @@ public:
 
 private:
     AppUiConfig();
-    void setDefault(void);
-    void loadValue(const QString &name);
-    QString getFontFamily(int id);
-    QHash<QString, QVariant> m_params;
-    QHash<AppFont, QString> m_fontFamily;
+    ~AppUiConfig();
+    AppUiConfigPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(AppUiConfig)
 };
 
 #endif // APPUICONFIG_H

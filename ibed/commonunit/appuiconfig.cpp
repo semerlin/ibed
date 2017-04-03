@@ -36,6 +36,7 @@
 #include <QColor>
 #include "util.h"
 #include "systemcall.h"
+#include "appuiconfig_p.h"
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
@@ -54,6 +55,10 @@ static const QStringList s_colorParams = QStringList()
         << "InoutEditColor"
         << "MusicSelectBackground";
 
+static const QStringList s_fontParams = QStringList()
+        << "Font_En"
+        << "Font_Zh";
+
 
 AppUiConfig &AppUiConfig::instance()
 {
@@ -63,12 +68,13 @@ AppUiConfig &AppUiConfig::instance()
 
 bool AppUiConfig::initialize()
 {
+    Q_D(AppUiConfig);
     QString fileName = AppSetting::instance().
             value(AppSetting::UiConfig).toString();
     if(!QFile::exists(fileName))
-        setDefault();
+        d->setDefault();
 
-    loadValue(fileName);
+    d->loadValue(fileName);
 
     return true;
 }
@@ -79,30 +85,32 @@ QVariant AppUiConfig::value(AppUiConfig::Parameter param) const
     QString name = s_allParams.at(param);
 
     if(s_qssParams.contains(name))
-        return m_params[name];
+        return d_ptr->m_params[name];
     else
     {
         Q_ASSERT(s_colorParams.contains(name));
-        return Util::stringListToColor(m_params[name].toStringList()).rgb();
+        return Util::stringListToColor(d_ptr->m_params[name].toStringList()).rgb();
     }
 }
 
 void AppUiConfig::setValue(AppUiConfig::Parameter param, const QVariant &val)
 {
     Q_ASSERT(s_allParams.count() > param);
-    m_params[s_allParams.at(param)] = val;
+    Q_D(AppUiConfig);
+    d->m_params[s_allParams.at(param)] = val;
 }
 
 void AppUiConfig::save()
 {
+    Q_D(AppUiConfig);
     QSettings setting(AppSetting::instance().
                       value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
 
     //save "Skin" and "Color" configure, "Font" configure can't be nodified in program
     setting.beginGroup("Skin");
-    setting.setValue("path", m_params["SkinPath"].toString());
-    setting.setValue("launch", m_params["LaunchQss"].toString());
-    setting.setValue("application", m_params["ApplicationQss"].toString());
+    setting.setValue("path", d->m_params["SkinPath"].toString());
+    setting.setValue("launch", d->m_params["LaunchQss"].toString());
+    setting.setValue("application", d->m_params["ApplicationQss"].toString());
     setting.endGroup();
 
     setting.beginGroup("Color");
@@ -115,16 +123,23 @@ void AppUiConfig::save()
 
 QString AppUiConfig::fontFamily(AppFont font) const
 {
-   return m_fontFamily[font];
+    Q_ASSERT(s_fontParams.count() > font);
+    return d_ptr->m_fontFamily[s_fontParams.at(font)];
 }
 
-AppUiConfig::AppUiConfig()
+AppUiConfig::AppUiConfig() :
+    d_ptr(new AppUiConfigPrivate)
 {
 
 }
 
+AppUiConfig::~AppUiConfig()
+{
+    delete d_ptr;
+}
 
-void AppUiConfig::setDefault()
+
+void AppUiConfigPrivate::setDefault()
 {
     QSettings setting(AppSetting::instance().
                       value(AppSetting::UiConfig).toString(), QSettings::IniFormat);
@@ -143,10 +158,9 @@ void AppUiConfig::setDefault()
     setting.setValue("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
     setting.setValue("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
-
 }
 
-void AppUiConfig::loadValue(const QString &name)
+void AppUiConfigPrivate::loadValue(const QString &name)
 {
     //read config
     QSettings setting(name, QSettings::IniFormat);
@@ -154,8 +168,8 @@ void AppUiConfig::loadValue(const QString &name)
     QString fontEn = setting.value("en", "./resource/ui/font/arial.ttf").toString();
     QString fontZh = setting.value("zh", "./resource/ui/font/W3.otf").toString();
     setting.endGroup();
-    m_fontFamily[Font_En] = getFontFamily(QFontDatabase::addApplicationFont(fontEn));
-    m_fontFamily[Font_Zh] = getFontFamily(QFontDatabase::addApplicationFont(fontZh));
+    m_fontFamily["Font_En"] = getFontFamily(QFontDatabase::addApplicationFont(fontEn));
+    m_fontFamily["Font_Zh"] = getFontFamily(QFontDatabase::addApplicationFont(fontZh));
 
     setting.beginGroup("Skin");
     m_params["SkinPath"] = setting.value("path", "./resource/skin");
@@ -167,12 +181,4 @@ void AppUiConfig::loadValue(const QString &name)
     m_params["InoutEditColor"] = setting.value("inoutEditColor", Util::colorToStringList(QColor(186, 186, 186)));
     m_params["MusicSelectBackground"] = setting.value("musicSelectBackground", Util::colorToStringList(QColor(100, 181, 237)));
     setting.endGroup();
-
 }
-
-QString AppUiConfig::getFontFamily(int id)
-{
-    QStringList list = QFontDatabase::applicationFontFamilies(id);
-    return list.at(0);
-}
-

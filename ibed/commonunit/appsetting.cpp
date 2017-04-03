@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QStringList>
 #include "systemcall.h"
+#include "appsetting_p.h"
 
 #define SETTING_FILE ("./resource/setting/appsetting.ini")
 
@@ -60,26 +61,27 @@ AppSetting &AppSetting::instance()
 
 bool AppSetting::initialize()
 {
+    Q_D(AppSetting);
     if(!QFile::exists(SETTING_FILE))
-        setDefault();
+        d->setDefault();
 
     //read config
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
     setting.beginGroup("Config");
-    m_params["LogConfig"] = setting.value("logConfig", "./resource/setting/log.conf").toString();
-    m_params["UiConfig"] = setting.value("uiConfig", "./resource/setting/appuiconfig.ini").toString();
-    m_params["ServerConfig"] = setting.value("serverConfig", "./resource/setting/serverconfig.ini").toString();
-    m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
-    m_params["DriverConfig"] = setting.value("driverConfig", "./resource/driver").toString();
-    m_params["EduAudioPath"] = setting.value("eduPath", "./resource/education").toString();
+    d->m_params["LogConfig"] = setting.value("logConfig", "./resource/setting/log.conf").toString();
+    d->m_params["UiConfig"] = setting.value("uiConfig", "./resource/setting/appuiconfig.ini").toString();
+    d->m_params["ServerConfig"] = setting.value("serverConfig", "./resource/setting/serverconfig.ini").toString();
+    d->m_params["NetConfig"] = setting.value("netConfig", "./resource/setting/interfaces").toString();
+    d->m_params["DriverConfig"] = setting.value("driverConfig", "./resource/driver").toString();
+    d->m_params["EduAudioPath"] = setting.value("eduPath", "./resource/education").toString();
     setting.endGroup();
 
     setting.beginGroup("Common");
-    m_params["DeviceNum"] = setting.value("device", 0).toUInt();
-    m_params["Brightness"] = setting.value("brightness", 100).toUInt();
-    m_params["Sound"] = setting.value("sound", 100).toUInt();
-    m_params["TurnOffTime"] = setting.value("turnofftime", 20).toUInt();
-    m_params["ModbusPort"] = setting.value("modbusport", "/dev/ttySP1").toString();
+    d->m_params["DeviceNum"] = setting.value("device", 0).toUInt();
+    d->m_params["Brightness"] = setting.value("brightness", 100).toUInt();
+    d->m_params["Sound"] = setting.value("sound", 100).toUInt();
+    d->m_params["TurnOffTime"] = setting.value("turnofftime", 20).toUInt();
+    d->m_params["ModbusPort"] = setting.value("modbusport", "/dev/ttySP1").toString();
     setting.endGroup();
 
     return true;
@@ -88,36 +90,45 @@ bool AppSetting::initialize()
 QVariant AppSetting::value(AppSetting::Parameter param) const
 {
     Q_ASSERT(s_allParams.count() > param);
-    return m_params[s_allParams.at(param)];
+    return d_ptr->m_params[s_allParams.at(param)];
 }
 
 void AppSetting::setValue(AppSetting::Parameter param, const QVariant &val)
 {
+    Q_D(AppSetting);
     Q_ASSERT(s_allParams.count() > param);
-    m_params[s_allParams.at(param)] = val;
+    d->m_params[s_allParams.at(param)] = val;
 }
 
 void AppSetting::save()
 {
+    Q_D(AppSetting);
     //just save "Common" settings, "Config" settings can't be modified in program
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
 
     setting.beginGroup("Common");
-    setting.setValue("device", m_params["DeviceNum"]);
-    setting.setValue("brightness", m_params["Brightness"]);
-    setting.setValue("sound", m_params["Sound"]);
-    setting.setValue("turnofftime", m_params["TurnOffTime"]);
+    setting.setValue("device", d->m_params["DeviceNum"]);
+    setting.setValue("brightness", d->m_params["Brightness"]);
+    setting.setValue("sound", d->m_params["Sound"]);
+    setting.setValue("turnofftime", d->m_params["TurnOffTime"]);
     setting.endGroup();
 
     SystemCall::sync();
 }
 
-AppSetting::AppSetting()
+AppSetting::AppSetting() :
+    d_ptr(new AppSettingPrivate)
 {
 
 }
 
-void AppSetting::setDefault()
+AppSetting::~AppSetting()
+{
+    delete d_ptr;
+}
+
+
+void AppSettingPrivate::setDefault()
 {
     QSettings setting(SETTING_FILE, QSettings::IniFormat);
     setting.beginGroup("Config");
@@ -136,5 +147,4 @@ void AppSetting::setDefault()
     setting.setValue("turnofftime", 20);
     setting.setValue("modbusport", "/dev/ttySP1");
     setting.endGroup();
-
 }
