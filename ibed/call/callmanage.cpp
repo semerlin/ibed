@@ -110,7 +110,6 @@ CallManagePrivate::CallManagePrivate(CallManage *parent) :
 
 CallManagePrivate::~CallManagePrivate()
 {
-    delete m_sip;
 }
 
 void CallManagePrivate::onStateChanged(CallState prev, CallState current)

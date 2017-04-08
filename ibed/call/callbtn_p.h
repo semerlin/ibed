@@ -3,6 +3,7 @@
 
 #include "call_global.h"
 #include <QObject>
+#include "boost/shared_ptr.hpp"
 
 class QTimer;
 class CallBtn;
@@ -16,7 +17,7 @@ public:
 
 public:
     int m_fd;
-    QTimer *m_timer;
+    boost::shared_ptr<QTimer> m_timer;
 
 private slots:
     /**

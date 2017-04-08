@@ -4,6 +4,7 @@
 #include "call_global.h"
 #include <QObject>
 #include "call.h"
+#include "boost/shared_ptr.hpp"
 
 class Sip;
 class CallBtn;
@@ -17,9 +18,9 @@ public:
     ~CallManagePrivate();
 
 public:
-    Sip *m_sip;
+    boost::shared_ptr<Sip> m_sip;
     bool m_isIdle;
-    CallBtn *m_btn;
+    boost::shared_ptr<CallBtn> m_btn;
     bool m_isInited;
 
 public:

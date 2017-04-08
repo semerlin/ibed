@@ -5,6 +5,7 @@
 #include <QObject>
 #include "pjsua.h"
 #include "call.h"
+#include "boost/shared_ptr.hpp"
 
 class QTimer;
 
@@ -41,7 +42,7 @@ private:
     pjsua_acc_id m_id;
     QString m_domain;
     bool m_isRegistered;
-    QTimer *m_timer;
+    boost::shared_ptr<QTimer> m_timer;
     static CallState m_prevState;
     static CallState m_curState;
     static pjsua_call_id m_callId;

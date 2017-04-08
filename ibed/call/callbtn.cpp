@@ -82,7 +82,6 @@ CallBtnPrivate::CallBtnPrivate(CallBtn *parent) :
 
 CallBtnPrivate::~CallBtnPrivate()
 {
-    delete m_timer;
     ::close(m_fd);
 }
 
