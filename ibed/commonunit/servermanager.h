@@ -2,8 +2,9 @@
 #define SERVERMANAGER_H
 
 #include "commonunit_global.h"
-#include <QHash>
+#include <QObject>
 
+class ServerManagerPrivate;
 
 class COMMONUNITSHARED_EXPORT ServerManager : public QObject
 {
@@ -61,11 +62,10 @@ signals:
 
 private:
     ServerManager();
-    void load(void);
+    ~ServerManager();
+    ServerManagerPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(ServerManager)
 
-private:
-    QHash<ServerType, QString> m_addresses;
-    QHash<ServerType, quint16> m_ports;
 };
 
 #endif // SERVERMANGER_H

@@ -33,12 +33,14 @@
 #include <QSettings>
 #include "appsetting.h"
 #include "systemcall.h"
+#include "servermanager_p.h"
 
 
-ServerManager::ServerManager()
+ServerManager::ServerManager() :
+    d_ptr(new ServerManagerPrivate)
 {
     qRegisterMetaType<ServerManager::ServerType>("ServerManager::ServerType");
-    load();
+    d_ptr->load();
 }
 
 
@@ -50,43 +52,48 @@ ServerManager &ServerManager::instance(void)
 
 QString ServerManager::address(const ServerManager::ServerType &type) const
 {
-    return m_addresses[type];
+    Q_ASSERT(type < ServerManager::Count);
+    return d_ptr->m_addresses[type];
 }
 
 quint16 ServerManager::port(const ServerManager::ServerType &type) const
 {
-    return m_ports[type];
+    Q_ASSERT(type < ServerManager::Count);
+    return d_ptr->m_ports[type];
 }
 
 void ServerManager::setAddress(const ServerManager::ServerType &type, const QString &address)
 {
-    m_addresses[type] = address;
+    Q_ASSERT(type < ServerManager::Count);
+    d_ptr->m_addresses[type] = address;
 }
 
 void ServerManager::setPort(const ServerManager::ServerType &type, quint16 port)
 {
-    m_ports[type] = port;
+    Q_ASSERT(type < ServerManager::Count);
+    d_ptr->m_ports[type] = port;
 }
 
 void ServerManager::save()
 {
+    Q_D(ServerManager);
     QSettings setting(AppSetting::instance().
                       value(AppSetting::ServerConfig).toString(), QSettings::IniFormat);
     setting.beginGroup("Default");
-    setting.setValue("address", m_addresses[ServerManager::Default]);
-    setting.setValue("port", m_ports[ServerManager::Default]);
+    setting.setValue("address", d->m_addresses[ServerManager::Default]);
+    setting.setValue("port", d->m_ports[ServerManager::Default]);
     setting.endGroup();
 
     setting.beginGroup("Sip");
-    setting.setValue("address", m_addresses[ServerManager::Sip]);
-    setting.setValue("port", m_ports[ServerManager::Sip]);
+    setting.setValue("address", d->m_addresses[ServerManager::Sip]);
+    setting.setValue("port", d->m_ports[ServerManager::Sip]);
     setting.endGroup();
 
 
     SystemCall::sync();
 }
 
-void ServerManager::load()
+void ServerManagerPrivate::load()
 {
     QSettings setting(AppSetting::instance().
                       value(AppSetting::ServerConfig).toString(), QSettings::IniFormat);
@@ -99,5 +106,6 @@ void ServerManager::load()
     m_addresses[ServerManager::Sip] = setting.value("address", "192.168.0.156").toString();
     m_ports[ServerManager::Sip] = setting.value("port", 5060).toUInt();
     setting.endGroup();
+
 
 }
