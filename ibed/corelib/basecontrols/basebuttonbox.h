@@ -24,14 +24,14 @@ public:
 public:
     /**
      * @brief set orientation
-     * @param
+     * @param orientation - box orientation
      */
     void setOrientation(Qt::Orientation orientation);
 
     /**
      * @brief add a button, this is a template function,
      *        T must be inheritd QAbstractButton
-     * @param button name
+     * @param name - button name
      */
     template <typename T>
     bool addButton(const QString &name);
@@ -39,49 +39,49 @@ public:
     /**
      * @brief add a icon based button, this is a template function,
      *        T must be inheritd QAbstractButton
-     * @param button name
-     * @param icon name
+     * @param name - button name
+     * @param icon - button icon
      */
     template <typename T>
     bool addButton(const QString &name, const QIcon &icon);
 
     /**
      * @brief change button shown text
-     * @param id: button position
-     * @param newName: button new shown text
+     * @param id - button position
+     * @param newName - button new shown text
      */
     void changeButtonName(int id, const QString &newName);
 
     /**
      * @brief chang button name
-     * @param origin: origin name
-     * @param newName: new name
+     * @param origin - origin name
+     * @param newName - new name
      */
     void changeButtonName(const QString &origin, const QString &newName);
 
     /**
      * @brief swap button position by name
-     * @param first: first button
-     * @param second: second button
+     * @param first - first button name
+     * @param second - second button name
      */
     void swapButtons(const QString &first, const QString &second);
 
     /**
      * @brief swap button position by position
-     * @param firstId: first button position
-     * @param secondId: second button position
+     * @param firstId - first button position
+     * @param secondId - second button position
      */
     void swapButtons(int firstId, int secondId);
 
     /**
      * @brief remove button by name
-     * @param name: button name
+     * @param name - button name
      */
     void removeButton(const QString &name);
 
     /**
      * @brief remove button by position
-     * @param id: button position based on zero
+     * @param id - button position based on zero
      */
     void removeButton(int id);
 
@@ -92,7 +92,7 @@ public:
 
     /**
      * @brief set button layout spacing
-     * @param spacing: layout spacing
+     * @param spacing - layout spacing
      */
     void setSpacing(int spacing);
 
@@ -108,24 +108,24 @@ public:
 public:
     /**
      * @brief return all buttons
-     * @return
+     * @return all buttons
      */
     template<typename T>
     const QList<T *> buttons(void) const;
 
     /**
      * @brief return button by id
-     * @return
+     * @return button pointer
      */
     template<typename T>
-    T *button(int id) const;
+    const T *button(int id) const;
 
     /**
      * @brief return button by name
-     * @return
+     * @return button pointer
      */
     template<typename T>
-    T *button(const QString &name) const;
+    const T *button(const QString &name) const;
 
 signals:
     void buttonClicked(int id);
@@ -150,7 +150,7 @@ bool BaseButtonBox::addButton(const QString &name)
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         m_buttons[m_buttons.count()] = button;
         m_layout->addWidget(button);
-        connect(m_buttons[m_buttons.count() - 1], SIGNAL(clicked(bool)), this, SLOT(onButtonClicked()));
+        return connect(m_buttons[m_buttons.count() - 1], SIGNAL(clicked(bool)), this, SLOT(onButtonClicked()));
     }
     else
         return false;
@@ -182,7 +182,7 @@ const QList<T *> BaseButtonBox::buttons() const
 }
 
 template <typename T>
-T *BaseButtonBox::button(int id) const
+const T *BaseButtonBox::button(int id) const
 {
     if(m_buttons.contains(id))
         return dynamic_cast<T *>(m_buttons[id]);
@@ -191,10 +191,10 @@ T *BaseButtonBox::button(int id) const
 }
 
 template <typename T>
-T *BaseButtonBox::button(const QString &name) const
+const T *BaseButtonBox::button(const QString &name) const
 {
-    for(QHash<int, QAbstractButton *>::const_iterator iter = m_buttons.begin();
-        iter != m_buttons.end(); ++iter)
+    for(QHash<int, QAbstractButton *>::const_iterator iter = m_buttons.constBegin();
+        iter != m_buttons.constEnd(); ++iter)
     {
         if(iter.value()->text() == name)
         {
