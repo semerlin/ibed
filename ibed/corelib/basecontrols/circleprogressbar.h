@@ -4,6 +4,8 @@
 #include "basecontrols_global.h"
 #include "basewidget.h"
 
+class CircleProgressBarPrivate;
+
 class BASECONTROLSSHARED_EXPORT CircleProgressBar : public BaseWidget
 {
     Q_OBJECT
@@ -27,31 +29,127 @@ public:
     {
         Solid,
         Dash,
+        Count,
     }CircleStyle;
 
 public:
     explicit CircleProgressBar(QWidget *parent = 0);
+    virtual ~CircleProgressBar();
 
 public slots:
+    /**
+     * @brief set circle max value
+     * @param value - max value
+     */
     void setMaximum(int value);
+
+    /**
+     * @brief set circle min value
+     * @param value - circle minimum value
+     */
     void setMinimum(int value);
+
+    /**
+     * @brief set circle value range
+     * @param min - minimum value
+     * @param max - maximum value
+     */
     void setRange(int min, int max);
+
+    /**
+     * @brief set current value
+     * @param value - current value
+     */
     void setValue(int value);
+
+    /**
+     * @brief set circle style
+     * @param style
+     */
     void setCircleStyle(CircleProgressBar::CircleStyle style);
+
+    /**
+     * @brief set text display in circle
+     * @param text - text
+     */
     void setText(const QString &text);
 
+    /**
+     * @brief set circle background color
+     * @param color - background color
+     */
     void setBackground(const QColor &color);
+
+    /**
+     * @brief set active range color
+     * @param color - active range color
+     */
     void setActive(const QColor &color);
+
+    /**
+     * @brief set interval angle
+     * @param angle - interval angle
+     */
     void setIntervalAngle(int angle);
+
+    /**
+     * @brief set circle start angle
+     * @param angle - start angle
+     */
     void setStartAngle(int angle);
+
+    /**
+     * @brief set circle height
+     * @param height - circle height
+     */
     void setCircleHeight(int height);
+
+    /**
+     * @brief set dash line width
+     * @param width - dash line width
+     */
     void setDashWidth(int width);
+
+    /**
+     * @brief set font size
+     * @param size - font size
+     */
     void setFontSize(int size);
+
+    /**
+     * @brief set circle inner radius
+     * @param radius - inner radius
+     */
     void setInnerRadius(int radius);
+
+    /**
+     * @brief set inner color
+     * @param color - inner color
+     */
     void setInner(const QColor &color);
+
+    /**
+     * @brief set circle color
+     * @param color - circle color
+     */
     void setColor(const QColor &color);
+
+    /**
+     * @brief set circle text font family
+     * @param family - text font family
+     */
     void setFontFamily(const QString &family);
+
+    /**
+     * @brief set gradient start color
+     * @param color - start color
+     */
     void setStartColor(const QColor &color);
+
+    /**
+     * @brief set gradient stop color
+     * @param color - stop color
+     */
     void setStopColor(const QColor &color);
 
 public:
@@ -78,29 +176,8 @@ protected:
     virtual void paintEvent(QPaintEvent *event);
 
 private:
-    void drawSolidCircle(void);
-    void drawDashCircle(void);
-
-private:
-    int m_min;
-    int m_max;
-    int m_value;
-    int m_circleHeight;
-    int m_intervalAngle;
-    int m_startAngle;
-    int m_dashWidth;
-    QColor m_background;
-    QColor m_active;
-    CircleProgressBar::CircleStyle m_style;
-    int m_fontSize;
-    int m_innerRadius;
-    QColor m_inner;
-    QColor m_color;
-    QString m_text;
-    QString m_fontFamily;
-    QColor m_startColor;
-    QColor m_stopColor;
-    bool m_useGradientColor;
+    CircleProgressBarPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(CircleProgressBar)
 };
 
 #endif // CIRCLEPROGRESSBAR_H

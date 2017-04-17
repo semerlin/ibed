@@ -1,9 +1,368 @@
+/*****************************************************************************
+**
+**  Copyright (C) 2016-2017 HuangYang
+**
+**  This file is part of IBED
+**
+**  This program is free software; you can redistribute it and/or modify
+**  it under the terms of the GNU General Public License version 3 as
+**  published by the Free Software Foundation.
+**
+**  You should have received a copy of the GNU General Public License
+**  along with this program. If not, see <http://www.gnu.org/licenses/>.
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**  @file     circleprogress.cpp
+**  @brief    circle progress bar class
+**  @details  none
+**  @author   huang yang
+**  @email    elious.huang@gmail.com
+**  @version  v1.0.0.0
+**  @license  GNU General Public License (GPL)
+**
+*****************************************************************************/
+
 #include "circleprogressbar.h"
 #include <QPainter>
 #include <QPainterPath>
+#include "circleprogressbar_p.h"
 
 CircleProgressBar::CircleProgressBar(QWidget *parent) :
     BaseWidget(parent),
+    d_ptr(new CircleProgressBarPrivate(this))
+{
+
+}
+
+CircleProgressBar::~CircleProgressBar()
+{
+    delete d_ptr;
+}
+
+void CircleProgressBar::setMaximum(int value)
+{
+    Q_D(CircleProgressBar);
+    if(value <= d->m_min)
+        return;
+
+    setRange(value, d->m_max);
+}
+
+void CircleProgressBar::setMinimum(int value)
+{
+    Q_D(CircleProgressBar);
+    if(value >= d->m_max)
+        return;
+
+    setRange(d->m_min, value);
+}
+
+void CircleProgressBar::setRange(int min, int max)
+{
+    Q_D(CircleProgressBar);
+    int minimum, maximum;
+    if(min >= max)
+    {
+        minimum = max;
+        maximum = min;
+    }
+    else
+    {
+        minimum = min;
+        maximum = max;
+    }
+
+    if((d->m_min != minimum) && (d->m_max != maximum))
+    {
+        d->m_min = minimum;
+        d->m_max = maximum;
+        update();
+    }
+}
+
+
+void CircleProgressBar::setCircleStyle(CircleProgressBar::CircleStyle style)
+{
+    Q_ASSERT(style < CircleProgressBar::Count);
+    Q_D(CircleProgressBar);
+    if(style != d->m_style)
+    {
+        d->m_style = style;
+        update();
+    }
+}
+
+void CircleProgressBar::setText(const QString &text)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_text != text)
+    {
+        d->m_text = text;
+        update();
+    }
+}
+
+void CircleProgressBar::setBackground(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_background != color)
+    {
+        d->m_background = color;
+        update();
+    }
+}
+
+
+void CircleProgressBar::setActive(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_active != color)
+    {
+        d->m_active = color;
+        update();
+    }
+}
+
+void CircleProgressBar::setIntervalAngle(int angle)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_intervalAngle != angle)
+    {
+        d->m_intervalAngle = angle;
+        update();
+    }
+}
+
+void CircleProgressBar::setStartAngle(int angle)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_startAngle != angle)
+    {
+        d->m_startAngle = angle;
+        update();
+    }
+}
+
+void CircleProgressBar::setCircleHeight(int height)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_circleHeight != height)
+    {
+        d->m_circleHeight = height;
+        update();
+    }
+}
+
+void CircleProgressBar::setDashWidth(int width)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_dashWidth != width)
+    {
+        d->m_dashWidth = width;
+        update();
+    }
+}
+
+void CircleProgressBar::setFontSize(int size)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_fontSize != size)
+    {
+        d->m_fontSize = size;
+        update();
+    }
+}
+
+void CircleProgressBar::setInnerRadius(int radius)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_innerRadius != radius)
+    {
+        d->m_innerRadius = radius;
+        update();
+    }
+}
+
+void CircleProgressBar::setInner(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_inner != color)
+    {
+        d->m_inner = color;
+        update();
+    }
+}
+
+void CircleProgressBar::setColor(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    d->m_useGradientColor = false;
+    if(d->m_color != color)
+    {
+        d->m_color = color;
+        update();
+    }
+}
+
+void CircleProgressBar::setFontFamily(const QString &family)
+{
+    Q_D(CircleProgressBar);
+    if(d->m_fontFamily != family)
+    {
+        d->m_fontFamily = family;
+        update();
+    }
+}
+
+void CircleProgressBar::setStartColor(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    d->m_useGradientColor = true;
+    if(d->m_startColor != color)
+    {
+        d->m_startColor = color;
+        update();
+    }
+}
+
+void CircleProgressBar::setStopColor(const QColor &color)
+{
+    Q_D(CircleProgressBar);
+    d->m_useGradientColor = true;
+    if(d->m_stopColor != color)
+    {
+        d->m_stopColor = color;
+        update();
+    }
+}
+
+
+int CircleProgressBar::maximum() const
+{
+    return d_ptr->m_max;
+}
+
+int CircleProgressBar::minimum() const
+{
+    return d_ptr->m_min;
+}
+
+int CircleProgressBar::value() const
+{
+    return d_ptr->m_value;
+}
+
+QColor CircleProgressBar::background() const
+{
+    return d_ptr->m_background;
+}
+
+
+QColor CircleProgressBar::active() const
+{
+    return d_ptr->m_active;
+}
+
+int CircleProgressBar::intervalAngle() const
+{
+    return d_ptr->m_intervalAngle;
+}
+
+int CircleProgressBar::startAngle() const
+{
+    return d_ptr->m_startAngle;
+}
+
+int CircleProgressBar::circleHeight() const
+{
+    return d_ptr->m_circleHeight;
+}
+
+int CircleProgressBar::dashWidth() const
+{
+    return d_ptr->m_dashWidth;
+}
+
+int CircleProgressBar::fontSize() const
+{
+    return d_ptr->m_fontSize;
+}
+
+int CircleProgressBar::innerRadius() const
+{
+    return d_ptr->m_innerRadius;
+}
+
+QColor CircleProgressBar::inner() const
+{
+    return d_ptr->m_inner;
+}
+
+QColor CircleProgressBar::color() const
+{
+    return d_ptr->m_color;
+}
+
+void CircleProgressBar::setValue(int value)
+{
+    Q_D(CircleProgressBar);
+    if((value >= d->m_min) && (value <= d->m_max))
+    {
+        d->m_value = value;
+        update();
+    }
+}
+
+CircleProgressBar::CircleStyle CircleProgressBar::circleStyle() const
+{
+    return d_ptr->m_style;
+}
+
+QString CircleProgressBar::text() const
+{
+   return d_ptr->m_text;
+}
+
+QString CircleProgressBar::fontFamily() const
+{
+    return d_ptr->m_fontFamily;
+}
+
+QColor CircleProgressBar::startColor() const
+{
+    return d_ptr->m_startColor;
+}
+
+QColor CircleProgressBar::stopColor() const
+{
+    return d_ptr->m_stopColor;
+}
+
+void CircleProgressBar::paintEvent(QPaintEvent *event)
+{
+    Q_D(CircleProgressBar);
+    BaseWidget::paintEvent(event);
+    switch(d->m_style)
+    {
+    case CircleProgressBar::Solid:
+        d->drawSolidCircle();
+        break;
+    case CircleProgressBar::Dash:
+        d->drawDashCircle();
+        break;
+    default:
+        d->drawSolidCircle();
+        break;
+    }
+}
+
+
+CircleProgressBarPrivate::CircleProgressBarPrivate(CircleProgressBar *parent) :
     m_min(0),
     m_max(100),
     m_value(24),
@@ -22,315 +381,21 @@ CircleProgressBar::CircleProgressBar(QWidget *parent) :
     m_fontFamily(""),
     m_startColor(QColor(0, 0, 0)),
     m_stopColor(QColor(0, 0, 0)),
-    m_useGradientColor(false)
+    m_useGradientColor(false),
+    q_ptr(parent)
 {
 
 }
 
-void CircleProgressBar::setMaximum(int value)
+
+void CircleProgressBarPrivate::drawSolidCircle()
 {
-    if(value <= m_min)
-        return;
+    Q_Q(CircleProgressBar);
+    QPainter painter(q);
 
-    setRange(value, m_max);
-}
-
-void CircleProgressBar::setMinimum(int value)
-{
-    if(value >= m_max)
-        return;
-
-    setRange(m_min, value);
-}
-
-void CircleProgressBar::setRange(int min, int max)
-{
-    int minimum, maximum;
-    if(min >= max)
-    {
-        minimum = max;
-        maximum = min;
-    }
-    else
-    {
-        minimum = min;
-        maximum = max;
-    }
-
-    if((m_min != minimum) && (m_max != maximum))
-    {
-        m_min = minimum;
-        m_max = maximum;
-        update();
-    }
-}
-
-
-void CircleProgressBar::setCircleStyle(CircleProgressBar::CircleStyle style)
-{
-    if(style != m_style)
-    {
-        m_style = style;
-        update();
-    }
-}
-
-void CircleProgressBar::setText(const QString &text)
-{
-    if(m_text != text)
-    {
-        m_text = text;
-        update();
-    }
-}
-
-void CircleProgressBar::setBackground(const QColor &color)
-{
-    if(m_background != color)
-    {
-        m_background = color;
-        update();
-    }
-}
-
-
-void CircleProgressBar::setActive(const QColor &color)
-{
-    if(m_active != color)
-    {
-        m_active = color;
-        update();
-    }
-}
-
-void CircleProgressBar::setIntervalAngle(int angle)
-{
-    if(m_intervalAngle != angle)
-    {
-        m_intervalAngle = angle;
-        update();
-    }
-}
-
-void CircleProgressBar::setStartAngle(int angle)
-{
-    if(m_startAngle != angle)
-    {
-        m_startAngle = angle;
-        update();
-    }
-}
-
-void CircleProgressBar::setCircleHeight(int height)
-{
-    if(m_circleHeight != height)
-    {
-        m_circleHeight = height;
-        update();
-    }
-}
-
-void CircleProgressBar::setDashWidth(int width)
-{
-    if(m_dashWidth != width)
-    {
-        m_dashWidth = width;
-        update();
-    }
-}
-
-void CircleProgressBar::setFontSize(int size)
-{
-    if(m_fontSize != size)
-    {
-        m_fontSize = size;
-        update();
-    }
-}
-
-void CircleProgressBar::setInnerRadius(int radius)
-{
-    if(m_innerRadius != radius)
-    {
-        m_innerRadius = radius;
-        update();
-    }
-}
-
-void CircleProgressBar::setInner(const QColor &color)
-{
-    if(m_inner != color)
-    {
-        m_inner = color;
-        update();
-    }
-}
-
-void CircleProgressBar::setColor(const QColor &color)
-{
-    m_useGradientColor = false;
-    if(m_color != color)
-    {
-        m_color = color;
-        update();
-    }
-}
-
-void CircleProgressBar::setFontFamily(const QString &family)
-{
-    if(m_fontFamily != family)
-    {
-        m_fontFamily = family;
-        update();
-    }
-}
-
-void CircleProgressBar::setStartColor(const QColor &color)
-{
-    m_useGradientColor = true;
-    if(m_startColor != color)
-    {
-        m_startColor = color;
-        update();
-    }
-}
-
-void CircleProgressBar::setStopColor(const QColor &color)
-{
-    m_useGradientColor = true;
-    if(m_stopColor != color)
-    {
-        m_stopColor = color;
-        update();
-    }
-}
-
-
-int CircleProgressBar::maximum() const
-{
-    return m_max;
-}
-
-int CircleProgressBar::minimum() const
-{
-    return m_min;
-}
-
-int CircleProgressBar::value() const
-{
-    return m_value;
-}
-
-QColor CircleProgressBar::background() const
-{
-    return m_background;
-}
-
-
-QColor CircleProgressBar::active() const
-{
-    return m_active;
-}
-
-int CircleProgressBar::intervalAngle() const
-{
-    return m_intervalAngle;
-}
-
-int CircleProgressBar::startAngle() const
-{
-    return m_startAngle;
-}
-
-int CircleProgressBar::circleHeight() const
-{
-    return m_circleHeight;
-}
-
-int CircleProgressBar::dashWidth() const
-{
-    return m_dashWidth;
-}
-
-int CircleProgressBar::fontSize() const
-{
-    return m_fontSize;
-}
-
-int CircleProgressBar::innerRadius() const
-{
-    return m_innerRadius;
-}
-
-QColor CircleProgressBar::inner() const
-{
-    return m_inner;
-}
-
-QColor CircleProgressBar::color() const
-{
-    return m_color;
-}
-
-void CircleProgressBar::setValue(int value)
-{
-    if((value >= m_min) && (value <= m_max))
-    {
-        m_value = value;
-        update();
-    }
-}
-
-CircleProgressBar::CircleStyle CircleProgressBar::circleStyle() const
-{
-    return m_style;
-}
-
-QString CircleProgressBar::text() const
-{
-   return m_text;
-}
-
-QString CircleProgressBar::fontFamily() const
-{
-    return m_fontFamily;
-}
-
-QColor CircleProgressBar::startColor() const
-{
-    return m_startColor;
-}
-
-QColor CircleProgressBar::stopColor() const
-{
-    return m_stopColor;
-}
-
-void CircleProgressBar::paintEvent(QPaintEvent *event)
-{
-    BaseWidget::paintEvent(event);
-    switch(m_style)
-    {
-    case CircleProgressBar::Solid:
-        drawSolidCircle();
-        break;
-    case CircleProgressBar::Dash:
-        drawDashCircle();
-        break;
-    default:
-        drawSolidCircle();
-        break;
-    }
-}
-
-
-void CircleProgressBar::drawSolidCircle(void)
-{
-    QPainter painter(this);
-
-    int radius = qMin(width() / 2, height() / 2) - 5;
+    int radius = qMin(q->width() / 2, q->height() / 2) - 5;
     //translate coordinate to middle
-    painter.translate(rect().center().x(), rect().center().y());
+    painter.translate(q->rect().center().x(), q->rect().center().y());
 
     //set pen render
     painter.setRenderHint(QPainter::Antialiasing);
@@ -371,16 +436,17 @@ void CircleProgressBar::drawSolidCircle(void)
     painter.drawText(QRect(-m_innerRadius, -m_innerRadius, m_innerRadius * 2, m_innerRadius * 2),
                      Qt::AlignCenter, m_text);
 
-
 }
 
-void CircleProgressBar::drawDashCircle(void)
-{
-    QPainter painter(this);
 
-    int radius = qMin(width() / 2, height() / 2) - 5;
+void CircleProgressBarPrivate::drawDashCircle()
+{
+    Q_Q(CircleProgressBar);
+    QPainter painter(q);
+
+    int radius = qMin(q->width() / 2, q->height() / 2) - 5;
     //translate coordinate to middle
-    painter.translate(rect().center().x(), rect().center().y());
+    painter.translate(q->rect().center().x(), q->rect().center().y());
 
     //set pen render
     painter.setRenderHint(QPainter::Antialiasing);
