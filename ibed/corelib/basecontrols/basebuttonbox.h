@@ -118,14 +118,14 @@ public:
      * @return button pointer
      */
     template<typename T>
-    const T *button(int id) const;
+    T *button(int id) const;
 
     /**
      * @brief return button by name
      * @return button pointer
      */
     template<typename T>
-    const T *button(const QString &name) const;
+    T *button(const QString &name) const;
 
 signals:
     void buttonClicked(int id);
@@ -182,7 +182,7 @@ const QList<T *> BaseButtonBox::buttons() const
 }
 
 template <typename T>
-const T *BaseButtonBox::button(int id) const
+T *BaseButtonBox::button(int id) const
 {
     if(m_buttons.contains(id))
         return dynamic_cast<T *>(m_buttons[id]);
@@ -191,7 +191,7 @@ const T *BaseButtonBox::button(int id) const
 }
 
 template <typename T>
-const T *BaseButtonBox::button(const QString &name) const
+T *BaseButtonBox::button(const QString &name) const
 {
     for(QHash<int, QAbstractButton *>::const_iterator iter = m_buttons.constBegin();
         iter != m_buttons.constEnd(); ++iter)

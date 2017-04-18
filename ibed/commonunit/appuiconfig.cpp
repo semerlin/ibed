@@ -36,7 +36,6 @@
 #include <QColor>
 #include "util.h"
 #include "systemcall.h"
-#include "appuiconfig_p.h"
 
 /* static parameters */
 static const QStringList s_allParams = QStringList()
@@ -58,6 +57,24 @@ static const QStringList s_colorParams = QStringList()
 static const QStringList s_fontParams = QStringList()
         << "Font_En"
         << "Font_Zh";
+
+
+class AppUiConfigPrivate
+{
+public:
+    void setDefault(void);
+    void loadValue(const QString &name);
+
+    inline QString getFontFamily(int id)
+    {
+        QStringList list = QFontDatabase::applicationFontFamilies(id);
+        return list.at(0);
+    }
+
+public:
+    QHash<QString, QVariant> m_params;
+    QHash<QString, QString> m_fontFamily;
+};
 
 
 AppUiConfig &AppUiConfig::instance()

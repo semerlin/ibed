@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 
 class EditLabelListItem;
+class EditLabelListModelPrivate;
 
 class BASECONTROLSSHARED_EXPORT EditLabelListModel : public QAbstractListModel
 {
@@ -30,7 +31,8 @@ public:
     QList<EditLabelListItem *> allItems(void) const;
 
 private:
-    QList<EditLabelListItem *> m_items;
+    EditLabelListModelPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(EditLabelListModel)
 };
 
 #endif // EDITLABELLISTMODEL_H

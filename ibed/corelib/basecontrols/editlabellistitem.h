@@ -5,6 +5,7 @@
 #include <QFont>
 #include <QSize>
 #include <QVariant>
+#include "boost/shared_ptr.hpp"
 
 class EditLabelListView;
 class EditLabelListItemPrivate;
@@ -102,13 +103,10 @@ public:
         extra = data(Qt::UserRole + 4).toInt();
     }
 
-
-
     EditLabelListItem& operator=(const EditLabelListItem &item);
 
 private:
-    EditLabelListView *m_view;
-    EditLabelListItemPrivate *d;
+    boost::shared_ptr<EditLabelListItemPrivate> d;
 };
 
 #endif // EditLabelListItem_H

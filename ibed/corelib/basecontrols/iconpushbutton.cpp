@@ -1,52 +1,68 @@
 #include "iconpushbutton.h"
 
+class IconPushButtonPrivate
+{
+public:
+    QList<QIcon> m_icons;
+};
+
 IconPushButton::IconPushButton(QWidget *parent) :
-    QPushButton(parent)
+    QPushButton(parent),
+    d_ptr(new IconPushButtonPrivate)
 {
 
+}
+
+IconPushButton::~IconPushButton()
+{
+    delete d_ptr;
 }
 
 void IconPushButton::addIcon(const QIcon &icon)
 {
-    m_icons.append(icon);
+    d_ptr->m_icons.append(icon);
 }
 
 void IconPushButton::addIcon(const QString &icon)
 {
-    m_icons.append(QIcon(icon));
+    d_ptr->m_icons.append(QIcon(icon));
 }
 
 void IconPushButton::setIcons(const QList<QIcon> &icons)
 {
-    m_icons.clear();
-    m_icons = icons;
-    if(m_icons.count() > 0)
-        setIcon(m_icons.at(0));
+    Q_D(IconPushButton);
+    d->m_icons.clear();
+    d->m_icons = icons;
+    if(d->m_icons.count() > 0)
+        setIcon(d->m_icons.at(0));
 }
 
 void IconPushButton::setIcons(const QStringList &icons)
 {
-    m_icons.clear();
+    Q_D(IconPushButton);
+    d->m_icons.clear();
     foreach(const QString &name, icons)
-        m_icons.append(QIcon(name));
+        d->m_icons.append(QIcon(name));
 
-    if(m_icons.count() > 0)
-        setIcon(m_icons.at(0));
+    if(d->m_icons.count() > 0)
+        setIcon(d->m_icons.at(0));
 }
 
 void IconPushButton::changeToIcon(int id)
 {
-    if(m_icons.count() > id)
-        setIcon(m_icons[id]);
+    Q_D(IconPushButton);
+    Q_ASSERT(d->m_icons.count() > id);
+    setIcon(d->m_icons[id]);
 }
 
 void IconPushButton::removeIcon(int id)
 {
-    if(m_icons.count() > id)
-        m_icons.removeAt(id);
+    Q_D(IconPushButton);
+    Q_ASSERT(d->m_icons.count() > id);
+    d->m_icons.removeAt(id);
 }
 
 void IconPushButton::clearIcons()
 {
-    m_icons.clear();
+    d_ptr->m_icons.clear();
 }

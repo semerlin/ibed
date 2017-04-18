@@ -33,7 +33,31 @@
 #include "sip.h"
 #include "appsetting.h"
 #include "servermanager.h"
-#include "callmanage_p.h"
+
+
+class CallManagePrivate : public QObject
+{
+    Q_OBJECT
+public:
+    explicit CallManagePrivate(CallManage *parent);
+    ~CallManagePrivate();
+
+public:
+    boost::shared_ptr<Sip> m_sip;
+    bool m_isIdle;
+    boost::shared_ptr<CallBtn> m_btn;
+    bool m_isInited;
+
+public:
+    void initSip(void);
+
+private slots:
+    void onStateChanged(CallState prev, CallState current);
+
+private:
+    CallManage *const q_ptr;
+    Q_DECLARE_PUBLIC(CallManage)
+};
 
 CallManage::CallManage() :
     d_ptr(new CallManagePrivate(this))
@@ -68,7 +92,7 @@ void CallManage::regToServer()
 {
     Q_D(CallManage);
     d->m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
-                       "intellicare", ServerManger::instance().address(ServerManger::Sip));
+                       "intellicare", ServerManager::instance().address(ServerManager::Sip));
 }
 
 
@@ -80,7 +104,7 @@ void CallManage::onCallOutRequest()
         d->m_isIdle = false;
 
         d->m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
-                           "intellicare", ServerManger::instance().address(ServerManger::Sip));
+                           "intellicare", ServerManager::instance().address(ServerManager::Sip));
         d->m_sip->dial("0");
     }
 }
@@ -104,7 +128,7 @@ CallManagePrivate::CallManagePrivate(CallManage *parent) :
     m_btn = new CallBtn;
 #endif
 
-    connect(m_sip, SIGNAL(stateChanged(CallState,CallState)), this, SLOT(onStateChanged(CallState,CallState)));
+    connect(m_sip.get(), SIGNAL(stateChanged(CallState,CallState)), this, SLOT(onStateChanged(CallState,CallState)));
 
 }
 
@@ -151,14 +175,17 @@ void CallManagePrivate::initSip()
         m_isInited = false;
     }
 
-    m_sip->setPort(ServerManger::instance().port(ServerManger::Sip));
+    m_sip->setPort(ServerManager::instance().port(ServerManager::Sip));
 
     if(!m_sip->init())
         return;
 
     if(!m_sip->reg(AppSetting::instance().value(AppSetting::DeviceNum).toString(),
-                   "intellicare", ServerManger::instance().address(ServerManger::Sip)))
+                   "intellicare", ServerManager::instance().address(ServerManager::Sip)))
         return;
 
     m_isInited = true;
 }
+
+
+#include "callmanage.moc"

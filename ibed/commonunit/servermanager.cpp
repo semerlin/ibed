@@ -33,8 +33,18 @@
 #include <QSettings>
 #include "appsetting.h"
 #include "systemcall.h"
-#include "servermanager_p.h"
 
+
+class ServerManagerPrivate
+{
+public:
+    void load(void);
+
+public:
+    QHash<ServerManager::ServerType, QString> m_addresses;
+    QHash<ServerManager::ServerType, quint16> m_ports;
+
+};
 
 ServerManager::ServerManager() :
     d_ptr(new ServerManagerPrivate)

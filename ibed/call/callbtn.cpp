@@ -40,7 +40,30 @@
 #include <fcntl.h>
 #include "applogger.h"
 #include "log4qt/logger.h"
-#include "callbtn_p.h"
+#include "boost/shared_ptr.hpp"
+
+
+class CallBtnPrivate : public QObject
+{
+    Q_OBJECT
+public:
+    explicit CallBtnPrivate(CallBtn *parent);
+    ~CallBtnPrivate();
+
+public:
+    int m_fd;
+    boost::shared_ptr<QTimer> m_timer;
+
+private slots:
+    /**
+     * @brief time interval button monitor
+     */
+    void onMonitorKeys(void);
+
+private:
+    CallBtn *const q_ptr;
+    Q_DECLARE_PUBLIC(CallBtn)
+};
 
 
 CallBtn::CallBtn() :
@@ -70,14 +93,13 @@ bool CallBtn::init()
 }
 
 
-
 CallBtnPrivate::CallBtnPrivate(CallBtn *parent) :
     m_fd(-1),
     m_timer(new QTimer(this)),
     q_ptr(parent)
 {
     m_timer->setInterval(500);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(onMonitorKeys()));
+    connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(onMonitorKeys()));
 }
 
 CallBtnPrivate::~CallBtnPrivate()
@@ -103,5 +125,6 @@ void CallBtnPrivate::onMonitorKeys()
             }
         }
     }
-
 }
+
+#include "callbtn.moc"

@@ -57,7 +57,8 @@ HEADERS += basecontrols.h\
     pixmaplabel.h \
     basedialog.h \
     clickablelabel.h \
-    circleprogressbar_p.h
+    editlabellistview_p.h \
+    editlabellistitem_p.h
 
 unix {
     target.path = /usr/lib

@@ -33,9 +33,16 @@
 #include <QDebug>
 #include <QStringList>
 #include "systemcall.h"
-#include "appsetting_p.h"
 
 #define SETTING_FILE ("./resource/setting/appsetting.ini")
+
+class AppSettingPrivate
+{
+public:
+    void setDefault();
+    QHash<QString, QVariant> m_params;
+
+};
 
 
 /* static parameters */

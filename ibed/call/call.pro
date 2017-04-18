@@ -24,8 +24,6 @@ HEADERS += call.h\
         call_global.h \
     callbtn.h \
     sip.h \
-    callbtn_p.h \
-    callmanage_p.h \
     callmanage.h
 
 unix {

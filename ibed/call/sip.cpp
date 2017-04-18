@@ -20,7 +20,7 @@ Sip::Sip() :
 {
     qRegisterMetaType<CallState>("CallState");
     m_timer->setInterval(100);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeOut()));
+    connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(onTimeOut()));
     m_timer->start();
 }
 
