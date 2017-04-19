@@ -58,7 +58,8 @@ HEADERS += basecontrols.h\
     basedialog.h \
     clickablelabel.h \
     editlabellistview_p.h \
-    editlabellistitem_p.h
+    editlabellistitem_p.h \
+    musicplaylistitem_p.h
 
 unix {
     target.path = /usr/lib

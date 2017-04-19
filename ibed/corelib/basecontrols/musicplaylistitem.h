@@ -6,14 +6,13 @@
 #include <QSize>
 #include <QVariant>
 #include <QBrush>
+#include "boost/shared_ptr.hpp"
 
 class MusicPlayListView;
 class MusicPlayListItemPrivate;
 
 class BASECONTROLSSHARED_EXPORT MusicPlayListItem
 {
-    friend class MusicPlayListView;
-
 public:
     explicit MusicPlayListItem();
     explicit MusicPlayListItem(const QString &name, const QString &iconPlay,
@@ -140,8 +139,8 @@ public:
     MusicPlayListItem& operator=(const MusicPlayListItem &item);
 
 private:
-    MusicPlayListView *m_view;
-    MusicPlayListItemPrivate *d;
+    friend class MusicPlayListView;
+    boost::shared_ptr<MusicPlayListItemPrivate> d;
 };
 
 

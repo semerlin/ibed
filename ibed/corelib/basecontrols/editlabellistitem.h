@@ -12,8 +12,6 @@ class EditLabelListItemPrivate;
 
 class BASECONTROLSSHARED_EXPORT EditLabelListItem
 {
-    friend class EditLabelListView;
-
 public:
     explicit EditLabelListItem();
     explicit EditLabelListItem(const QString &name, const QString &text,
@@ -106,6 +104,7 @@ public:
     EditLabelListItem& operator=(const EditLabelListItem &item);
 
 private:
+    friend class EditLabelListView;
     boost::shared_ptr<EditLabelListItemPrivate> d;
 };
 

@@ -4,6 +4,7 @@
 #include "basecontrols_global.h"
 #include <QListView>
 #include <QStyledItemDelegate>
+#include "boost/shared_ptr.hpp"
 
 class MusicPlayListItem;
 class MusicPlayListDelegate;
@@ -13,9 +14,6 @@ class MusicPlayListViewPrivate;
 class BASECONTROLSSHARED_EXPORT MusicPlayListView : public QListView
 {
     Q_OBJECT
-    friend class MusicPlayListItem;
-    friend class MusicPlayListDelegate;
-
 public:
     MusicPlayListView(QWidget *parent = 0);
     ~MusicPlayListView();
@@ -43,8 +41,9 @@ private slots:
     void onClicked(const QModelIndex &index);
 
 private:
-    MusicPlayListViewPrivate *d;
-
+    friend class MusicPlayListItem;
+    friend class MusicPlayListDelegate;
+    boost::shared_ptr<MusicPlayListViewPrivate> d;
 };
 
 #endif // MusicPlayListView_H

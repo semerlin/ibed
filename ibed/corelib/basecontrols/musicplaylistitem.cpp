@@ -1,46 +1,39 @@
+/*****************************************************************************
+**
+**  Copyright (C) 2016-2017 HuangYang
+**
+**  This file is part of IBED
+**
+**  This program is free software; you can redistribute it and/or modify
+**  it under the terms of the GNU General Public License version 3 as
+**  published by the Free Software Foundation.
+**
+**  You should have received a copy of the GNU General Public License
+**  along with this program. If not, see <http://www.gnu.org/licenses/>.
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**  @file     musicplaylistitem.cpp
+**  @brief    music play list item class
+**  @details  none
+**  @author   huang yang
+**  @email    elious.huang@gmail.com
+**  @version  v1.0.0.0
+**  @license  GNU General Public License (GPL)
+**
+*****************************************************************************/
+
 #include "musicplaylistview.h"
 #include "musicplaylistmodel.h"
 #include "musicplaylistitem.h"
-
-class MusicPlayItemData
-{
-public:
-    MusicPlayItemData() :
-        m_role(-1)
-    {
-    }
-
-    MusicPlayItemData(int role, const QVariant &value) :
-        m_role(role),
-        m_value(value)
-    {
-    }
-
-    int m_role;
-    QVariant m_value;
-
-    bool operator==(const MusicPlayItemData &data)
-    {
-        return ((m_role == data.m_role) && (m_value == data.m_value));
-    }
-};
-
-
-class MusicPlayListItemPrivate
-{
-public:
-    MusicPlayListItemPrivate(MusicPlayListItem *item) :
-        q(item)
-    {
-    }
-
-    MusicPlayListItem *q;
-    QList<MusicPlayItemData> m_values;
-};
+#include "musicplaylistitem_p.h"
 
 MusicPlayListItem::MusicPlayListItem() :
-    m_view(NULL),
-    d(new MusicPlayListItemPrivate(this))
+    d(new MusicPlayListItemPrivate)
 {
     int alignment = Qt::AlignVCenter | Qt::AlignLeft;
     setData(Qt::TextAlignmentRole, alignment);
@@ -53,8 +46,7 @@ MusicPlayListItem::MusicPlayListItem() :
 
 MusicPlayListItem::MusicPlayListItem(const QString &name, const QString &iconPlay,
                                      const QString &iconPause, const QString &iconStop) :
-    m_view(NULL),
-    d(new MusicPlayListItemPrivate(this))
+    d(new MusicPlayListItemPrivate)
 {
     setData(Qt::DisplayRole, name);
     setData(Qt::UserRole, iconPlay);
@@ -70,13 +62,13 @@ MusicPlayListItem::MusicPlayListItem(const QString &name, const QString &iconPla
 
 MusicPlayListItem::MusicPlayListItem(const MusicPlayListItem &item)
 {
+    d->m_view = item.d->m_view;
     d->m_values = item.d->m_values;
 }
 
 MusicPlayListItem::~MusicPlayListItem()
 {
-    m_view = NULL;
-    delete d;
+    d->m_view = NULL;
 }
 
 
@@ -97,8 +89,8 @@ void MusicPlayListItem::setData(int role, const QVariant &value)
     if(!found)
         d->m_values.append(MusicPlayItemData(role, value));
 
-    if(m_view != NULL)
-        m_view->model()->itemChanged(this);
+    if(d->m_view != NULL)
+        d->m_view->model()->itemChanged(this);
 }
 
 QVariant MusicPlayListItem::data(int role) const

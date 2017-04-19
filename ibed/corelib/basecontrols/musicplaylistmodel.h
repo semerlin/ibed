@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 
 class MusicPlayListItem;
+class MusicPlayListModelPrivate;
 
 class BASECONTROLSSHARED_EXPORT MusicPlayListModel : public QAbstractListModel
 {
@@ -30,7 +31,8 @@ public:
     QList<MusicPlayListItem *> allItems(void) const;
 
 private:
-    QList<MusicPlayListItem *> m_items;
+    MusicPlayListModelPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(MusicPlayListModel)
 };
 
 #endif // MUSICPLAYLISTMODEL_H
