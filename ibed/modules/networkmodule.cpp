@@ -62,8 +62,8 @@ void NetworkModule::unload()
 
 void NetworkModule::init()
 {
-    m_defaultClient->connectServer(ServerManger::instance().address(ServerManger::Default),
-                                   ServerManger::instance().port(ServerManger::Default));
+    m_defaultClient->connectServer(ServerManager::instance().address(ServerManager::Default),
+                                   ServerManager::instance().port(ServerManager::Default));
 }
 
 void NetworkModule::reconnect(const QString &ip, quint16 port, quint16 device,

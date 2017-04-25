@@ -16,7 +16,7 @@ CallModule::~CallModule()
 bool CallModule::load(const QVariant &val)
 {
     Q_UNUSED(val)
-    m_callMange = new CallMange;
+    m_callMange = new CallManage;
 
     connect(m_callMange, SIGNAL(callOutConnecting()), this, SIGNAL(callOutConnecting()));
     connect(m_callMange, SIGNAL(callInConnecting()), this, SIGNAL(callInConnecting()));

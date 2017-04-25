@@ -35,6 +35,8 @@ public:
 class BASECONTROLSSHARED_EXPORT MusicPlayListItemPrivate
 {
 public:
+    MusicPlayListItemPrivate();
+public:
     MusicPlayListView *m_view;
     QList<MusicPlayItemData> m_values;
 

@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QMap>
 
-class ModuleManger;
+class ModuleManager;
 
 class MAINMODULESHARED_EXPORT MainModule : public QObject
 {
@@ -16,7 +16,7 @@ public:
 
 public:
     bool initialize(void);
-    ModuleManger *manger(void) const;
+    ModuleManager *manger(void) const;
 
 private slots:
     void onBedControlPressed(int id);
@@ -32,7 +32,7 @@ private slots:
     void callOutTimer(void);
 
 private:
-    ModuleManger *m_manger;
+    ModuleManager *m_manager;
 };
 
 #endif // MAINMODULE_H

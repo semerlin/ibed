@@ -1,4 +1,4 @@
-#include "modulemanger.h"
+#include "modulemanager.h"
 #include "mainmodule.h"
 #include "hardwaremodule.h"
 #include "uimodule.h"
@@ -14,26 +14,26 @@
 
 
 MainModule::MainModule() :
-    m_manger(new ModuleManger)
+    m_manager(new ModuleManager)
 {
     //init modules
-    m_manger->addModule(new UiModule("Ui"));
-    m_manger->addModule(new ThemeModule("Theme"));
-    m_manger->addModule(new HardwareModule("Hardware"));
-    m_manger->addModule(new NetworkModule("Network"));
-    m_manger->addModule(new MediaModule("Media"));
-    m_manger->addModule(new CallModule("Call"));
+    m_manager->addModule(new UiModule("Ui"));
+    m_manager->addModule(new ThemeModule("Theme"));
+    m_manager->addModule(new HardwareModule("Hardware"));
+    m_manager->addModule(new NetworkModule("Network"));
+    m_manager->addModule(new MediaModule("Media"));
+    m_manager->addModule(new CallModule("Call"));
 
 }
 
 bool MainModule::initialize()
 {
     //modules
-    UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
-    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
-    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
+    UiModule *ui = m_manager->moduleConvert<UiModule>("Ui");
+    NetworkModule *network = m_manager->moduleConvert<NetworkModule>("Network");
+    HardwareModule *hardware = m_manager->moduleConvert<HardwareModule>("Hardware");
+    MediaModule *media = m_manager->moduleConvert<MediaModule>("Media");
+    CallModule *call = m_manager->moduleConvert<CallModule>("Call");
 
 
     //connect signals
@@ -140,14 +140,14 @@ bool MainModule::initialize()
     return true;
 }
 
-ModuleManger *MainModule::manger() const
+ModuleManager *MainModule::manger() const
 {
-    return m_manger;
+    return m_manager;
 }
 
 void MainModule::onBedControlPressed(int id)
 {
-    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+    HardwareModule *hardware = m_manager->moduleConvert<HardwareModule>("Hardware");
 
     switch(id)
     {
@@ -212,7 +212,7 @@ void MainModule::onBedControlPressed(int id)
 
 void MainModule::onBedControlReleased(int id)
 {
-    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+    HardwareModule *hardware = m_manager->moduleConvert<HardwareModule>("Hardware");
 
     //just stop all motors
     Q_UNUSED(id)
@@ -269,20 +269,20 @@ void MainModule::onBedControlReleased(int id)
 
 void MainModule::onInfuStart()
 {
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    NetworkModule *network = m_manager->moduleConvert<NetworkModule>("Network");
     network->sendInfuStatus(1);
 }
 
 void MainModule::onInfuStop()
 {
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    NetworkModule *network = m_manager->moduleConvert<NetworkModule>("Network");
     network->sendInfuStatus(2);
 }
 
 void MainModule::onInfuInputChanged(int input)
 {
-    UiModule *ui = m_manger->moduleConvert<UiModule>("Ui");
-    NetworkModule *network = m_manger->moduleConvert<NetworkModule>("Network");
+    UiModule *ui = m_manager->moduleConvert<UiModule>("Ui");
+    NetworkModule *network = m_manager->moduleConvert<NetworkModule>("Network");
 
     if(ui->infuMount() > 0)
     {
@@ -294,13 +294,13 @@ void MainModule::onInfuInputChanged(int input)
 
 void MainModule::onCallTerminate()
 {
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+    MediaModule *media = m_manager->moduleConvert<MediaModule>("Media");
     media->startMonitor();
 }
 
 void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
 {
-    HardwareModule *hardware = m_manger->moduleConvert<HardwareModule>("Hardware");
+    HardwareModule *hardware = m_manager->moduleConvert<HardwareModule>("Hardware");
     QMap<quint8, quint8> motorMoves;
     quint8 id, dir;
     for(QMap<quint8, quint8>::const_iterator iter = moves.constBegin();
@@ -316,7 +316,7 @@ void MainModule::onMotorMove(const QMap<quint8, quint8> &moves)
 
 void MainModule::prepareCall()
 {
-    MediaModule *media = m_manger->moduleConvert<MediaModule>("Media");
+    MediaModule *media = m_manager->moduleConvert<MediaModule>("Media");
 
     media->onStop("");
     media->stopMonitor();
@@ -325,7 +325,7 @@ void MainModule::prepareCall()
 
 void MainModule::callOutTimer()
 {
-    CallModule *call = m_manger->moduleConvert<CallModule>("Call");
+    CallModule *call = m_manager->moduleConvert<CallModule>("Call");
     call->callOutRequest();
 }
 

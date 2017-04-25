@@ -18,7 +18,6 @@ SOURCES += network.cpp \
     defaultclient.cpp \
     netprotocol.cpp \
     registerdatahandler.cpp \
-    servermanger.cpp \
     baseinfodatahandler.cpp \
     heartbeatdatahandler.cpp \
     advisedatahandler.cpp \

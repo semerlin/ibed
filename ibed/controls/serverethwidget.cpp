@@ -23,11 +23,11 @@ ServerEthWidget::ServerEthWidget(QWidget *parent) :
 
     ui->pushButtonConnect->setText(QT_TRANSLATE_NOOP("Server", "连 接"));
 
-    ui->widgetIp->setText(ServerManger::instance().
-                          address(ServerManger::Default));
+    ui->widgetIp->setText(ServerManager::instance().
+                          address(ServerManager::Default));
 
-    ui->widgetPort->setText(QString::number(ServerManger::instance().
-                                            port(ServerManger::Default)));
+    ui->widgetPort->setText(QString::number(ServerManager::instance().
+                                            port(ServerManager::Default)));
 
     ui->widgetDevice->setText(QString::number(AppSetting::instance().value(AppSetting::DeviceNum).toInt()));
 }

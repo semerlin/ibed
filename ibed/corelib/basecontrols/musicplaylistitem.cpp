@@ -122,3 +122,10 @@ MusicPlayListItem &MusicPlayListItem::operator=(const MusicPlayListItem &item)
     return *this;
 }
 
+
+
+MusicPlayListItemPrivate::MusicPlayListItemPrivate() :
+    m_view(NULL)
+{
+
+}

@@ -16,18 +16,18 @@ DEFINES += FRAMEWORK_LIBRARY
 SOURCES += framework.cpp \
     simplestatemachine.cpp \
     baseappmodule.cpp \
-    modulemanger.cpp \
-    baseapplaunch.cpp
+    baseapplaunch.cpp \
+    modulemanager.cpp
 
 HEADERS += framework.h\
         framework_global.h \
     simplestatemachine.h \
     iappmodule.h \
     baseappmodule.h \
-    modulemanger.h \
     baseapplaunch.h \
     iapplaunch.h \
-    iapplaunchwidget.h
+    iapplaunchwidget.h \
+    modulemanager.h
 
 unix {
     target.path = /usr/lib

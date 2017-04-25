@@ -107,20 +107,20 @@ void SettingWidget::saveServer()
     quint16 port = ui->widgetServerEth->port();
     bool needSave = false;
 
-    if(ip != ServerManger::instance().address(ServerManger::Default))
+    if(ip != ServerManager::instance().address(ServerManager::Default))
     {
         needSave = true;
-        ServerManger::instance().setAddress(ServerManger::Default, ip);
+        ServerManager::instance().setAddress(ServerManager::Default, ip);
     }
 
-    if(port != ServerManger::instance().port(ServerManger::Default))
+    if(port != ServerManager::instance().port(ServerManager::Default))
     {
         needSave = true;
-        ServerManger::instance().setPort(ServerManger::Default, port);
+        ServerManager::instance().setPort(ServerManager::Default, port);
     }
 
     if(needSave)
-        ServerManger::instance().save();
+        ServerManager::instance().save();
 }
 
 void SettingWidget::saveScreen()

@@ -44,6 +44,7 @@ private:
     friend class MusicPlayListItem;
     friend class MusicPlayListDelegate;
     boost::shared_ptr<MusicPlayListViewPrivate> d;
+//    MusicPlayListViewPrivate *d;
 };
 
 #endif // MusicPlayListView_H

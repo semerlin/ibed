@@ -5,7 +5,7 @@
 #include "iappmodule.h"
 #include <QObject>
 
-class FRAMEWORKSHARED_EXPORT BaseAppModule : public QObject, public IAppModule
+class FRAMEWORKSHARED_EXPORT BaseAppModule : public IAppModule
 {
     Q_OBJECT
 public:

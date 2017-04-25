@@ -4,8 +4,9 @@
 #include "framework_global.h"
 #include <QVariant>
 
-class FRAMEWORKSHARED_EXPORT IAppModule
+class FRAMEWORKSHARED_EXPORT IAppModule : public QObject
 {
+    Q_OBJECT
 public:
     IAppModule() {}
     virtual ~IAppModule() {}

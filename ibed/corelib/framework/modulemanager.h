@@ -1,5 +1,5 @@
-#ifndef MODULEMANGER_H
-#define MODULEMANGER_H
+#ifndef MODULEMANAGER_H
+#define MODULEMANAGER_H
 
 #include "framework_global.h"
 #include "iappmodule.h"
@@ -7,7 +7,7 @@
 #include <QHash>
 #include <QStringList>
 
-class FRAMEWORKSHARED_EXPORT ModuleManger : public QObject
+class FRAMEWORKSHARED_EXPORT ModuleManager : public QObject
 {
     Q_OBJECT
 
@@ -31,8 +31,8 @@ public:
     }MODULE_STATUS;
 
 public:
-    ModuleManger();
-    ~ModuleManger();
+    ModuleManager();
+    ~ModuleManager();
 
 public:
     /**
@@ -177,10 +177,10 @@ public:
      * @param
      * @param
      */
-    void moduleChanging(IAppModule *module, ModuleManger::MODULE_STATUS status);
+    void moduleChanging(IAppModule *module, ModuleManager::MODULE_STATUS status);
 
 signals:
-    void moduleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status);
+    void moduleChanged(IAppModule *module, ModuleManager::MODULE_STATUS status);
 
 private slots:
     void onLoadModule(const QString &name, const QVariant &val);
@@ -196,7 +196,7 @@ private:
 
 
 template <typename T>
-T* ModuleManger::moduleConvert(const QString &name)
+T* ModuleManager::moduleConvert(const QString &name)
 {
     if(m_moduleWithNames.contains(name))
     {

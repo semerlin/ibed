@@ -1,5 +1,5 @@
-#ifndef CALLMANGE_H
-#define CALLMANGE_H
+#ifndef CALLMANAGE_H
+#define CALLMANAGE_H
 
 #include <QObject>
 

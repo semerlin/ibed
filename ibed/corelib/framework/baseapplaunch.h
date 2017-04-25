@@ -3,7 +3,7 @@
 
 #include "framework_global.h"
 #include "iapplaunch.h"
-#include "modulemanger.h"
+#include "modulemanager.h"
 #include "iapplaunchwidget.h"
 
 /**
@@ -13,15 +13,14 @@ class FRAMEWORKSHARED_EXPORT BaseAppLaunch : public QObject, public IAppLaunch
 {
     Q_OBJECT
 public:
-    explicit BaseAppLaunch(IAppLaunchWidget *parent, ModuleManger *manger);
+    explicit BaseAppLaunch(IAppLaunchWidget *parent, ModuleManager *manger);
     virtual ~BaseAppLaunch();
 
 public:
     virtual int run(int argc, char **argv);
-    virtual int restart(void);
 
 private slots:
-    void onModuleChanged(IAppModule *module, ModuleManger::MODULE_STATUS status);
+    void onModuleChanged(IAppModule *module, ModuleManager::MODULE_STATUS status);
     void onStartLaunch();
 
 signals:
@@ -30,7 +29,7 @@ signals:
 
 private:
     IAppLaunchWidget *m_widget;
-    ModuleManger *m_moduleManger;
+    ModuleManager *m_moduleManger;
     QVariant m_extVal;
 };
 

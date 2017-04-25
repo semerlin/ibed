@@ -4,7 +4,7 @@
 #include "modules_global.h"
 #include "baseappmodule.h"
 
-class CallMange;
+class CallManage;
 
 class CallModule : public BaseAppModule
 {
@@ -28,7 +28,7 @@ signals:
     void callTerminate(void);
 
 private:
-    CallMange *m_callMange;
+    CallManage *m_callMange;
 };
 
 #endif // CALLMODULE_H

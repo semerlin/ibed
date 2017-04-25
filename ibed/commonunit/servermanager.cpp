@@ -53,6 +53,11 @@ ServerManager::ServerManager() :
     d_ptr->load();
 }
 
+ServerManager::~ServerManager()
+{
+    delete d_ptr;
+}
+
 
 ServerManager &ServerManager::instance(void)
 {

@@ -1,25 +1,25 @@
-#include "modulemanger.h"
+#include "modulemanager.h"
 #include "boost/foreach.hpp"
 #include "log4qt/logger.h"
 
-LOG4QT_DECLARE_STATIC_LOGGER(log, ModuleManger)
+LOG4QT_DECLARE_STATIC_LOGGER(log, ModuleManager)
 
 
-ModuleManger::ModuleManger() :
+ModuleManager::ModuleManager() :
     m_error("No error"),
     m_isOutMainThread(false)
 {
-    qRegisterMetaType<ModuleManger::MODULE_STATUS>("ModuleManger::MODULE_STATUS");
+    qRegisterMetaType<ModuleManager::MODULE_STATUS>("ModuleManager::MODULE_STATUS");
 }
 
-ModuleManger::~ModuleManger()
+ModuleManager::~ModuleManager()
 {
     unloadedModules();
 }
 
-void ModuleManger::addModule(IAppModule *module)
+void ModuleManager::addModule(IAppModule *module)
 {
-    Q_ASSERT_X(module != NULL, "ModuleManger::addModule",
+    Q_ASSERT_X(module != NULL, "ModuleManager::addModule",
                "module can\'t be NULL!");
 
     m_modules.append(module);
@@ -30,7 +30,7 @@ void ModuleManger::addModule(IAppModule *module)
     emit moduleChanged(module, MODULE_ADD);
 }
 
-void ModuleManger::addModules(const QList<IAppModule *> &modules)
+void ModuleManager::addModules(const QList<IAppModule *> &modules)
 {
     BOOST_FOREACH(IAppModule *module, modules)
     {
@@ -43,7 +43,7 @@ void ModuleManger::addModules(const QList<IAppModule *> &modules)
     }
 }
 
-void ModuleManger::setModules(const QList<IAppModule *> &modules)
+void ModuleManager::setModules(const QList<IAppModule *> &modules)
 {
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
@@ -64,7 +64,7 @@ void ModuleManger::setModules(const QList<IAppModule *> &modules)
     }
 }
 
-void ModuleManger::removeModule(IAppModule *module)
+void ModuleManager::removeModule(IAppModule *module)
 {
     m_modules.removeOne(module);
     m_moduleWithNames.remove(module->name());
@@ -74,7 +74,7 @@ void ModuleManger::removeModule(IAppModule *module)
     emit moduleChanged(module, MODULE_REMOVE);
 }
 
-void ModuleManger::removeModule(const QString &name)
+void ModuleManager::removeModule(const QString &name)
 {
     if(m_moduleWithNames.contains(name))
     {
@@ -88,12 +88,12 @@ void ModuleManger::removeModule(const QString &name)
     }
 }
 
-QList<IAppModule *> ModuleManger::modules() const
+QList<IAppModule *> ModuleManager::modules() const
 {
     return m_modules;
 }
 
-IAppModule *ModuleManger::module(const QString &name)
+IAppModule *ModuleManager::module(const QString &name)
 {
     if(m_moduleWithNames.contains(name))
         return m_moduleWithNames[name];
@@ -101,7 +101,7 @@ IAppModule *ModuleManger::module(const QString &name)
     return NULL;
 }
 
-QStringList ModuleManger::moduleNames() const
+QStringList ModuleManager::moduleNames() const
 {
     QStringList ret;
 
@@ -113,7 +113,7 @@ QStringList ModuleManger::moduleNames() const
     return ret;
 }
 
-QList<IAppModule *> ModuleManger::loadedModules() const
+QList<IAppModule *> ModuleManager::loadedModules() const
 {
     QList<IAppModule *> ret;
 
@@ -126,7 +126,7 @@ QList<IAppModule *> ModuleManger::loadedModules() const
     return ret;
 }
 
-QStringList ModuleManger::loadedModuleNames() const
+QStringList ModuleManager::loadedModuleNames() const
 {
     QStringList ret;
 
@@ -140,7 +140,7 @@ QStringList ModuleManger::loadedModuleNames() const
 
 }
 
-QList<IAppModule *> ModuleManger::unloadedModules() const
+QList<IAppModule *> ModuleManager::unloadedModules() const
 {
     QList<IAppModule *> ret;
 
@@ -157,7 +157,7 @@ QList<IAppModule *> ModuleManger::unloadedModules() const
 
 }
 
-QStringList ModuleManger::unloadedModuleNames() const
+QStringList ModuleManager::unloadedModuleNames() const
 {
     QStringList ret;
 
@@ -174,7 +174,7 @@ QStringList ModuleManger::unloadedModuleNames() const
 
 }
 
-bool ModuleManger::loadModule(const QString &name, const QVariant &val)
+bool ModuleManager::loadModule(const QString &name, const QVariant &val)
 {
     bool ret = false;
 
@@ -182,8 +182,8 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
     {
         if(m_isOutMainThread)
         {
-            if(!m_moduleWithNames[name]->canRunInThread())
-                return false;
+//            if(!m_moduleWithNames[name]->canRunInThread())
+//                return false;
         }
 
         if(!m_moduleWithNames[name]->isLoaded())
@@ -207,7 +207,7 @@ bool ModuleManger::loadModule(const QString &name, const QVariant &val)
     return ret;
 }
 
-bool ModuleManger::loadModules(const QVariant &val)
+bool ModuleManager::loadModules(const QVariant &val)
 {
     bool ret;
 
@@ -215,8 +215,8 @@ bool ModuleManger::loadModules(const QVariant &val)
     {
         if(m_isOutMainThread)
         {
-            if(!module->canRunInThread())
-                continue;
+//            if(!module->canRunInThread())
+//                continue;
         }
 
         if(!module->isLoaded())
@@ -242,7 +242,7 @@ bool ModuleManger::loadModules(const QVariant &val)
 }
 
 
-bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
+bool ModuleManager::reloadModule(const QString &name, const QVariant &val)
 {
     bool ret = false;
 
@@ -253,8 +253,8 @@ bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
 
         if(m_isOutMainThread)
         {
-            if(!m_moduleWithNames[name]->canRunInThread())
-                return false;
+//            if(!m_moduleWithNames[name]->canRunInThread())
+//                return false;
         }
 
         emit moduleChanged(m_moduleWithNames[name], MODULE_RELOADING);
@@ -271,7 +271,7 @@ bool ModuleManger::reloadModule(const QString &name, const QVariant &val)
     return ret;
 }
 
-bool ModuleManger::reloadModules(const QVariant &val)
+bool ModuleManager::reloadModules(const QVariant &val)
 {
     bool ret = false;
 
@@ -282,8 +282,8 @@ bool ModuleManger::reloadModules(const QVariant &val)
 
         if(m_isOutMainThread)
         {
-            if(!module->canRunInThread())
-                continue;
+//            if(!module->canRunInThread())
+//                continue;
         }
 
         emit moduleChanged(module, MODULE_RELOADING);
@@ -301,7 +301,7 @@ bool ModuleManger::reloadModules(const QVariant &val)
     return ret;
 }
 
-void ModuleManger::unloadModule(const QString &name)
+void ModuleManager::unloadModule(const QString &name)
 {
     if(m_moduleWithNames.contains(name))
     {
@@ -313,7 +313,7 @@ void ModuleManger::unloadModule(const QString &name)
     }
 }
 
-void ModuleManger::unloadModules()
+void ModuleManager::unloadModules()
 {
     BOOST_FOREACH(IAppModule *module, m_modules)
     {
@@ -325,27 +325,27 @@ void ModuleManger::unloadModules()
     }
 }
 
-void ModuleManger::setOutMainThread(bool flag)
+void ModuleManager::setOutMainThread(bool flag)
 {
     m_isOutMainThread = flag;
 }
 
-bool ModuleManger::isOutMainThread() const
+bool ModuleManager::isOutMainThread() const
 {
     return m_isOutMainThread;
 }
 
-QString ModuleManger::error() const
+QString ModuleManager::error() const
 {
     return m_error;
 }
 
-void ModuleManger::moduleChanging(IAppModule *module, ModuleManger::MODULE_STATUS status)
+void ModuleManager::moduleChanging(IAppModule *module, ModuleManager::MODULE_STATUS status)
 {
     emit moduleChanged(module, status);
 }
 
-void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
+void ModuleManager::onLoadModule(const QString &name, const QVariant &val)
 {
     bool ret = false;
 
@@ -353,10 +353,10 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
     {
         if(m_isOutMainThread)
         {
-            if(!m_moduleWithNames[name]->canRunInThread())
-            {
-                return ;
-            }
+//            if(!m_moduleWithNames[name]->canRunInThread())
+//            {
+//                return ;
+//            }
         }
 
         if(!m_moduleWithNames[name]->isLoaded())
@@ -378,7 +378,7 @@ void ModuleManger::onLoadModule(const QString &name, const QVariant &val)
     }
 }
 
-void ModuleManger::onLoadModules(const QVariant &val)
+void ModuleManager::onLoadModules(const QVariant &val)
 {
     bool ret;
 
@@ -386,10 +386,10 @@ void ModuleManger::onLoadModules(const QVariant &val)
     {
         if(m_isOutMainThread)
         {
-            if(!module->canRunInThread())
-            {
-                continue;
-            }
+//            if(!module->canRunInThread())
+//            {
+//                continue;
+//            }
         }
 
         if(!module->isLoaded())
@@ -416,7 +416,7 @@ void ModuleManger::onLoadModules(const QVariant &val)
         emit moduleChanged(NULL, MODULE_LOAD_FINISHED);
 }
 
-void ModuleManger::onModuleDestroyed(QObject *module)
+void ModuleManager::onModuleDestroyed(QObject *module)
 {
     if(module)
         m_modules.removeOne(reinterpret_cast<IAppModule *>(module));

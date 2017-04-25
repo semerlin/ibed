@@ -30,7 +30,7 @@
 
 #include <QApplication>
 #include "launchwidget.h"
-#include "modulemanger.h"
+#include "modulemanager.h"
 #include "baseapplaunch.h"
 #include "appsetting.h"
 #include "applogger.h"
