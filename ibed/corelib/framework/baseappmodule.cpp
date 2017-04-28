@@ -30,13 +30,26 @@
 #include "baseappmodule.h"
 
 
+class BaseAppModulePrivate
+{
+public:
+    explicit BaseAppModulePrivate(const QString &name);
+
+public:
+    QString m_name;
+    QVariant m_val;
+};
 
 BaseAppModule::BaseAppModule(const QString &name) :
     m_isLoaded(false),
     m_error("no error"),
-    m_name(name),
-    m_val(QVariant(QVariant::Invalid))
+    d_ptr(new BaseAppModulePrivate(name))
 {
+}
+
+BaseAppModule::~BaseAppModule()
+{
+    delete d_ptr;
 }
 
 bool BaseAppModule::isLoaded() const
@@ -50,20 +63,28 @@ bool BaseAppModule::reload()
     if(m_isLoaded)
         unload();
 
-    return load(m_val);
+    return load(d_ptr->m_val);
 }
 
 void BaseAppModule::setName(const QString &name)
 {
-    m_name = name;
+    d_ptr->m_name = name;
 }
 
 QString BaseAppModule::name() const
 {
-    return m_name;
+    return d_ptr->m_name;
 }
 
 QString BaseAppModule::error() const
 {
     return m_error;
+}
+
+
+BaseAppModulePrivate::BaseAppModulePrivate(const QString &name) :
+    m_name(name),
+    m_val(QVariant(QVariant::Invalid))
+{
+
 }

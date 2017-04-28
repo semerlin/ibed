@@ -53,6 +53,9 @@ public:
      * @return error code
      */
     virtual QString error(void) const = 0;
+
+signals:
+    void message(const QString &msg);
 };
 
 #endif // IAPPMODULE

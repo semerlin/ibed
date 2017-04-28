@@ -5,12 +5,14 @@
 #include "iappmodule.h"
 #include <QObject>
 
+class BaseAppModulePrivate;
+
 class FRAMEWORKSHARED_EXPORT BaseAppModule : public IAppModule
 {
     Q_OBJECT
 public:
     explicit BaseAppModule(const QString &name = "empty");
-    virtual ~BaseAppModule(){}
+    virtual ~BaseAppModule();
 
 public:
     virtual bool load(const QVariant &extraVal = QVariant(QVariant::Invalid)) = 0;
@@ -29,8 +31,8 @@ protected:
     QString m_error;
 
 private:
-    QString m_name;
-    QVariant m_val;
+    BaseAppModulePrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(BaseAppModule)
 };
 
 #endif // BASEAPPMODULE_H
